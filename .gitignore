@@ -1,0 +1,4 @@
+.vscode
+.hypothesis
+*.db
+*.pyc
