@@ -52,7 +52,8 @@ def create_random_food(db) -> models.Food:
     food_dict = schemas.FoodCreate(brand= brand, name= name)
 
     food = crud.create(obj_in=food_dict, db=db, model=models.Food)
-
+    # food = schemas.Food(food)
+    food = schemas.Food(**jsonable_encoder(food))
     return jsonable_encoder(food)
 
 def create_random_serving_size(food_id, db) -> models.ServingSize:

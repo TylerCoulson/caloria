@@ -38,7 +38,6 @@ def test_food_log_read_id(client:TestClient, db:Session):
     food = utils.create_random_food(db)
     servings = utils.create_random_serving_size(food['id'], db)
 
-
     data = {
         "date": date(2023,1,23).isoformat(), 
         "food_id": food['id'],
@@ -68,7 +67,6 @@ def test_food_log_read_day(client:TestClient, db:Session):
     user = utils.create_random_user(db, user_dict)
     food = utils.create_random_food(db)
     servings = utils.create_random_serving_size(food['id'], db)
-
 
     data = {
         "date": date(2023,1,23).isoformat(), 

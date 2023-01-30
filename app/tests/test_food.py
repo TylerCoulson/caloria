@@ -36,5 +36,6 @@ def test_food_read(client:TestClient, db:Session):
     assert response.json() == {
         "id": output_data.id,
         "brand": "read_test",
-        "name": "test123"
+        "name": "test123",
+        "ingredients": []
     }

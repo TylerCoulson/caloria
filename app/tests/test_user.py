@@ -45,8 +45,6 @@ def test_users_food_logs(client:TestClient, db:Session):
     for key in user.keys():
         assert content[key] == user[key]
 
-    print("log", [log])
-    print("content", content['log'])
 
     for key in log.keys():
         assert content['log'][-1][key] == log[key]

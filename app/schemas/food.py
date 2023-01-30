@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List
 
 class FoodBase(BaseModel):
     brand: str
@@ -10,6 +10,6 @@ class FoodCreate(FoodBase):
 
 class Food(FoodBase):
     id: int
-
+    ingredients: List["Food"] | None = []
     class Config:
         orm_mode = True
