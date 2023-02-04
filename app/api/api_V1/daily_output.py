@@ -13,12 +13,7 @@ router = APIRouter()
 from app import crud
 
 
-@router.get(
-    "/{user_id}/{date}",
-    response_model=schemas.DailyOutputBase,
-    status_code=status.HTTP_200_OK,
-)
-def get_daily(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):
+def daily_log(user_id:int, date:date, db):
     output_data = {"date": date, "user_id":user_id}
     user_data = crud.read(_id=user_id, db=db, model=models.User)
 
@@ -81,5 +76,32 @@ def get_daily(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):
 
     output_data['date'] = date
     output_data['calories_left'] = calorie_goal - calories_eaten_on_current_date
+
+    # actual_weight
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == date)).first()
+    output_data['actual_weight'] = weight_data.actual_weight if weight_data else 0
+
+    return output_data
+
+@router.post(
+    "",
+    response_model=schemas.DailyOutputBase,
+    status_code=status.HTTP_201_CREATED,
+)
+def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
+    
+    log = crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
+    
+    output_data = daily_log(user_id=log.user_id, date=log.date, db=db)
+    return output_data
+
+
+@router.get(
+    "/{user_id}/{date}",
+    response_model=schemas.DailyOutputBase,
+    status_code=status.HTTP_200_OK,
+)
+def get_daily(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):
+    output_data = daily_log(user_id=user_id, date=date, db=db)
     
     return output_data

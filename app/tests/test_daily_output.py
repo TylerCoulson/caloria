@@ -53,7 +53,8 @@ def test_daily_data(client:TestClient, db:Session):
 
     data = {
         "user_id": user['id'],
-        "date": end_date
+        "date": end_date,
+        "actual_weight": 308.8
     }
     response= client.get(f"/daily/{data['user_id']}/{data['date']}")
     assert response.status_code == 200
@@ -78,3 +79,31 @@ def test_daily_data(client:TestClient, db:Session):
     }
 
     assert content == output
+
+def test_add_actual_weight(client:TestClient, db:Session):
+    user_dict = {
+        "start_date":date(2022,12,6),
+        "email":f'{utils.random_lower_string()}@{utils.random_lower_string(6)}.com',
+        "start_weight":322.4,
+        "end_weight":150,
+        "sex":'male',
+        "birthdate":date(1992,12,5),
+        "height":70,
+        "lbs_to_lost":2,
+        "activity_level":1.2,
+    }
+    user = utils.create_user(db, user_dict)
+    
+    start_date = datetime.strptime(user['start_date'], "%Y-%m-%d").date()
+    end_date = start_date + timedelta(days=58)
+
+    data = {
+        "user_id": user['id'],
+        "date": end_date.isoformat(),
+        "actual_weight": 308.8
+    }
+    response= client.post(f"/daily", json=data)
+    content = response.json()    
+    assert response.status_code == 201
+
+    assert content['actual_weight'] == 308.8

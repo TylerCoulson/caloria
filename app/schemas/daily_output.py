@@ -17,7 +17,10 @@ class DailyOutputBase(BaseModel):
     calorie_surplus: int
     user_id: int
 
+    class Config:
+        orm_mode = True
 
 class DailyOutputInput(BaseModel):
     user_id: int
     date: date
+    actual_weight: float | None = 0
