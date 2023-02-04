@@ -18,7 +18,7 @@ def test_user_create(client:TestClient, db:Session):
 
 def test_user_read(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
-    data = utils.create_random_user(db, user_dict)
+    data = utils.create_user(db, user_dict)
 
     response= client.get(f"user/{data['id']}")
     content = response.json()
@@ -29,7 +29,7 @@ def test_user_read(client:TestClient, db:Session):
 
 def test_users_food_logs(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
-    user = utils.create_random_user(db, user_dict)
+    user = utils.create_user(db, user_dict)
 
     food = utils.create_random_food(db)
     serving = utils.create_random_serving_size(food['id'], db)

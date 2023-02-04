@@ -41,7 +41,7 @@ def create_random_user_dict() -> dict:
 
     return jsonable_encoder(user_dict)
 
-def create_random_user(db, user_dict) -> models.User:
+def create_user(db, user_dict) -> models.User:
     data = schemas.UserCreate(**user_dict)
     user = crud.create(obj_in=data, db=db, model=models.User)
     return jsonable_encoder(user)
@@ -70,13 +70,18 @@ def create_random_serving_size(food_id, db) -> models.ServingSize:
     serving = crud.create(obj_in=data, db=db, model=models.ServingSize)
     return jsonable_encoder(serving)
 
+def create_serving_size_db(serving_schema, db) -> models.ServingSize:
+    serving = crud.create(obj_in=serving_schema, db=db, model=models.ServingSize)
+    return jsonable_encoder(serving)
 
-def create_food_log(user_id:int, food_id:int, serving_size_id:int, date:date, db) -> models.Food_Log:
+def create_food_log(user_id:int, food_id:int, serving_size_id:int, date:date, db, serving_amount:int = None) -> models.Food_Log:
+    serving_amount = random.randint(1,10) if serving_amount is None else serving_amount
+   
     data = {
         "date": date.isoformat(), 
         "food_id": food_id,
         "serving_size_id": serving_size_id,
-        "serving_amount": random.randint(1,10),
+        "serving_amount": serving_amount,
         "user_id": user_id
     }
 

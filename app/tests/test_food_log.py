@@ -9,7 +9,7 @@ from . import utils
 
 def test_food_log_create(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
-    user = utils.create_random_user(db, user_dict)
+    user = utils.create_user(db, user_dict)
     
     food = utils.create_random_food(db)
     servings = utils.create_random_serving_size(food['id'], db)
@@ -34,7 +34,7 @@ def test_food_log_create(client:TestClient, db:Session):
 
 def test_food_log_read_id(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
-    user = utils.create_random_user(db, user_dict)
+    user = utils.create_user(db, user_dict)
     food = utils.create_random_food(db)
     servings = utils.create_random_serving_size(food['id'], db)
 
@@ -64,7 +64,7 @@ def test_food_log_read_id(client:TestClient, db:Session):
 
 def test_food_log_read_day(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
-    user = utils.create_random_user(db, user_dict)
+    user = utils.create_user(db, user_dict)
     food = utils.create_random_food(db)
     servings = utils.create_random_serving_size(food['id'], db)
 
