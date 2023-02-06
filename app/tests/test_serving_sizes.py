@@ -16,7 +16,7 @@ def test_serving_size_create(client:TestClient, db:Session):
         "protein": 13,
     }
 
-    response= client.post("/serving_size", json=data)
+    response= client.post(f"/api/v1/serving_size", json=data)
     
     assert response.status_code == 201
     content = response.json()
@@ -39,7 +39,7 @@ def test_serving_size_read_id(client:TestClient, db:Session):
     
     output_data = crud.create(obj_in=input_data, db=db, model=models.ServingSize)
 
-    response= client.get(f"serving_size/{output_data.id}")
+    response= client.get(f"/api/v1/serving_size/{output_data.id}")
     assert response.status_code == 200
     assert response.json() == {
         "id": output_data.id,
@@ -72,7 +72,7 @@ def test_serving_size_read_by_food(client:TestClient, db:Session):
         full_output_date.append(jsonable_encoder(output_data))
         
 
-    response= client.get(f"serving_size/food_id/{output_data.food_id}")
+    response= client.get(f"/api/v1/serving_size/food_id/{output_data.food_id}")
     assert response.status_code == 200
     assert response.json() == {"servings":full_output_date}
 

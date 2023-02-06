@@ -23,7 +23,7 @@ def test_food_log_create(client:TestClient, db:Session):
         "user_id": user['id']
     }
 
-    response= client.post("/food_log", json=data)
+    response= client.post(f"/api/v1/food_log", json=data)
     assert response.status_code == 201
     content = response.json()
     assert "id" in content
@@ -51,7 +51,7 @@ def test_food_log_read_id(client:TestClient, db:Session):
     output_data = crud.create(obj_in=input_data, db=db, model=models.Food_Log)
 
 
-    response= client.get(f"food_log/{output_data.id}")
+    response= client.get(f"/api/v1/food_log/{output_data.id}")
 
     assert response.status_code == 200
     content = response.json()
@@ -87,7 +87,7 @@ def test_food_log_read_day(client:TestClient, db:Session):
         to_delete.append(output_data)
         full_output_date.append(jsonable_encoder(output_data))
 
-    response= client.get(f"food_log/{user['id']}/date/{data['date']}")
+    response= client.get(f"/api/v1/food_log/{user['id']}/date/{data['date']}")
 
     assert response.status_code == 200
     

@@ -6,7 +6,7 @@ from . import utils
 def test_user_create(client:TestClient, db:Session):
     data = utils.create_random_user_dict()
 
-    response= client.post("/user", json=data)
+    response= client.post(f"/api/v1/user", json=data)
     
     assert response.status_code == 201
     content = response.json()
@@ -20,7 +20,7 @@ def test_user_read(client:TestClient, db:Session):
     user_dict = utils.create_random_user_dict()
     data = utils.create_user(db, user_dict)
 
-    response= client.get(f"user/{data['id']}")
+    response= client.get(f"/api/v1/user/{data['id']}")
     content = response.json()
     assert response.status_code == 200
     
@@ -38,7 +38,7 @@ def test_users_food_logs(client:TestClient, db:Session):
     log = utils.create_food_log(user['id'], food['id'], serving['id'], date, db)
 
 
-    response= client.get(f"user/{user['id']}")
+    response= client.get(f"/api/v1/user/{user['id']}")
     assert response.status_code == 200
 
     content = response.json()

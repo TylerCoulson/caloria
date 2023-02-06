@@ -12,7 +12,7 @@ def test_food_create(client:TestClient, db:Session):
         "name": "test123"
     }
 
-    response= client.post("/food", json=data)
+    response= client.post(f"/api/v1/food", json=data)
 
     assert response.status_code == 201
     content = response.json()
@@ -31,7 +31,7 @@ def test_food_read(client:TestClient, db:Session):
     
     output_data = crud.create(obj_in=input_data, db=db, model=models.Food)
 
-    response= client.get(f"food/{output_data.id}")
+    response= client.get(f"/api/v1/food/{output_data.id}")
     assert response.status_code == 200
     assert response.json() == {
         "id": output_data.id,

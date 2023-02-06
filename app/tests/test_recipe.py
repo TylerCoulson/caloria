@@ -17,7 +17,7 @@ def test_recipe_create(client:TestClient, db:Session):
         "ingredient": food_2['id']
     }
     
-    response= client.post("/recipe", json=data)
+    response= client.post(f"/api/v1/recipe", json=data)
 
     assert response.status_code == 201
     content = response.json()

@@ -56,7 +56,7 @@ def test_daily_data(client:TestClient, db:Session):
         "date": end_date,
         "actual_weight": 308.8
     }
-    response= client.get(f"/daily/{data['user_id']}/{data['date']}")
+    response= client.get(f"/api/v1/daily/{data['user_id']}/{data['date']}")
     assert response.status_code == 200
     content = response.json()
     
@@ -102,7 +102,7 @@ def test_add_actual_weight(client:TestClient, db:Session):
         "date": end_date.isoformat(),
         "actual_weight": 308.8
     }
-    response= client.post(f"/daily", json=data)
+    response= client.post(f"/api/v1/daily", json=data)
     content = response.json()    
     assert response.status_code == 201
 
