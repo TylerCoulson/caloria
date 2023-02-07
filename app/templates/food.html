@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th id="id">ID</th>
+            <th id="brand">Brand</th>
+            <th id="name">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for food in foods %}
+        <tr>
+            <td headers="id" name="food_id" hx-push-url="true" value={{food.id}} hx-trigger="click" hx-get="/food/{{food.id}}" hx-target="#content">{{food.id}}</td>
+            <td headers="brand">{{food.brand}}</td>
+            <td headers="name">{{food.name}}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<select name="search_for"> 
+    <option value="brand">Brand</option>
+    <option value="name">Name</option>
+</select>
+<input name="search_word" type="text" hx-trigger="change delay:500ms" hx-get="/food/search" hx-include="[name='search_for']" hx-target="#food_list">
+
+<div id="food_list"></div>
+{% endblock %}
