@@ -41,6 +41,14 @@ def get_food_search(*, search_for:str, search_word:str, n:int=25, db: Session = 
         raise HTTPException(status_code=404, detail="Food not found")
     return data
 
+@router.get(
+    "/all",
+    response_model=schemas.Food,
+    status_code=status.HTTP_200_OK,
+)
+def get_all_foods(*, n:int=25, db: Session = Depends(deps.get_db)):
+    data = db.query(models.Food).filter().limit(n).all()
+    return data
 
 # @router.put(
 #     "/{food_id}",

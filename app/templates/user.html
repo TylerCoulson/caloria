@@ -1,0 +1,10 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+    <table>
+    {% for key, value in user.items() %}
+        <td>{{key}}</td>
+        <td>{{value}}</td>
+    {% endfor %}
+    </table>
+{% endblock %}

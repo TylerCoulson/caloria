@@ -15,7 +15,7 @@ from app import crud
     response_model=schemas.UserLogs,
     status_code=status.HTTP_201_CREATED,
 )
-def post_user(*, user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
+def create_user(*, user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
     user_out = crud.create(obj_in=user, db=db, model=models.User)
     return user_out
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
 <table>

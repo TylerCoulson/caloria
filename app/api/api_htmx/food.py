@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status,Request, HTTPException
+from fastapi import APIRouter, Depends, status,Request, HTTPException, Header
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session  # type: ignore
 from fastapi.templating import Jinja2Templates
@@ -17,12 +17,13 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def post_food(*, request: Request, food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
+def post_food(*, request: Request,hx_request: str | None = Header(default=None), food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
     food_out = jsonable_encoder(api_food.post_food(food=food, db=db))
     # food_out = [schemas.FoodBase(**jsonable_encoder(food_db))]
 
     context = {
             "request": request,
+            "hx_request": hx_request,
             "foods": [food_out]
         }
     return templates.TemplateResponse("food.html", context)
@@ -32,10 +33,11 @@ def post_food(*, request: Request, food: schemas.FoodCreate, db: Session = Depen
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_search_food(*, request: Request, db: Session = Depends(deps.get_db)):
+def get_search_food(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page that allows foods searching for food"""
     context = {
             "request": request,
+            "hx_request": hx_request,
         }
     return templates.TemplateResponse("food_search.html", context)
 
@@ -46,12 +48,15 @@ def get_search_food(*, request: Request, db: Session = Depends(deps.get_db)):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_food(*, request: Request, food_id: int, db: Session = Depends(deps.get_db)):
+def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
     food_out = jsonable_encoder(api_food.get_food_id(food_id=food_id, db=db))
-    print(food_out)
+    
     context = {
             "request": request,
-            "foods": [food_out]
+            "hx_request": hx_request,
+
+            "foods": [food_out],
+            
         }
     return templates.TemplateResponse("food.html", context)
 
@@ -60,25 +65,41 @@ def get_food(*, request: Request, food_id: int, db: Session = Depends(deps.get_d
 response_class=HTMLResponse,
 status_code=status.HTTP_200_OK,
 )
-def get_search_food_results(*, request: Request, n:int=25, search_for:str, search_word:str, db: Session = Depends(deps.get_db)):
+def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_for:str, search_word:str, db: Session = Depends(deps.get_db)):
     """Returns the results of searching for food"""
     try:
         data = api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
         
-        print(data[0])
         headers = jsonable_encoder(data[0]).keys()
         
         context = {
-                "request": request,
-                "foods": jsonable_encoder(data),
-                "headers": headers
+            "request": request,
+            "hx_request": hx_request,
+            "foods": jsonable_encoder(data),
+            "headers": headers
             }
         return templates.TemplateResponse("food.html", context)
     
     except HTTPException:
         context = {
-                "request": request,
-                "message": f"No food with {search_for.capitalize()} - {search_word}"
+            "request": request,
+            "hx_request": hx_request,
+            "message": f"No food with {search_for.capitalize()} - {search_word}"
         }
         return templates.TemplateResponse("404.html", context)
 
+@router.get(
+    "/all",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
+    """ returns page that all foods"""
+    data = api_food.get_all_foods(n=n, db=db)
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "hx_request": hx_request,
+            "foods": data
+        }
+    return templates.TemplateResponse("food.html", context)

@@ -1,7 +1,10 @@
-{% extends "base.html" %}
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-    <h1> Get User by id</h1>
+
+<div hx-trigger="load" hx-get="/food/all" hx-target="#content"></div>
+
+<!-- <h1> Get User by id</h1>
     <div>
         <input type="number" name="user_id" min="1" hx-trigger="change load delay:500ms" hx-get="/user" hx-push-url="true" hx-target="#user_data">
     </div>
@@ -30,6 +33,6 @@
         <button type="submit">Submit</button>
     </form>
     
-    <div id="user" value="5"></div>
+    <div id="user"></div> -->
 
 {% endblock %}
