@@ -11,5 +11,6 @@ class FoodCreate(FoodBase):
 class Food(FoodBase):
     id: int
     ingredients: List["Food"] | None = []
+    # servings: List["Food"] | None = []
     class Config:
         orm_mode = True

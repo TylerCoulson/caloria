@@ -16,6 +16,9 @@ class Food(Base):
     brand = Column(String)
     name = Column(String)
 
+    servings = relationship(
+        "ServingSize", back_populates="food"
+    )
     ingredients = relationship(
         "Food",
         secondary=recipe_table,
