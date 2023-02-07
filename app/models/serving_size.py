@@ -13,3 +13,5 @@ class ServingSize(Base):
     fats = Column(Integer)
     carbs = Column(Integer)
     protein = Column(Integer)
+
+    food = relationship("Food", back_populates="servings")
