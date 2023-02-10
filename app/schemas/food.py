@@ -14,3 +14,8 @@ class Food(FoodBase):
     # servings: List["Food"] | None = []
     class Config:
         orm_mode = True
+
+class FoodWithServings(Food):
+    servings: List["Food"] | None = []
+    class Config:
+        orm_mode = True

@@ -1,7 +1,7 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-<table>
+<table name="food">
     <thead>
         <tr>
             <th id="id">ID</th>
@@ -10,14 +10,16 @@
         </tr>
     </thead>
     <tbody>
-    {% for food in foods %}
-        <tr>
-            <td headers="id" name="food_id" hx-push-url="true" value={{food.id}} hx-trigger="click" hx-get="/food/{{food.id}}" hx-target="#content">{{food.id}}</td>
-            <td headers="brand">{{food.brand}}</td>
-            <td headers="name">{{food.name}}</td>
+        {% for food in foods %}
+        <tr name="food_id" hx-push-url="true" hx-trigger="{{trigger}}" hx-get="/food/{{food.id}}" hx-target="#content">
+                <td headers="id">{{food.id}}</td>
+                <td headers="brand">{{food.brand}}</td>
+                <td headers="name">{{food.name}}</td>
         </tr>
-    {% endfor %}
-
+        {% endfor %}
     </tbody>
 </table>
+{% if include_servings %}
+    <div name="servings" id="servings" hx-trigger="load" hx-get="/servings/food_id/{{foods[0].id}}" hx-target="#servings"></div>
+{% endif %}
 {% endblock %}

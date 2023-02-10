@@ -8,6 +8,7 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import food as api_food
+from app.api.api_V1 import serving_size as api_servings
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -50,11 +51,13 @@ def get_search_food(*, request: Request,hx_request: str | None = Header(default=
 )
 def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
     food_out = jsonable_encoder(api_food.get_food_id(food_id=food_id, db=db))
-    
+    servings = True
+
     context = {
             "request": request,
             "hx_request": hx_request,
-
+            "trigger": None,
+            "include_servings": servings,
             "foods": [food_out],
             
         }
@@ -71,13 +74,15 @@ def get_search_food_results(*, request: Request,hx_request: str | None = Header(
         data = api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
         
         headers = jsonable_encoder(data[0]).keys()
-        
+
         context = {
             "request": request,
             "hx_request": hx_request,
             "foods": jsonable_encoder(data),
+            "trigger": "click",
             "headers": headers
             }
+
         return templates.TemplateResponse("food.html", context)
     
     except HTTPException:
