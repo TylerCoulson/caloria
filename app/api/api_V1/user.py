@@ -16,6 +16,8 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 def create_user(*, user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
+    if db.query(models.User).filter(models.User.email == user.email).first():
+            raise HTTPException(status_code=403, detail="Email already has an account")
     user_out = crud.create(obj_in=user, db=db, model=models.User)
     return user_out
 

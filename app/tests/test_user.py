@@ -51,3 +51,15 @@ def test_users_food_logs(client:TestClient, db:Session):
 
     assert content['log'][-1]['food'] == food
     assert content['log'][-1]['serving_size'] == serving
+
+
+def test_duplicate_user(client:TestClient, db:Session):
+    user_dict = utils.create_random_user_dict()
+    user = utils.create_user(db, user_dict)
+
+    response= client.post(f"/api/v1/user", json=user_dict)
+    assert response.status_code == 403
+
+    content = response.json()
+
+    assert content == {'detail': 'Email already has an account'}
