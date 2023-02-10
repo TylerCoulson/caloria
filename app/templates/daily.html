@@ -1,0 +1,47 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<table name="user">
+    
+    {% for key, value in daily.items()%}
+    <tr>
+        <th id={{key}}>{{key}}</th>
+        <td headers={{key}}>{{value}}</td>
+    </tr>
+    {% endfor %}
+    <!-- <thead>
+        <tr>
+            <th id="day">day</th>
+            <th id="week">week</th>
+            <th id="date">date</th>
+            <th id="actual_weight">actual_weight</th>
+            <th id="est_weight">est_weight</th>
+            <th id="resting_rate">resting_rate</th>
+            <th id="eaten_calories">eaten_calories</th>
+            <th id="calories_left">calories_left</th>
+            <th id="calorie_goal">calorie_goal</th>
+            <th id="total_lbs_lost">total_lbs_lost</th>
+            <th id="calorie_surplus">calorie_surplus</th>
+            <th id="user_id">user_id</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td headers="day">{{daily.day}}</td>
+            <td headers="week">{{daily.week}}</td>
+            <td headers="date">{{daily.date}}</td>
+            <td headers="actual_weight">{{daily.actual_weight}}</td>
+            <td headers="est_weight">{{daily.est_weight}}</td>
+            <td headers="resting_rate">{{daily.resting_rate}}</td>
+            <td headers="eaten_calories">{{daily.eaten_calories}}</td>
+            <td headers="calories_left">{{daily.calories_left}}</td>
+            <td headers="calorie_goal">{{daily.calorie_goal}}</td>
+            <td headers="total_lbs_lost">{{daily.total_lbs_lost}}</td>
+            <td headers="calorie_surplus">{{daily.calorie_surplus}}</td>
+            <td headers="user_id">{{daily.user_id}}</td>
+        </tr>
+    </tbody> -->
+</table>
+{% endblock %}
+
+

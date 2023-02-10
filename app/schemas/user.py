@@ -9,7 +9,7 @@ class UserBase(BaseModel):
     start_weight: float
     end_weight: float
     sex: str
-    birthdate:date
+    birthdate: date
     height: int
     lbs_to_lost: float
     activity_level: float

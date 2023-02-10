@@ -1,10 +1,17 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<!-- {% include "post_servings.html"%} -->
-<div hx-trigger="" hx-get="/food/all" hx-target="#content"></div>
+<div name="inputs">
+    <input type="number" min="1" id="user_id" name="user_id">
+    <input type="date" id="date" name="date">
+</div>
+Starting_stats
+<div id="start_stats" hx-trigger="change from:#user_id" hx-get="/user" hx-include="[name='user_id']"></div>
+CurrentDay
+<div id="current_stats"hx-trigger="change from:#user_id, from:#date" value="2023-02-07" hx-get="/daily" hx-include="[name='inputs']"></div>
+<!-- <div id="progress_chart">Graph of Progress</div> -->
 
-<H1>I just wanted to have something here for the landing page</H1>
+
 
 <!-- <h1> Get User by id</h1>
     <div>

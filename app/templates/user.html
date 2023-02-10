@@ -1,10 +1,36 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-    <table>
-    {% for key, value in user.items() %}
-        <td>{{key}}</td>
-        <td>{{value}}</td>
-    {% endfor %}
-    </table>
+<table name="user">
+    <thead>
+        <tr>
+            <th id="id">ID</th>
+            <th id="start_date">start_date</th>
+            <th id="email">email</th>
+            <th id="start_weight">start_weight</th>
+            <th id="end_weight">end_weight</th>
+            <th id="sex">sex</th>
+            <th id="birthdate">birthdate</th>
+            <th id="height">height</th>
+            <th id="lbs_to_lost">lbs_to_lost</th>
+            <th id="activity_level">activity_level</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr name="user_id" hx-push-url="true" hx-trigger="{{trigger}}" hx-get="/user?user_id={{user.id}}" hx-target="#content">
+            <td headers="id">{{user.id}}</td>
+            <td headers="start_date">{{user.start_date}}</td>
+            <td headers="email">{{user.email}}</td>
+            <td headers="start_weight">{{user.start_weight}}</td>
+            <td headers="end_weight">{{user.end_weight}}</td>
+            <td headers="sex">{{user.sex}}</td>
+            <td headers="birthdate">{{user.birthdate}}</td>
+            <td headers="height">{{user.height}}</td>
+            <td headers="lbs_to_lost">{{user.lbs_to_lost}}</td>
+            <td headers="activity_level">{{user.activity_level}}</td>
+        </tr>
+    </tbody>
+</table>
 {% endblock %}
+
+
