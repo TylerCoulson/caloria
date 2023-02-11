@@ -14,6 +14,10 @@ router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
 tabs = {'food': 'active'}
+'''
+hx_request - Checks if request was made through an hx_request
+tabs - which tab should be active in the navigation tab
+'''
 @router.post(
     "",
     response_class=HTMLResponse,
