@@ -8,7 +8,7 @@
 Starting_stats
 <div id="start_stats" hx-trigger="change from:#user_id" hx-get="/user" hx-include="[name='user_id']"></div>
 CurrentDay
-<div id="current_stats"hx-trigger="change from:#user_id, from:#date" value="2023-02-07" hx-get="/daily" hx-include="[name='inputs']"></div>
+<div id="current_stats"hx-trigger="change from:#user_id, change from:#date" value="2023-02-07" hx-get="/daily" hx-include="[name='inputs']"></div>
 <!-- <div id="progress_chart">Graph of Progress</div> -->
 
 

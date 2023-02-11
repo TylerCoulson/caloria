@@ -13,6 +13,7 @@ from app.api.api_V1 import serving_size as api_servings
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
+tabs = {'food': 'active'}
 @router.post(
     "",
     response_class=HTMLResponse,
@@ -39,6 +40,7 @@ def get_search_food(*, request: Request,hx_request: str | None = Header(default=
     context = {
             "request": request,
             "hx_request": hx_request,
+            "tabs": tabs
         }
     return templates.TemplateResponse("food_search.html", context)
 
@@ -51,15 +53,13 @@ def get_search_food(*, request: Request,hx_request: str | None = Header(default=
 )
 def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
     food_out = jsonable_encoder(api_food.get_food_id(food_id=food_id, db=db))
-    servings = True
-
     context = {
             "request": request,
             "hx_request": hx_request,
             "trigger": None,
-            "include_servings": servings,
+            "include_servings": True,
             "foods": [food_out],
-            
+            "tabs": tabs
         }
     return templates.TemplateResponse("food.html", context)
 
@@ -80,7 +80,8 @@ def get_search_food_results(*, request: Request,hx_request: str | None = Header(
             "hx_request": hx_request,
             "foods": jsonable_encoder(data),
             "trigger": "click",
-            "headers": headers
+            "headers": headers,
+            "tabs": tabs
             }
 
         return templates.TemplateResponse("food.html", context)
@@ -105,6 +106,7 @@ def get_all_foods(*, request: Request, hx_request: str | None = Header(default=N
             "request": request,
             "hx_request": hx_request,
             "hx_request": hx_request,
-            "foods": data
+            "foods": data,
+            "tabs": tabs
         }
     return templates.TemplateResponse("food.html", context)
