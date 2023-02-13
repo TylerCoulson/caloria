@@ -107,7 +107,7 @@ def get_all_daily(*, user_id:int, db: Session = Depends(deps.get_db)):
     current_date = date.today()
     start_date = user_data.start_date
     total_days = (current_date - start_date).days
-    for i in range(total_days):
+    for i in range(total_days+1):
         i_date = start_date + timedelta(i)
         output_data.append(daily_log(user_id=user_id, date=i_date, db=db))
     

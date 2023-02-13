@@ -17,20 +17,26 @@ templates = Jinja2Templates("app/templates")
 
 from app import crud
 
+tabs = {'daily': 'active'}
+@router.post(
+    "",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
+    print("testing")
+    print('not', actual_weight)
+    output_data = jsonable_encoder(api_daily.post_daily(actual_weight=actual_weight, db=db))
+    context = {
+                "request": request,
+                "hx_request": hx_request,
+                "dailies": [output_data],
+                "tabs": tabs
+            }
 
-# @router.post(
-#     "",
-#     response_model=schemas.DailyOutputBase,
-#     status_code=status.HTTP_201_CREATED,
-# )
-# def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
-    
-#     log = crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
-    
-#     output_data = daily_log(user_id=log.user_id, date=log.date, db=db)
-#     return output_data
+    return templates.TemplateResponse("daily.html", context)
 
-tabs = {'food': 'active'}
+
 @router.get(
     "",
     response_class=HTMLResponse,
