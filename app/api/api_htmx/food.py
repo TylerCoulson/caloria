@@ -8,7 +8,7 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import food as api_food
-from app.api.api_V1 import serving_size as api_servings
+
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")

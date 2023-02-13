@@ -1,6 +1,8 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
+<div hx-trigger="click" hx-get="/create/food" hx-target="#create_food">Create Food</div>
+<div id="create_food"></div>
 <table name="food">
     <thead>
         <tr>
@@ -20,6 +22,9 @@
     </tbody>
 </table>
 {% if include_servings %}
-    <div name="servings" id="servings" hx-trigger="load" hx-get="/servings/food_id/{{foods[0].id}}" hx-target="#servings"></div>
+<div hx-trigger="click" hx-get="/create/serving_size" hx-target="#create_serving_size">Create Serving</div>
+<div id="create_serving_size"></div>
+<div name="servings" id="servings" hx-trigger="load" hx-get="/servings/food_id/{{foods[0].id}}" hx-target="#servings"></div>
+    
 {% endif %}
 {% endblock %}

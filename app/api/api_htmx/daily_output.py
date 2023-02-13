@@ -44,6 +44,5 @@ def get_daily(*, request: Request,hx_request: str | None = Header(default=None),
                 "hx_request": hx_request,
                 "daily": output_data
             }
-    print(context['daily'])
     return templates.TemplateResponse("daily.html", context)
     
