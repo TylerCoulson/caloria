@@ -1,0 +1,9 @@
+<form hx-post="/food_log" hx-target="#food_log" hx-ext='json-enc' >
+    date - <input type='date' name='date'></input>
+    food_id - <input type='number' min='1' name='food_id'></input>
+    serving_size_id - <input type='number' min='1' name='serving_size_id'></input>
+    serving_amount - <input type='number' min='0' name='serving_amount'></input>
+    user_id - <input type='number' min='1' name='user_id'></input>    
+    <button type="submit">Submit</button>
+</form>
+<div id="food_log"></div>
