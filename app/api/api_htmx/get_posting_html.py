@@ -20,7 +20,7 @@ templates = Jinja2Templates("app/templates")
     status_code=status.HTTP_200_OK,
 )
 def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    print("test")
+    
     context = {
             "request": request,
             "hx_request": hx_request,
@@ -36,7 +36,7 @@ def get_create_log(*, request: Request, hx_request: str | None = Header(default=
     status_code=status.HTTP_200_OK,
 )
 def get_create_serving(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    print("test")
+    
     context = {
             "request": request,
             "hx_request": hx_request,
@@ -52,7 +52,7 @@ def get_create_serving(*, request: Request, hx_request: str | None = Header(defa
     status_code=status.HTTP_200_OK,
 )
 def get_create_serving(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    print("test")
+    
     context = {
             "request": request,
             "hx_request": hx_request,

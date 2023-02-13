@@ -22,7 +22,7 @@ tabs = {'food_log': 'active'}
 )
 def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
     log = jsonable_encoder(api_food_log.post_food_log(food_log=food_log, db=db))
-    print("post", log)
+    
     context = {
             "request": request,
             "hx_request": hx_request,
@@ -37,7 +37,7 @@ def post_food_log(*, request: Request, hx_request: str | None = Header(default=N
     status_code=status.HTTP_200_OK,
 )
 def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), user_id:int, db: Session = Depends(deps.get_db)):
-    print("testing")
+    
     try:
         logs = jsonable_encoder(api_food_log.get_food_logs(user_id=user_id, db=db))
         context = {
@@ -92,7 +92,7 @@ def get_food_logs_by_user_date(*, request: Request, hx_request: str | None = Hea
 )
 def get_food_log_id(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
     log = jsonable_encoder(api_food_log.get_food_log_id(food_log_id=food_log_id, db=db))
-    print(log)    
+    
     context = {
             "request": request,
             "hx_request": hx_request,

@@ -54,15 +54,15 @@ def get_daily(*, request: Request,hx_request: str | None = Header(default=None),
     status_code=status.HTTP_200_OK,
 )
 def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), user_id:int, db: Session = Depends(deps.get_db)):
-    print("testing")
+    
     output_data = jsonable_encoder(api_daily.get_all_daily(user_id=user_id, db=db))
-    # print("2")
-    # print(output_data)
+    # 
+    # 
     context = {
                 "request": request,
                 "hx_request": hx_request,
                 "dailies": output_data,
                 "tabs": tabs
             }
-    print("context", context['dailies'][0])
+    
     return templates.TemplateResponse("daily.html", context)

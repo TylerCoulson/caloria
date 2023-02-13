@@ -109,7 +109,6 @@ def get_all_foods(*, request: Request, hx_request: str | None = Header(default=N
     context = {
             "request": request,
             "hx_request": hx_request,
-            "hx_request": hx_request,
             "foods": data,
             "tabs": tabs
         }
