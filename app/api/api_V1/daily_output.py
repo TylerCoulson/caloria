@@ -78,6 +78,9 @@ def daily_log(user_id:int, date:date, db):
     output_data['date'] = date
     output_data['calories_left'] = calorie_goal - calories_eaten_on_current_date
 
+    # bmi
+    output_data['bmi'] = calorie_calcs.bmi(user_data.height, est_weight)
+
     # actual_weight
     weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == date)).first()
     output_data['actual_weight'] = weight_data.actual_weight if weight_data else 0

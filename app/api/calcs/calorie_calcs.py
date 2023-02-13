@@ -2,6 +2,8 @@ from datetime import date
 from app.api.calcs.calcs import resting_rate 
 
 
+def bmi(height: float, weight:float):
+    return round((weight/(height**2))*703,2)
 
 def days_between(start_date:date, end_date:date):
     return (end_date - start_date).days

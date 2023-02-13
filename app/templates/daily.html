@@ -6,12 +6,13 @@
 <table name="user" class="table table-bordered table-sm table-hover table-striped">
     <thead>
         <tr>
+            <th id="user_id" scope="col">user_id</th>
             <th id="day" scope="col">day</th>
             <th id="week" scope="col">week</th>
             <th id="date" scope="col">date</th>
-            <th id="user_id" scope="col">user_id</th>
             <th id="actual_weight" scope="col">actual_weight</th>
             <th id="est_weight" scope="col">est_weight</th>
+            <th id="bmi" scope="c">BMI</th>
             <th id="resting_rate" scope="col">resting_rate</th>
             <th id="eaten_calories" scope="col">eaten_calories</th>
             <th id="calories_left" scope="col">calories_left</th>
@@ -22,13 +23,14 @@
     </thead>
     <tbody>
         {% for daily in dailies %}    
-        <tr id={{daily.date}}>
+        <tr class= id={{daily.date}}>
+            <td headers="user_id">{{daily.user_id}}</td>
             <td headers="day">{{daily.day}}</td>
             <td headers="week">{{daily.week}}</td>
             <td headers="date">{{daily.date}}</td>
-            <td headers="user_id">{{daily.user_id}}</td>
             <td headers="actual_weight">{{daily.actual_weight}}</td>
             <td headers="est_weight">{{daily.est_weight}}</td>
+            <td headers="bmi">{{daily.bmi}}</td>
             <td headers="resting_rate">{{daily.resting_rate}}</td>
             <td headers="eaten_calories">{{daily.eaten_calories}}</td>
             <td headers="calories_left">{{daily.calories_left}}</td>

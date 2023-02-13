@@ -24,8 +24,6 @@ tabs = {'daily': 'active'}
     status_code=status.HTTP_201_CREATED,
 )
 def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
-    print("testing")
-    print('not', actual_weight)
     output_data = jsonable_encoder(api_daily.post_daily(actual_weight=actual_weight, db=db))
     context = {
                 "request": request,
