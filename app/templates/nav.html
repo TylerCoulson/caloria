@@ -1,6 +1,7 @@
 <nav class="nav nav-tabs" hx-push-url="true" hx-target="#content" _="on htmx:afterOnLoad take .active for event.target" >
     <a class="nav-item nav-link {{tabs.home}}" hx-get="/">Home</a>
     <a class="nav-item nav-link {{tabs.food}}" hx-get="/food">Foods</a>
-    <a class="nav-item nav-link {{tabs.food_log}}" hx-get="/food_log">Food Log</a>
+    <a class="nav-item nav-link {{tabs.food_log}}" hx-get="/food_log?user_id=5">Food Log</a>
+    <a class="nav-item nav-link {{tabs.daily}}" hx-get="/daily/all?user_id=5">Daily</a>
     <!-- <a class="nav-item nav-link" hx-get="/servings" hx-push-url="true" hx-target="#content">Servings</a> -->
 </nav>

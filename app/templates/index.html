@@ -8,7 +8,7 @@
 Starting_stats
 <div id="start_stats" hx-trigger="change from:#user_id" hx-get="/user" hx-include="[name='user_id']"></div>
 CurrentDay
-<div id="current_stats"hx-trigger="change from:#user_id, change from:#date" value="2023-02-07" hx-get="/food_log" hx-include="[name='inputs']"></div>
+<div id="current_stats"hx-trigger="change from:#user_id, change from:#date" value="2023-02-07" hx-get="/daily" hx-include="[name='inputs']"></div>
 <!-- <div id="progress_chart">Graph of Progress</div> -->
 
 
@@ -19,7 +19,7 @@ CurrentDay
     </div>
     <div id="user_data"></div>
 -->
-    <h1> Add Log</h1>        
+    <!-- <h1> Add Log</h1>        
     <form hx-post="/food_log" hx-target="#food" hx-ext='json-enc' >
         date - <input type='date' name='date'></input>
         food_id - <input type='number' min='1' name='food_id'></input>
@@ -28,7 +28,7 @@ CurrentDay
         user_id - <input type='number' min='1' name='user_id'></input>    
         <button type="submit">Submit</button>
     </form>
-    <div id="food"></div>
+    <div id="food"></div> -->
 <!-- 
     <h1> Add User</h1>
     <form hx-post="/user" hx-target="#user" hx-ext='json-enc' >

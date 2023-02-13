@@ -50,8 +50,8 @@ def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db)):
     response_model=schemas.FoodLog,
     status_code=status.HTTP_200_OK,
 )
-def get_food_logs(*, db: Session = Depends(deps.get_db)):
-    data = db.query(models.Food_Log).all()
+def get_food_logs(*, user_id:int, db: Session = Depends(deps.get_db)):
+    data = db.query(models.Food_Log).filter(models.Food_Log.user_id == user_id).all()
 
     return data
 

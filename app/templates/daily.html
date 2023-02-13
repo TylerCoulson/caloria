@@ -2,14 +2,7 @@
 
 {% block content %}
 <table name="user">
-    
-    {% for key, value in daily.items()%}
-    <tr>
-        <th id={{key}}>{{key}}</th>
-        <td headers={{key}}>{{value}}</td>
-    </tr>
-    {% endfor %}
-    <!-- <thead>
+    <thead>
         <tr>
             <th id="day">day</th>
             <th id="week">week</th>
@@ -26,6 +19,7 @@
         </tr>
     </thead>
     <tbody>
+        {% for daily in dailies %}    
         <tr>
             <td headers="day">{{daily.day}}</td>
             <td headers="week">{{daily.week}}</td>
@@ -40,7 +34,8 @@
             <td headers="calorie_surplus">{{daily.calorie_surplus}}</td>
             <td headers="user_id">{{daily.user_id}}</td>
         </tr>
-    </tbody> -->
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}
 

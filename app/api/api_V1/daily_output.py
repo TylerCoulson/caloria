@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
-from datetime import date
+from datetime import date, timedelta
 from app import deps
 from app import schemas
 from app import models
+from app import crud
 
 from app.api.calcs.calcs import resting_rate, age
 from app.api.calcs import calorie_calcs
 
 router = APIRouter()
 
-from app import crud
+
 
 
 def daily_log(user_id:int, date:date, db):
@@ -95,6 +96,22 @@ def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends
     output_data = daily_log(user_id=log.user_id, date=log.date, db=db)
     return output_data
 
+@router.get(
+    "/all",
+    response_model=schemas.DailyOutputBase,
+    status_code=status.HTTP_200_OK,
+)
+def get_all_daily(*, user_id:int, db: Session = Depends(deps.get_db)):
+    user_data = crud.read(_id=user_id, db=db, model=models.User)
+    output_data = []
+    current_date = date.today()
+    start_date = user_data.start_date
+    total_days = (current_date - start_date).days
+    for i in range(total_days):
+        i_date = start_date + timedelta(i)
+        output_data.append(daily_log(user_id=user_id, date=i_date, db=db))
+    
+    return output_data
 
 @router.get(
     "/{user_id}/{date}",

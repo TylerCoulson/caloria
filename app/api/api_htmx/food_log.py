@@ -36,10 +36,10 @@ def post_food_log(*, request: Request, hx_request: str | None = Header(default=N
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), user_id:int, db: Session = Depends(deps.get_db)):
     print("testing")
     try:
-        logs = jsonable_encoder(api_food_log.get_food_logs(db=db))
+        logs = jsonable_encoder(api_food_log.get_food_logs(user_id=user_id, db=db))
         context = {
                 "request": request,
                 "hx_request": hx_request,
