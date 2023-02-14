@@ -9,6 +9,7 @@ def test_daily_data(client:TestClient, db:Session):
     user_dict = {
         "start_date":date(2022,12,6),
         "email":f'{utils.random_lower_string()}@{utils.random_lower_string(6)}.com',
+        "password_hash": utils.random_lower_string(),
         "start_weight":322.4,
         "end_weight":150,
         "sex":'male',
@@ -84,6 +85,7 @@ def test_add_actual_weight(client:TestClient, db:Session):
     user_dict = {
         "start_date":date(2022,12,6),
         "email":f'{utils.random_lower_string()}@{utils.random_lower_string(6)}.com',
+        "password_hash": utils.random_lower_string(),
         "start_weight":322.4,
         "end_weight":150,
         "sex":'male',

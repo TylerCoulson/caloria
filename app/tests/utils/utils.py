@@ -18,6 +18,7 @@ def random_date(start:date=date(1923,1,1), end:date=date(2010,12,31)) -> date:
 
 def create_random_user_dict() -> dict:
     start_date = date.today()
+    password_hash = random_lower_string() 
     email = f'{random_lower_string()}@{random_lower_string(6)}.com'
     start_weight = random.randint(200,700) + round(random.random(),2)
     end_weight = random.randint(100,180) + round(random.random(),2)
@@ -29,6 +30,7 @@ def create_random_user_dict() -> dict:
 
     user_dict = schemas.UserCreate(
         start_date = start_date,
+        password_hash=password_hash,
         email = email,
         start_weight = start_weight,
         end_weight = end_weight,

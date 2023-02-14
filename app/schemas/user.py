@@ -6,6 +6,7 @@ from typing import List
 class UserBase(BaseModel):
     start_date: date
     email: str
+    password_hash: str
     start_weight: float
     end_weight: float
     sex: str

@@ -9,6 +9,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     start_date = Column(Date)
     email = Column(String)
+    password_hash = Column(String)
     start_weight = Column(Float)
     end_weight = Column(Float)
     sex = Column(String)
