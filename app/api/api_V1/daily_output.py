@@ -104,14 +104,14 @@ def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends
     response_model=schemas.DailyOutputBase,
     status_code=status.HTTP_200_OK,
 )
-def get_all_daily(*, user_id:int, db: Session = Depends(deps.get_db)):
+def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
     user_data = crud.read(_id=user_id, db=db, model=models.User)
     output_data = []
     current_date = date.today()
     start_date = user_data.start_date
     total_days = (current_date - start_date).days
-    for i in range(total_days+1):
-        i_date = start_date + timedelta(i)
+    for i in range(min(total_days, n_days)+1):
+        i_date = current_date - timedelta(i)
         output_data.append(daily_log(user_id=user_id, date=i_date, db=db))
     
     return output_data

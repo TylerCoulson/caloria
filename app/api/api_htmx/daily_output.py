@@ -57,9 +57,9 @@ def get_daily(*, request: Request,hx_request: str | None = Header(default=None),
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), user_id:int, db: Session = Depends(deps.get_db)):
+def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), user_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
     
-    output_data = jsonable_encoder(api_daily.get_all_daily(user_id=user_id, db=db))
+    output_data = jsonable_encoder(api_daily.get_all_daily(user_id=user_id, n_days=n_days, db=db))
     # 
     # 
     context = {
