@@ -8,13 +8,11 @@ from datetime import date
 
 from . import utils
 
-def test_recipe_create(client:TestClient, db:Session):
-    food_1 = utils.create_random_food(db)
-    food_2 = utils.create_random_food(db)
+def test_recipe_create(client:TestClient, db:Session, food, food_2):
 
     data = {
-        "finished_food": food_1['id'],
-        "ingredient": food_2['id']
+        "finished_food": food.id,
+        "ingredient": food_2.id
     }
     
     response= client.post(f"/api/v1/recipe", json=data)

@@ -66,6 +66,17 @@ def food(db) -> models.Food:
     return food
 
 @pytest.fixture()
+def food_2(db):
+    brand = random_lower_string()
+    name = random_lower_string()
+    food_dict = schemas.FoodCreate(brand= brand, name= name)
+
+    food = crud.create(obj_in=food_dict, db=db, model=models.Food)
+    # food = schemas.Food(food)
+    food = schemas.Food(**jsonable_encoder(food))
+    return food
+
+@pytest.fixture()
 def serving(food, db) -> models.ServingSize:
     food_id = food.id
     data = schemas.ServingSizeCreate(
