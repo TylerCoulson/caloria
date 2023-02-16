@@ -27,7 +27,7 @@ class FoodLogUser(FoodLog):
         orm_mode = True
 
 class DayLog(BaseModel):
-    user: "User"
+    # user: "User"
     log: List[FoodLog] = []
 
     class Config:

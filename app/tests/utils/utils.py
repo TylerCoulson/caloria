@@ -1,54 +1,61 @@
 import random
 import string
+import pytest
 from fastapi.encoders import jsonable_encoder
 from app import models
 from app import schemas
 from app import crud
 from datetime import date, timedelta
 
+
 def random_lower_string(k=32) -> str:
     return "".join(random.choices(string.ascii_lowercase, k=k))
 
 
-def random_date(start:date=date(1923,1,1), end:date=date(2010,12,31)) -> date:
+def random_date(start: date = date(1923, 1, 1), end: date = date(2010, 12, 31)) -> date:
     days_difference = end - start
-    random_date = start + timedelta(days=days_difference.days) * random.random() 
-    
+    random_date = start + timedelta(days=days_difference.days) * random.random()
+
     return random_date
+
 
 def create_random_user_dict() -> dict:
     start_date = date.today()
-    password_hash = random_lower_string() 
-    email = f'{random_lower_string()}@{random_lower_string(6)}.com'
-    start_weight = random.randint(200,700) + round(random.random(),2)
-    end_weight = random.randint(100,180) + round(random.random(),2)
-    sex = random.choice(['male', "female"])
+    password_hash = random_lower_string()
+    email = f"{random_lower_string()}@{random_lower_string(6)}.com"
+    start_weight = random.randint(200, 700) + round(random.random(), 2)
+    end_weight = random.randint(100, 180) + round(random.random(), 2)
+    sex = random.choice(["male", "female"])
     birthdate = random_date()
-    height = random.randint(48,84)
+    height = random.randint(48, 84)
     lbs_to_lost = round(random.random() * 2)
-    activity_level = random.choice([1.2,1.375,1.55,1.725,1.9])
+    activity_level = random.choice([1.2, 1.375, 1.55, 1.725, 1.9])
 
     user_dict = schemas.UserCreate(
-        start_date = start_date,
+        start_date=start_date,
         password_hash=password_hash,
-        email = email,
-        start_weight = start_weight,
-        end_weight = end_weight,
-        sex = sex,
-        birthdate = birthdate,
-        height = height,
-        lbs_to_lost = lbs_to_lost,
-        activity_level = activity_level,
+        email=email,
+        start_weight=start_weight,
+        end_weight=end_weight,
+        sex=sex,
+        birthdate=birthdate,
+        height=height,
+        lbs_to_lost=lbs_to_lost,
+        activity_level=activity_level,
     )
 
     return jsonable_encoder(user_dict)
 
-def create_user(db, user_dict) -> models.User:
+@pytest.fixture()
+def user(db) -> models.User:
+    # if user_dict is None:
+    user_dict = create_random_user_dict()
     data = schemas.UserCreate(**user_dict)
     user = crud.create(obj_in=data, db=db, model=models.User)
-    return jsonable_encoder(user)
+    return user
 
-def create_random_food(db) -> models.Food:
+@pytest.fixture()
+def food(db) -> models.Food:
     brand = random_lower_string()
     name = random_lower_string()
     food_dict = schemas.FoodCreate(brand= brand, name= name)
@@ -56,37 +63,42 @@ def create_random_food(db) -> models.Food:
     food = crud.create(obj_in=food_dict, db=db, model=models.Food)
     # food = schemas.Food(food)
     food = schemas.Food(**jsonable_encoder(food))
-    return jsonable_encoder(food)
+    return food
 
-def create_random_serving_size(food_id, db) -> models.ServingSize:
+@pytest.fixture()
+def serving(food, db) -> models.ServingSize:
+    food_id = food.id
     data = schemas.ServingSizeCreate(
-        food_id = food_id,
-        description = random_lower_string(),
-        calories = random.randint(1,1000),
-        fats = random.randint(1,1000),
-        carbs = random.randint(1,1000),
-        protein = random.randint(1,1000),
+        food_id=food_id,
+        description=random_lower_string(),
+        calories=random.randint(1, 1000),
+        fats=random.randint(1, 1000),
+        carbs=random.randint(1, 1000),
+        protein=random.randint(1, 1000),
     )
 
-
     serving = crud.create(obj_in=data, db=db, model=models.ServingSize)
-    return jsonable_encoder(serving)
+    return serving
 
-def create_serving_size_db(serving_schema, db) -> models.ServingSize:
-    serving = crud.create(obj_in=serving_schema, db=db, model=models.ServingSize)
-    return jsonable_encoder(serving)
+@pytest.fixture()
+def food_log(
+    user, food, serving, db
+) -> models.Food_Log:
+    
+    user_id = user.id
+    food_id = food.id
+    serving_size_id = serving.id
+    serving_amount = random.randint(1, 10)
 
-def create_food_log(user_id:int, food_id:int, serving_size_id:int, date:date, db, serving_amount:int = None) -> models.Food_Log:
-    serving_amount = random.randint(1,10) if serving_amount is None else serving_amount
-   
     data = {
-        "date": date.isoformat(), 
+        "date": (user.start_date + timedelta(random.randint(1,100))).isoformat(),
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
-        "user_id": user_id
+        "user_id": user_id,
     }
 
     data = schemas.FoodLogCreate(**data)
     log = crud.create(obj_in=data, db=db, model=models.Food_Log)
-    return jsonable_encoder(log)
+    return log
+
