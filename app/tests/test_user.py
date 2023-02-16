@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
-
+from fastapi.encoders import jsonable_encoder
+from app import models
+from app import schemas
 from . import utils
 
 def test_user_create(client:TestClient, db:Session):
@@ -16,48 +18,26 @@ def test_user_create(client:TestClient, db:Session):
         assert content[key] == data[key]
 
 
-def test_user_read(client:TestClient, db:Session):
-    user_dict = utils.create_random_user_dict()
-    data = utils.create_user(db, user_dict)
+def test_user_read(client:TestClient, db:Session, user:models.User):
 
-    response= client.get(f"/api/v1/user/{data['id']}")
+    response= client.get(f"/api/v1/user/{user.id}")
     content = response.json()
     assert response.status_code == 200
     
-    for key in data.keys():
-        assert content[key] == data[key]
+    assert content == jsonable_encoder(user)
 
-def test_users_food_logs(client:TestClient, db:Session):
-    user_dict = utils.create_random_user_dict()
-    user = utils.create_user(db, user_dict)
+def test_users_food_logs(client:TestClient, db:Session, food_log:models.Food_Log):
 
-    food = utils.create_random_food(db)
-    serving = utils.create_random_serving_size(food['id'], db)
-    date = utils.random_date()
-
-    log = utils.create_food_log(user['id'], food['id'], serving['id'], date, db)
-
-
-    response= client.get(f"/api/v1/user/{user['id']}")
+    response= client.get(f"/api/v1/user/{food_log.user_id}")
     assert response.status_code == 200
-
+ 
     content = response.json()
-    for key in user.keys():
-        assert content[key] == user[key]
+    assert content['log'] == [jsonable_encoder(food_log)]
 
+def test_duplicate_user(client:TestClient, db:Session, user:models.User):
 
-    for key in log.keys():
-        assert content['log'][-1][key] == log[key]
-
-    assert content['log'][-1]['food'] == food
-    assert content['log'][-1]['serving_size'] == serving
-
-
-def test_duplicate_user(client:TestClient, db:Session):
-    user_dict = utils.create_random_user_dict()
-    user = utils.create_user(db, user_dict)
-
-    response= client.post(f"/api/v1/user", json=user_dict)
+    data = jsonable_encoder(schemas.UserCreate(**jsonable_encoder(user)))
+    response= client.post(f"/api/v1/user", json=data)
     assert response.status_code == 403
 
     content = response.json()

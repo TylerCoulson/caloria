@@ -21,21 +21,21 @@ def test_food_create(client:TestClient, db:Session):
     for key in data.keys():
         assert content[key] == data[key]
 
-def test_food_read(client:TestClient, db:Session):
-    data = {
-        "brand": "read_test",
-        "name": "test123"
-    }
+def test_food_read(client:TestClient, db:Session, food:schemas.Food):
+    # data = {
+    #     "brand": "read_test",
+    #     "name": "test123"
+    # }
 
-    input_data = schemas.FoodCreate(**data)
+    # input_data = schemas.FoodCreate(**data)
     
-    output_data = crud.create(obj_in=input_data, db=db, model=models.Food)
+    # output_data = crud.create(obj_in=input_data, db=db, model=models.Food)
 
-    response= client.get(f"/api/v1/food/{output_data.id}")
+    response= client.get(f"/api/v1/food/{food.id}")
     assert response.status_code == 200
     assert response.json() == {
-        "id": output_data.id,
-        "brand": "read_test",
-        "name": "test123",
+        "id": food.id,
+        "brand": food.brand,
+        "name": food.name,
         "ingredients": []
     }
