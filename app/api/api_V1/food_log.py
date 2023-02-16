@@ -27,7 +27,7 @@ def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depends(deps
     status_code=status.HTTP_200_OK,
 )
 def get_food_log_date(*, date: date, user_id:int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogUser]:
-    data = db.query(models.Food_Log).filter(models.Food_Log.date == date).all()
+    data = db.query(models.Food_Log).filter(models.Food_Log.date == date).filter(models.Food_Log.user_id == user_id).all()
     user = crud.read(_id=user_id, db=db, model=models.User)
 
     if not data:
@@ -45,7 +45,15 @@ def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db)):
         raise HTTPException(status_code=404, detail="Food_log not found")
     return data
 
+@router.get(
+    "",
+    response_model=schemas.FoodLog,
+    status_code=status.HTTP_200_OK,
+)
+def get_food_logs(*, user_id:int, db: Session = Depends(deps.get_db)):
+    data = db.query(models.Food_Log).filter(models.Food_Log.user_id == user_id).all()
 
+    return data
 
 # @router.put(
 #     "/{food_log_id}",

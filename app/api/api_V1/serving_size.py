@@ -37,9 +37,11 @@ def get_serving_size_id(*, serving_size_id: int, db: Session = Depends(deps.get_
 )
 def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLog]:
     data = db.query(models.ServingSize).filter(models.ServingSize.food_id == food_id).all()
-    if not data:
-        raise HTTPException(status_code=404, detail="Serving Size not found")
-    return {"servings":data}
+    
+    # if not data:
+    #     raise HTTPException(status_code=404, detail="Serving Size not found")
+
+    return {"servings": data}
 
 
 # @router.put(

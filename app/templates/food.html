@@ -1,0 +1,30 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<div hx-trigger="click" hx-get="/create/food" hx-target="#create_food">Create Food</div>
+<div id="create_food"></div>
+<table name="food">
+    <thead>
+        <tr>
+            <th id="id">ID</th>
+            <th id="brand">Brand</th>
+            <th id="name">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for food in foods %}
+        <tr name="food_id" hx-push-url="true" hx-trigger="{{trigger}}" hx-get="/food/{{food.id}}" hx-target="#content">
+                <td headers="id">{{food.id}}</td>
+                <td headers="brand">{{food.brand}}</td>
+                <td headers="name">{{food.name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if include_servings %}
+<div hx-trigger="click" hx-get="/create/serving_size" hx-target="#create_serving_size">Create Serving</div>
+<div id="create_serving_size"></div>
+<div name="servings" id="servings" hx-trigger="load" hx-get="/servings/food_id/{{foods[0].id}}" hx-target="#servings"></div>
+    
+{% endif %}
+{% endblock %}

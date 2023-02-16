@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
-from datetime import date
+from datetime import date, timedelta
 from app import deps
 from app import schemas
 from app import models
+from app import crud
 
 from app.api.calcs.calcs import resting_rate, age
 from app.api.calcs import calorie_calcs
 
 router = APIRouter()
 
-from app import crud
+
 
 
 def daily_log(user_id:int, date:date, db):
@@ -77,6 +78,9 @@ def daily_log(user_id:int, date:date, db):
     output_data['date'] = date
     output_data['calories_left'] = calorie_goal - calories_eaten_on_current_date
 
+    # bmi
+    output_data['bmi'] = calorie_calcs.bmi(user_data.height, est_weight)
+
     # actual_weight
     weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == date)).first()
     output_data['actual_weight'] = weight_data.actual_weight if weight_data else 0
@@ -95,6 +99,22 @@ def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends
     output_data = daily_log(user_id=log.user_id, date=log.date, db=db)
     return output_data
 
+@router.get(
+    "/all",
+    response_model=schemas.DailyOutputBase,
+    status_code=status.HTTP_200_OK,
+)
+def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
+    user_data = crud.read(_id=user_id, db=db, model=models.User)
+    output_data = []
+    current_date = date.today()
+    start_date = user_data.start_date
+    total_days = (current_date - start_date).days
+    for i in range(min(total_days, n_days)+1):
+        i_date = current_date - timedelta(i)
+        output_data.append(daily_log(user_id=user_id, date=i_date, db=db))
+    
+    return output_data
 
 @router.get(
     "/{user_id}/{date}",

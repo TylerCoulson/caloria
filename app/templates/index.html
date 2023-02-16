@@ -1,0 +1,49 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<div name="inputs">
+    <input type="number" min="1" id="user_id" name="user_id">
+    <input type="date" id="date" name="date">
+</div>
+Starting_stats
+<div id="start_stats" hx-trigger="change from:#user_id" hx-get="/user" hx-include="[name='user_id']"></div>
+CurrentDay
+<div id="current_stats"hx-trigger="change from:#user_id, change from:#date" value="2023-02-07" hx-get="/daily" hx-include="[name='inputs']"></div>
+<!-- <div id="progress_chart">Graph of Progress</div> -->
+
+
+
+<!-- <h1> Get User by id</h1>
+    <div>
+        <input type="number" name="user_id" min="1" hx-trigger="change load delay:500ms" hx-get="/user" hx-push-url="true" hx-target="#user_data">
+    </div>
+    <div id="user_data"></div>
+-->
+    <!-- <h1> Add Log</h1>        
+    <form hx-post="/food_log" hx-target="#food" hx-ext='json-enc' >
+        date - <input type='date' name='date'></input>
+        food_id - <input type='number' min='1' name='food_id'></input>
+        serving_size_id - <input type='number' min='1' name='serving_size_id'></input>
+        serving_amount - <input type='number' min='0' name='serving_amount'></input>
+        user_id - <input type='number' min='1' name='user_id'></input>    
+        <button type="submit">Submit</button>
+    </form>
+    <div id="food"></div> -->
+<!-- 
+    <h1> Add User</h1>
+    <form hx-post="/user" hx-target="#user" hx-ext='json-enc' >
+        start_date - <input type="date" name="start_date">
+        email - <input type="email" name="email">
+        start_weight - <input type="number" step=".1" name="start_weight">
+        end_weight - <input type="number" step=".1" name="end_weight">
+        sex - <input type="text" name="sex">
+        birthdate - <input type="date" name="birthdate">
+        height - <input type="number" name="height">
+        lbs_to_lost - <input type="number" min="0" max="2" step=".1" name="lbs_to_lost">
+        activity_level - <input type="number" min="1" max="2" step=".1" name="activity_level">
+        <button type="submit">Submit</button>
+    </form>
+    
+    <div id="user"></div> -->
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th id="id">ID</th>
+            <th id="food_id">food_id</th>
+            <th id="description">description</th>
+            <th id="calories">calories</th>
+            <th id="fats">fats</th>
+            <th id="carbs">carbs</th>
+            <th id="protein">protein</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for serving in servings %}
+        <tr name="serving_id" hx-push-url="true" hx-trigger={{trigger}} hx-get="/servings/{{serving.id}}" hx-target="#content">
+            <td headers="id">{{serving.id}}</td>
+            <td headers="food_id">{{serving.food_id}}</td>
+            <td headers="description">{{serving.description}}</td>
+            <td headers="calories">{{serving.calories}}</td>
+            <td headers="fats">{{serving.fats}}</td>
+            <td headers="carbs">{{serving.carbs}}</td>
+            <td headers="protein">{{serving.protein}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
