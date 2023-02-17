@@ -89,10 +89,10 @@ def daily_log(user_id:int, date:date, db):
 
 @router.post(
     "",
-    response_model=schemas.DailyOutputBase,
+    response_model=schemas.DailyOverview,
     status_code=status.HTTP_201_CREATED,
 )
-def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
+def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)):
     
     log = crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
@@ -101,7 +101,7 @@ def post_daily(*, actual_weight: schemas.DailyOutputInput, db: Session = Depends
 
 @router.get(
     "/all",
-    response_model=schemas.DailyOutputBase,
+    response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
 def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
@@ -118,7 +118,7 @@ def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_
 
 @router.get(
     "/{user_id}/{date}",
-    response_model=schemas.DailyOutputBase,
+    response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
 def get_daily(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):

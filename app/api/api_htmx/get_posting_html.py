@@ -7,7 +7,7 @@ from app import deps
 from app import schemas
 from app import models
 from datetime import date
-from app.api.api_V1 import daily_output as api_daily
+from app.api.api_V1 import daily_overview as api_daily
 from app import crud
 
 

@@ -10,7 +10,7 @@ from app import models
 
 from app.api.calcs.calcs import resting_rate, age
 from app.api.calcs import calorie_calcs
-from app.api.api_V1 import daily_output as api_daily
+from app.api.api_V1 import daily_overview as api_daily
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -23,7 +23,7 @@ tabs = {'daily': 'active'}
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOutputInput, db: Session = Depends(deps.get_db)):
+def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)):
     output_data = jsonable_encoder(api_daily.post_daily(actual_weight=actual_weight, db=db))
     context = {
                 "request": request,
