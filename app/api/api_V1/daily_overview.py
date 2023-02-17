@@ -6,7 +6,6 @@ from app import schemas
 from app import models
 from app import crud
 
-from app.api.calcs.calcs import resting_rate, age
 from app.api.calcs import calorie_calcs
 
 router = APIRouter()
@@ -18,8 +17,8 @@ def daily_log(user_id:int, date:date, db):
     output_data = {"date": date, "user_id":user_id}
     user_data = crud.read(_id=user_id, db=db, model=models.User)
 
-    user_age = age(user_data.birthdate, date)
-    start_rmr = resting_rate(weight=user_data.start_weight, height=user_data.height, age=user_age, sex=user_data.sex, activity_level=user_data.activity_level)
+    user_age = calorie_calcs.age(user_data.birthdate, date)
+    start_rmr = calorie_calcs.resting_rate(weight=user_data.start_weight, height=user_data.height, age=user_age, sex=user_data.sex, activity_level=user_data.activity_level)
     
     # days
     days = calorie_calcs.days_between(start_date=user_data.start_date, end_date=date)
@@ -37,7 +36,7 @@ def daily_log(user_id:int, date:date, db):
         start_weight=user_data.start_weight,
         lbs_per_day=user_data.lbs_to_lost/7,
         days=days,
-        start_age=age(user_data.birthdate, user_data.start_date),
+        start_age=calorie_calcs.age(user_data.birthdate, user_data.start_date),
         current_age=user_age,
         height=user_data.height,
         sex=user_data.sex,
@@ -45,7 +44,7 @@ def daily_log(user_id:int, date:date, db):
     output_data['est_weight'] = est_weight
     
     # resting_rate
-    current_rmr  = resting_rate(est_weight, user_data.height, user_age, user_data.sex, user_data.activity_level)
+    current_rmr  = calorie_calcs.resting_rate(est_weight, user_data.height, user_age, user_data.sex, user_data.activity_level)
     output_data['resting_rate'] = current_rmr
     
     

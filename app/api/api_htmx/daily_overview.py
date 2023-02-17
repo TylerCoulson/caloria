@@ -8,7 +8,6 @@ from app import deps
 from app import schemas
 from app import models
 
-from app.api.calcs.calcs import resting_rate, age
 from app.api.calcs import calorie_calcs
 from app.api.api_V1 import daily_overview as api_daily
 
