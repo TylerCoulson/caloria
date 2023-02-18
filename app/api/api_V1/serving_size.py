@@ -37,33 +37,30 @@ def get_serving_size_id(*, serving_id: int, db: Session = Depends(deps.get_db)):
 )
 def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLog]:
     data = db.query(models.ServingSize).filter(models.ServingSize.food_id == food_id).all()
-    
-    # if not data:
-    #     raise HTTPException(status_code=404, detail="Serving Size not found")
 
     return {"servings": data}
 
 
-# @router.put(
-#     "/{serving_size_id}",
-#     response_model=schemas.ServingSizeBase,
-#     status_code=status.HTTP_200_OK,
-# )
-# def update_serving_size(
-#     *, serving_size_id: int, serving_size_in: schemas.ServingSizeBase, db: Session = Depends(deps.get_db)
-# ):
-#     data = get_serving_size(serving_size_id=serving_size_id, db=db)
+@router.put(
+    "/{food_id}/serving/{serving_id}",
+    response_model=schemas.ServingSize,
+    status_code=status.HTTP_200_OK,
+)
+def update_serving_size(
+    *, serving_id: int, serving_size_in: schemas.ServingSizeBase, db: Session = Depends(deps.get_db)
+):
+    data = get_serving_size_id(serving_id=serving_id, db=db)
 
-#     data = crud.update(db_obj=data, data_in=serving_size_in, db=db)
-#     return data
+    data = crud.update(db_obj=data, data_in=serving_size_in, db=db)
+    return data
 
 
-# @router.delete(
-#     "/{serving_size_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def delete_serving_size(*, serving_size_id: int, db: Session = Depends(deps.get_db)):
-#     data = get_serving_size(serving_size_id=serving_size_id, db=db)
+@router.delete(
+    "/{food_id}/serving/{serving_id}",
+    status_code=status.HTTP_200_OK,
+)
+def delete_serving_size(*, serving_id: int, db: Session = Depends(deps.get_db)):
+    data = get_serving_size_id(serving_id=serving_id, db=db)
 
-#     data = crud.delete(_id=serving_size_id, db=db, db_obj=data)
-#     return data
+    data = crud.delete(_id=serving_id, db=db, db_obj=data)
+    return
