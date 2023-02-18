@@ -62,7 +62,7 @@ def test_serving_size_read_by_food(client:TestClient, db:Session):
 def test_serving_size_update(client:TestClient, db:Session, serving: models.ServingSize):
     data = jsonable_encoder(serving)
     data['fats'] = 256
-    print(data)
+
     response= client.put(f"/api/v1/food/{serving.food_id}/serving/{serving.id}", json=data)
     assert response.status_code == 200
     

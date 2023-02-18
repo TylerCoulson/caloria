@@ -124,3 +124,32 @@ def get_daily(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):
     output_data = daily_log(user_id=user_id, date=date, db=db)
     
     return output_data
+
+@router.put(
+    "/{user_id}/{date}",
+    response_model=schemas.DailyOverview,
+    status_code=status.HTTP_200_OK,
+)
+def update_daily(
+    *, user_id:int, date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
+):
+    
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == date)).first()
+    # data = get_daily(user_id=user_id, date=date, db=db)
+    # print(daily_data)
+    print(weight_data)
+    data = crud.update(db_obj=weight_data, data_in=daily_data, db=db)
+    
+    output = daily_log(user_id, date, db)
+    return output
+
+
+@router.delete(
+    "/{user_id}/{date}",
+    status_code=status.HTTP_200_OK,
+)
+def delete_food(*, user_id:int, date:date, db: Session = Depends(deps.get_db)):
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == date)).first()
+
+    data = crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
+    return
