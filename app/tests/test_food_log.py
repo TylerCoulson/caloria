@@ -39,7 +39,7 @@ def test_food_log_read_id(client:TestClient, db:Session, food_log:models.Food_Lo
 def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_Log):
 
 
-    response= client.get(f"/api/v1/food_log/{food_log.user_id}/date/{food_log.date}")
+    response= client.get(f"/api/v1/food_log/{food_log.user_id}/{food_log.date}")
 
     assert response.status_code == 200
     content = response.json()

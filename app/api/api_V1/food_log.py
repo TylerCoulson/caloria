@@ -22,7 +22,7 @@ def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depends(deps
     return food_log_out
 
 @router.get(
-    "/{user_id}/date/{date}",
+    "/{user_id}/{date}",
     response_model=schemas.DayLog,
     status_code=status.HTTP_200_OK,
 )
