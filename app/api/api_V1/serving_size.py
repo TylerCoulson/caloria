@@ -4,14 +4,13 @@ from sqlalchemy.orm import Session  # type: ignore
 from app import deps
 from app import schemas
 from app import models
-
-router = APIRouter()
-
 from app import crud
 
+from app.api.api_V1.food import router
+router.tags = ['servings']
 
 @router.post(
-    "",
+    "/{food_id}/serving",
     response_model=schemas.ServingSize,
     status_code=status.HTTP_201_CREATED,
 )
@@ -20,18 +19,19 @@ def post_serving_size(*, serving_size: schemas.ServingSizeCreate, db: Session = 
     return serving_size_out
 
 @router.get(
-    "/{serving_size_id}",
+    "/{food_id}/serving/{serving_id}",
     response_model=schemas.ServingSize,
     status_code=status.HTTP_200_OK,
 )
-def get_serving_size_id(*, serving_size_id: int, db: Session = Depends(deps.get_db)):
-    data = crud.read(_id=serving_size_id, db=db, model=models.ServingSize)
+def get_serving_size_id(*, serving_id: int, db: Session = Depends(deps.get_db)):
+    print("TESTING")
+    data = crud.read(_id=serving_id, db=db, model=models.ServingSize)
     if not data:
         raise HTTPException(status_code=404, detail="serving size not found")
     return data
 
 @router.get(
-    "/food_id/{food_id}",
+    "/{food_id}/servings",
     response_model=schemas.AllServings,
     status_code=status.HTTP_200_OK,
 )

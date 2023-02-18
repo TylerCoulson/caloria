@@ -18,28 +18,6 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# import string
-# import random
-# from fastapi.encoders import jsonable_encoder
-
-# from app import models
-# from app import schemas
-# from app import crud
-
-# def random_lower_string(k=32) -> str:
-#     return "".join(random.choices(string.ascii_lowercase, k=k))
-
-# @pytest.fixture()
-# def food(db):
-#     brand = random_lower_string()
-#     name = random_lower_string()
-#     food_dict = schemas.FoodCreate(brand= brand, name= name)
-
-#     food = crud.create(obj_in=food_dict, db=db, model=models.Food)
-#     # food = schemas.Food(food)
-#     food = schemas.Food(**jsonable_encoder(food))
-#     return jsonable_encoder(food)
-
 @pytest.fixture(scope="session")
 def db() -> Generator:
     # setup

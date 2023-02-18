@@ -4,7 +4,7 @@ from app import deps
 from app import schemas
 from app import models
 
-router = APIRouter()
+router = APIRouter(tags=["food"])
 
 from app import crud
 

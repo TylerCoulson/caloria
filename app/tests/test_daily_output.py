@@ -21,7 +21,6 @@ def test_daily_data(client:TestClient, db:Session, user:models.User, food_log:mo
     assert response.status_code == 200
     content = response.json()
 
-    # assert 1 == 2
     output = {
         "day": days,
         "actual_weight": 0,
