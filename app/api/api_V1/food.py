@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
-
 from app import deps
 from app import schemas
 from app import models
@@ -50,26 +49,27 @@ def get_all_foods(*, n:int=25, db: Session = Depends(deps.get_db)):
     data = db.query(models.Food).filter().limit(n).all()
     return data
 
-# @router.put(
-#     "/{food_id}",
-#     response_model=schemas.FoodBase,
-#     status_code=status.HTTP_200_OK,
-# )
-# def update_food(
-#     *, food_id: int, food_in: schemas.FoodBase, db: Session = Depends(deps.get_db)
-# ):
-#     data = get_food(food_id=food_id, db=db)
+@router.put(
+    "/{food_id}",
+    response_model=schemas.Food,
+    status_code=status.HTTP_200_OK,
+)
+def update_food(
+    *, food_id: int, food_in: schemas.FoodBase, db: Session = Depends(deps.get_db)
+):
+    data = get_food_id(food_id=food_id, db=db)
 
-#     data = crud.update(db_obj=data, data_in=food_in, db=db)
-#     return data
+    data = crud.update(db_obj=data, data_in=food_in, db=db)
+
+    return data
 
 
-# @router.delete(
-#     "/{food_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def delete_food(*, food_id: int, db: Session = Depends(deps.get_db)):
-#     data = get_food(food_id=food_id, db=db)
+@router.delete(
+    "/{food_id}",
+    status_code=status.HTTP_200_OK,
+)
+def delete_food(*, food_id: int, db: Session = Depends(deps.get_db)):
+    data = get_food_id(food_id=food_id, db=db)
 
-#     data = crud.delete(_id=food_id, db=db, db_obj=data)
-#     return data
+    data = crud.delete(_id=food_id, db=db, db_obj=data)
+    return
