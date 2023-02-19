@@ -34,26 +34,26 @@ def get_user_id(*, user_id: int, db: Session = Depends(deps.get_db)):
 
 
 
-# @router.put(
-#     "/{user_id}",
-#     response_model=schemas.UserBase,
-#     status_code=status.HTTP_200_OK,
-# )
-# def update_user(
-#     *, user_id: int, user_in: schemas.UserBase, db: Session = Depends(deps.get_db)
-# ):
-#     data = get_user(user_id=user_id, db=db)
+@router.put(
+    "/{user_id}",
+    response_model=schemas.User,
+    status_code=status.HTTP_200_OK,
+)
+def update_user(
+    *, user_id: int, user_in: schemas.UserBase, db: Session = Depends(deps.get_db)
+):
+    data = get_user_id(user_id=user_id, db=db)
 
-#     data = crud.update(db_obj=data, data_in=user_in, db=db)
-#     return data
+    data = crud.update(db_obj=data, data_in=user_in, db=db)
+    return data
 
 
-# @router.delete(
-#     "/{user_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def delete_user(*, user_id: int, db: Session = Depends(deps.get_db)):
-#     data = get_user(user_id=user_id, db=db)
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_200_OK,
+)
+def delete_user(*, user_id: int, db: Session = Depends(deps.get_db)):
+    data = get_user_id(user_id=user_id, db=db)
 
-#     data = crud.delete(_id=user_id, db=db, db_obj=data)
-#     return data
+    data = crud.delete(_id=user_id, db=db, db_obj=data)
+    return
