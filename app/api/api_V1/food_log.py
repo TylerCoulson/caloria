@@ -55,26 +55,26 @@ def get_food_logs(*, user_id:int, db: Session = Depends(deps.get_db)):
 
     return data
 
-# @router.put(
-#     "/{food_log_id}",
-#     response_model=schemas.FoodLogUserBase,
-#     status_code=status.HTTP_200_OK,
-# )
-# def update_food_log(
-#     *, food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)
-# ):
-#     data = get_food_log(food_log_id=food_log_id, db=db)
+@router.put(
+    "/{food_log_id}",
+    response_model=schemas.FoodLog,
+    status_code=status.HTTP_200_OK,
+)
+def update_food_log(
+    *, food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)
+):
+    data = get_food_log_id(food_log_id=food_log_id, db=db)
 
-#     data = crud.update(db_obj=data, data_in=food_log_in, db=db)
-#     return data
+    data = crud.update(db_obj=data, data_in=food_log_in, db=db)
+    return data
 
 
-# @router.delete(
-#     "/{food_log_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def delete_food_log(*, food_log_id: int, db: Session = Depends(deps.get_db)):
-#     data = get_food_log(food_log_id=food_log_id, db=db)
+@router.delete(
+    "/{food_log_id}",
+    status_code=status.HTTP_200_OK,
+)
+def delete_food_log(*, food_log_id: int, db: Session = Depends(deps.get_db)):
+    data = get_food_log_id(food_log_id=food_log_id, db=db)
 
-#     data = crud.delete(_id=food_log_id, db=db, db_obj=data)
-#     return data
+    data = crud.delete(_id=food_log_id, db=db, db_obj=data)
+    return

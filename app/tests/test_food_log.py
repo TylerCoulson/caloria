@@ -47,4 +47,27 @@ def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_L
     print('content', content)
     print('food_log', jsonable_encoder(food_log))
     assert content == {"log": [jsonable_encoder(food_log)]}
+
+def test_food_update(client:TestClient, db:Session, food_log:models.Food_Log):
+    food_log.serving_amount += 2
+    data = jsonable_encoder(food_log)
     
+    response = client.put(f"/api/v1/food_log/{food_log.id}", json=data)
+
+    assert response.status_code == 200
+    
+    content = response.json()
+
+    assert "food" in content
+    assert "serving_size" in content
+    for key in data.keys():
+        assert content[key] == data[key]
+
+def test_food_delete(client:TestClient, db:Session, food_log:models.Food_Log):
+    response = client.delete(f"/api/v1/food_log/{food_log.id}")
+
+    assert response.status_code == 200
+
+    assert response.json() is None
+
+    assert crud.read(_id=food_log.id, db=db, model=models.Food_Log) is None
