@@ -11,18 +11,20 @@ from app.api.calcs import calorie_calcs
 def test_daily_overview_get(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
     start_date = user.start_date
     end_date = food_log.date
-    days = calorie_calcs.days_between(start_date, end_date)
+    days = (end_date - start_date).days 
 
     data = {
         "user_id": user.id,
-        "date": end_date,
+        "current_date": end_date,
         "actual_weight": 308.8
     }
 
-    response= client.get(f"/api/v1/daily/{data['user_id']}/{data['date']}")
+    response= client.get(f"/api/v1/daily/{data['user_id']}/{data['current_date']}")
+    print(response.json())
+    
     assert response.status_code == 200
     content = response.json()
-
+    print(content)
     output = {
         "day": days,
         "actual_weight": 0,
@@ -56,7 +58,7 @@ def test_daily_overview_post(client:TestClient, db:Session, user: models.User):
 def test_daily_overview_update(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
     start_date = user.start_date
     end_date = food_log.date
-    days = calorie_calcs.days_between(start_date, end_date)
+    days = (end_date - start_date).days 
 
     daily = {
         "user_id": user.id,
@@ -89,7 +91,6 @@ def test_daily_overview_update(client:TestClient, db:Session, user:models.User, 
     assert content.keys() == output.keys() 
 
 def test_daily_overview_delete(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
-    start_date = user.start_date
     end_date = food_log.date
 
 

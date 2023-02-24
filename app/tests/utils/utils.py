@@ -24,11 +24,11 @@ def create_random_user_dict() -> dict:
     password_hash = random_lower_string()
     email = f"{random_lower_string()}@{random_lower_string(6)}.com"
     start_weight = random.randint(200, 700) + round(random.random(), 2)
-    end_weight = random.randint(100, 180) + round(random.random(), 2)
+    goal_weight = random.randint(100, 180) + round(random.random(), 2)
     sex = random.choice(["male", "female"])
     birthdate = random_date()
     height = random.randint(48, 84)
-    lbs_to_lost = round(random.random() * 2)
+    lbs_per_week = round(random.random() * 2)
     activity_level = random.choice([1.2, 1.375, 1.55, 1.725, 1.9])
 
     user_dict = schemas.UserCreate(
@@ -36,11 +36,11 @@ def create_random_user_dict() -> dict:
         password_hash=password_hash,
         email=email,
         start_weight=start_weight,
-        end_weight=end_weight,
+        goal_weight=goal_weight,
         sex=sex,
         birthdate=birthdate,
         height=height,
-        lbs_to_lost=lbs_to_lost,
+        lbs_per_week=lbs_per_week,
         activity_level=activity_level,
     )
 

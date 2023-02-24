@@ -11,11 +11,11 @@ class User(Base):
     email = Column(String)
     password_hash = Column(String)
     start_weight = Column(Float)
-    end_weight = Column(Float)
+    goal_weight = Column(Float)
     sex = Column(String)
     birthdate = Column(Date)
     height = Column(Integer)
-    lbs_to_lost = Column(Float)
+    lbs_per_week = Column(Float)
     activity_level = Column(Float)
 
     log = relationship('Food_Log', back_populates="user")

@@ -47,7 +47,7 @@ def test_duplicate_user(client:TestClient, db:Session, user:models.User):
     assert content == {'detail': 'Email already has an account'}
 
 def test_update_user(client:TestClient, db:Session, user:models.User):
-    user.end_weight += 52
+    user.goal_weight += 52
     data = jsonable_encoder(schemas.UserCreate(**jsonable_encoder(user)))
 
     response= client.put(f"/api/v1/user/{user.id}", json=data)
