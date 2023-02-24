@@ -6,7 +6,7 @@ from app import models
 from app import schemas
 from app import crud
 from datetime import date, timedelta
-
+from app.api.calcs.calorie_calcs import PersonsDay
 
 def random_lower_string(k=32) -> str:
     return "".join(random.choices(string.ascii_lowercase, k=k))
@@ -113,3 +113,20 @@ def food_log(
     log = crud.create(obj_in=data, db=db, model=models.Food_Log)
     return log
 
+@pytest.fixture()
+def daily_output(user:models.User, food_log:models.Food_Log):
+    # food_log.serving_size.calories = 
+    print(food_log.serving_size.calories)
+    
+    return PersonsDay(
+        height = 70,
+        start_weight = 322.4,
+        start_date = date(2022,12,6),
+        lbs_per_day = 2/7,
+        birthdate = date(1992,12,5),
+        sex = 'male',
+        activity_level = 1.2,
+        goal_weight = 150,
+        user_logs = [food_log],
+        current_date = date(2022,12,7),
+    )

@@ -97,9 +97,9 @@ class PersonsDay():
         return round(total_calories_eaten,0)
 
     def age(self, current_date:date):
-        print("START")
+
         years = current_date.year - self.birthdate.year - (1 if ((current_date.month, current_date.day) < (self.birthdate.month, self.birthdate.day)) else 0)
-        print("ETERE")
+
         return years
 
     def resting_rate(self, weight:float, age:int):

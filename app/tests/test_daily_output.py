@@ -20,11 +20,10 @@ def test_daily_overview_get(client:TestClient, db:Session, user:models.User, foo
     }
 
     response= client.get(f"/api/v1/daily/{data['user_id']}/{data['current_date']}")
-    print(response.json())
     
     assert response.status_code == 200
     content = response.json()
-    print(content)
+
     output = {
         "day": days,
         "actual_weight": 0,
@@ -37,7 +36,8 @@ def test_daily_overview_get(client:TestClient, db:Session, user:models.User, foo
         "calorie_goal": 1860,
         "total_lbs_lost": 10.7,
         "calorie_surplus": -19540,
-        "user_id": food_log.user_id
+        "user_id": food_log.user_id,
+        "bmi": 44.71
     }
 
     assert content.keys() == output.keys()
@@ -85,7 +85,8 @@ def test_daily_overview_update(client:TestClient, db:Session, user:models.User, 
         "calorie_goal": 1860,
         "total_lbs_lost": 10.7,
         "calorie_surplus": -19540,
-        "user_id": food_log.user_id
+        "user_id": food_log.user_id,
+        "bmi":44.71
     }
 
     assert content.keys() == output.keys() 

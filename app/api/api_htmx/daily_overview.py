@@ -6,9 +6,7 @@ from sqlalchemy.orm import Session  # type: ignore
 from datetime import date
 from app import deps
 from app import schemas
-from app import models
 
-from app.api.calcs import calorie_calcs
 from app.api.api_V1 import daily_overview as api_daily
 
 router = APIRouter()
@@ -40,7 +38,7 @@ def post_daily(*, request: Request,hx_request: str | None = Header(default=None)
     status_code=status.HTTP_200_OK,
 )
 def get_daily(*, request: Request,hx_request: str | None = Header(default=None), user_id:int, date:date = date.today(), db: Session = Depends(deps.get_db)):
-    output_data = jsonable_encoder(api_daily.get_daily(user_id=user_id, date=date, db=db))
+    output_data = jsonable_encoder(api_daily.get_daily(user_id=user_id, current_date=date, db=db))
     
     context = {
                 "request": request,

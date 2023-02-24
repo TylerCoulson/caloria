@@ -89,7 +89,7 @@ def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_
     total_days = (current_date - start_date).days
     for i in range(min(total_days, n_days)+1):
         i_date = current_date - timedelta(i)
-        output_data.append(daily_log(user_id=user_id, date=i_date, db=db))
+        output_data.append(daily_log(user_id=user_id, current_date=i_date, db=db))
     
     return output_data
 
@@ -99,10 +99,7 @@ def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_
     status_code=status.HTTP_200_OK,
 )
 def get_daily(*, user_id:int, current_date:date, db: Session = Depends(deps.get_db)):
-    # print(user_id)
-    # print(date)
     output_data = daily_log(user_id=user_id, current_date=current_date, db=db)
-    print(output_data['date'])
     return output_data
 
 @router.put(

@@ -17,6 +17,7 @@ class DailyOverview(DailyOverviewInput):
     calorie_goal: int
     total_lbs_lost: float
     calorie_surplus: int
+    bmi: float
 
 
     class Config:
