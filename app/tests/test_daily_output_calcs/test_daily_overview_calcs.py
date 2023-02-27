@@ -1,11 +1,32 @@
 from datetime import date
 import pytest
-from app.api.calcs import calorie_calcs
+import json
+from app.api.calcs.calorie_calcs import PersonsDay
+
+def test_prediction():
+    data = {"height": 70,
+    "start_weight": 322.4,
+    "start_date": date(2022,12,6),
+    "lbs_per_day": 2/7,
+    "birthdate": date(1992,12,5),
+    "sex": 'male',
+    "activity_level": 1.2,
+    "goal_weight": 150.0,
+    "user_logs": []
+    }
+
+    person = PersonsDay(**data)
 
 
+    with open('app/tests/test_data/prediction.json') as prediction_file:
+        prediction_output = json.load(prediction_file)
 
-def test_bmi(daily_output):
-    assert daily_output.bmi() == 46.25
+    assert person.prediction() == prediction_output
+    # print(person.prediction())
+
+
+# def test_bmi(daily_output):
+#     assert daily_output.bmi() == 46.25
 
 # @pytest.mark.parametrize(
 #     "logs, date, start_date, expected",
