@@ -20,8 +20,8 @@ class PersonsDay():
         self.user_logs = user_logs
 
 
-    def bmi(self):
-        return round((self.estimated_weight()/(self.height**2))*703,2)
+    def bmi(self, current_date:date):
+        return round((self.estimated_weight(current_date=current_date)/(self.height**2))*703,2)
 
 
     def total_calories_eaten(self, current_date:date):
@@ -82,12 +82,12 @@ class PersonsDay():
 
         return round(calorie_goal,0)
 
-    def total_lbs_lost(self):
-        return round(self.start_weight - self.estimated_weight(), 1)
+    def total_lbs_lost(self, current_date:date):
+        return round(self.start_weight - self.estimated_weight(current_date=current_date), 1)
         
     def calorie_surplus(self, current_date:date):
         start_age = self.age(current_date=self.birthdate)
-        est_weight = self.estimated_weight()
+        est_weight = self.estimated_weight(current_date=current_date)
         current_age = self.age(current_date=current_date)
 
         start_goal = self.calorie_goal(weight=self.start_weight, age=start_age)
@@ -96,7 +96,7 @@ class PersonsDay():
         cal_goal = (start_goal + est_goal)/2
         total_calorie_goal = cal_goal * (current_date - self.start_date).days
 
-        total_calories_eaten = total_calorie_goal - self.total_calories_eaten() 
+        total_calories_eaten = total_calorie_goal - self.total_calories_eaten(current_date=current_date) 
         
         return round(total_calories_eaten,0)
 

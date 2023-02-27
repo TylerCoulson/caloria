@@ -17,7 +17,7 @@ def daily_log(user_id:int, current_date:date, db):
     output_data = {"date": current_date, "user_id":user_id}
     user_data = crud.read(_id=user_id, db=db, model=models.User)
 
-    log_data = PersonsDay(height=user_data.height, start_weight=user_data.start_weight, start_date=user_data.start_date, lbs_per_day=(user_data.lbs_per_week/7), birthdate=user_data.birthdate, sex=user_data.sex, activity_level=user_data.activity_level, goal_weight=user_data.goal_weight, user_logs=user_data.log, current_date=current_date) 
+    log_data = PersonsDay(height=user_data.height, start_weight=user_data.start_weight, start_date=user_data.start_date, lbs_per_day=(user_data.lbs_per_week/7), birthdate=user_data.birthdate, sex=user_data.sex, activity_level=user_data.activity_level, goal_weight=user_data.goal_weight, user_logs=user_data.log) 
 
     user_age = log_data.age(current_date)
     
@@ -29,7 +29,7 @@ def daily_log(user_id:int, current_date:date, db):
     output_data['week'] = (day//7)+1
     
     # estimated_weight
-    est_weight = log_data.estimated_weight()
+    est_weight = log_data.estimated_weight(current_date=current_date)
     output_data['est_weight'] = est_weight
     
     # resting_rate
@@ -46,17 +46,17 @@ def daily_log(user_id:int, current_date:date, db):
     output_data['calorie_goal'] = calorie_goal
     
     # total_lbs_lost
-    total_lbs_lost = log_data.total_lbs_lost()
+    total_lbs_lost = log_data.total_lbs_lost(current_date=current_date)
     output_data['total_lbs_lost'] = total_lbs_lost
     
     # calorie surplus
-    total_calorie_surplus = log_data.calorie_surplus()
+    total_calorie_surplus = log_data.calorie_surplus(current_date=current_date)
     output_data['calorie_surplus'] = total_calorie_surplus
 
     output_data['calories_left'] = calorie_goal - calories_eaten_on_current_date
 
     # bmi
-    output_data['bmi'] = log_data.bmi()
+    output_data['bmi'] = log_data.bmi(current_date=current_date)
 
     # actual_weight
     weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == current_date)).first()
