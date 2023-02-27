@@ -163,7 +163,7 @@ class PersonsDay():
             output[f'{day+1}'] = {
                 "day": day+2,
                 "week": day//7 + 1,
-                "date": current_date.isoformat(),
+                "date": (current_date+ timedelta(1)).isoformat(),
                 "est_weight": round(est_weight,1),
                 "resting_rate": rest_rate,
                 "net_calories": net_calories,

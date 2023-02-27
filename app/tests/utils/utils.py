@@ -27,7 +27,7 @@ def create_random_user_dict() -> dict:
     goal_weight = 150
     sex = 'male'
     birthdate = date(1992,12,5)
-    height = 7
+    height = 70
     lbs_per_week = 2
     activity_level = 1.2
 
