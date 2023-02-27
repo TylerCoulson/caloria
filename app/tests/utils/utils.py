@@ -116,7 +116,6 @@ def food_log(
 @pytest.fixture()
 def daily_output(user:models.User, food_log:models.Food_Log):
     # food_log.serving_size.calories = 
-    print(food_log.serving_size.calories)
     
     return PersonsDay(
         height = 70,
@@ -128,5 +127,4 @@ def daily_output(user:models.User, food_log:models.Food_Log):
         activity_level = 1.2,
         goal_weight = 150,
         user_logs = [food_log],
-        current_date = date(2022,12,7),
     )

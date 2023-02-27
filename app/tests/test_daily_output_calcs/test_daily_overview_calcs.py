@@ -3,25 +3,11 @@ import pytest
 import json
 from app.api.calcs.calorie_calcs import PersonsDay
 
-def test_prediction():
-    data = {"height": 70,
-    "start_weight": 322.4,
-    "start_date": date(2022,12,6),
-    "lbs_per_day": 2/7,
-    "birthdate": date(1992,12,5),
-    "sex": 'male',
-    "activity_level": 1.2,
-    "goal_weight": 150.0,
-    "user_logs": []
-    }
-
-    person = PersonsDay(**data)
-
-
+def test_prediction(daily_output):
     with open('app/tests/test_data/prediction.json') as prediction_file:
         prediction_output = json.load(prediction_file)
 
-    assert person.prediction() == prediction_output
+    assert daily_output.prediction() == prediction_output
     # print(person.prediction())
 
 
