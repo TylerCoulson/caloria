@@ -53,7 +53,7 @@ class PersonsDay():
         average_rmr = (ideal_rmr+start_rmr)/2
 
         total_ideal_calories = average_rmr * days
-        print(total_ideal_calories)        
+        
         net_calories = total_ideal_calories - total_calories_eaten
         
         est_weight = self.start_weight - (net_calories/3500)
@@ -137,7 +137,7 @@ class PersonsDay():
         rest_rate = self.resting_rate(weight=est_weight, age=start_age)
         net_calories = self.calorie_goal(weight=est_weight, age=start_age)
         bmi = round((est_weight/(self.height**2))*703,2)
-        
+
         output = {'0':{
                 "day": day+1,
                 "week": day//7 + 1,
@@ -161,7 +161,7 @@ class PersonsDay():
             bmi = round((est_weight/(self.height**2))*703,2)
             
             output[f'{day+1}'] = {
-                "day": day+1,
+                "day": day+2,
                 "week": day//7 + 1,
                 "date": current_date.isoformat(),
                 "est_weight": round(est_weight,1),

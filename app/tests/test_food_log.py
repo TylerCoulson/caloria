@@ -44,8 +44,8 @@ def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_L
     assert response.status_code == 200
     content = response.json()
 
-    print('content', content)
-    print('food_log', jsonable_encoder(food_log))
+    
+    
     assert content == {"log": [jsonable_encoder(food_log)]}
 
 def test_food_update(client:TestClient, db:Session, food_log:models.Food_Log):

@@ -24,7 +24,7 @@ def post_serving_size(*, serving_size: schemas.ServingSizeCreate, db: Session = 
     status_code=status.HTTP_200_OK,
 )
 def get_serving_size_id(*, serving_id: int, db: Session = Depends(deps.get_db)):
-    print("TESTING")
+    
     data = crud.read(_id=serving_id, db=db, model=models.ServingSize)
     if not data:
         raise HTTPException(status_code=404, detail="serving size not found")

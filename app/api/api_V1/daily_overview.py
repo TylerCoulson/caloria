@@ -113,7 +113,7 @@ def update_daily(
     
     weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == current_date)).first()
     # data = get_daily(user_id=user_id, current_date=current_date, db=db)
-    # print(daily_data)
+    # 
 
     data = crud.update(db_obj=weight_data, data_in=daily_data, db=db)
     
