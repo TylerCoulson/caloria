@@ -5,3 +5,6 @@
 wants
 htmlcov
 .coverage
+app/auth
+venv
+scripts_tests
