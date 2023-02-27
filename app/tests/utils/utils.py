@@ -20,16 +20,16 @@ def random_date(start: date = date(1923, 1, 1), end: date = date(2010, 12, 31)) 
 
 
 def create_random_user_dict() -> dict:
-    start_date = date.today()
+    start_date = date(2022,12,6)
     password_hash = random_lower_string()
     email = f"{random_lower_string()}@{random_lower_string(6)}.com"
-    start_weight = random.randint(200, 700) + round(random.random(), 2)
-    goal_weight = random.randint(100, 180) + round(random.random(), 2)
-    sex = random.choice(["male", "female"])
-    birthdate = random_date()
-    height = random.randint(48, 84)
-    lbs_per_week = round(random.random() * 2)
-    activity_level = random.choice([1.2, 1.375, 1.55, 1.725, 1.9])
+    start_weight = 322.4
+    goal_weight = 150
+    sex = 'male'
+    birthdate = date(1992,12,5)
+    height = 7
+    lbs_per_week = 2
+    activity_level = 1.2
 
     user_dict = schemas.UserCreate(
         start_date=start_date,
@@ -78,14 +78,13 @@ def food_2(db):
 
 @pytest.fixture()
 def serving(food, db) -> models.ServingSize:
-    food_id = food.id
     data = schemas.ServingSizeCreate(
-        food_id=food_id,
+        food_id=food.id,
         description=random_lower_string(),
-        calories=random.randint(1, 1000),
-        fats=random.randint(1, 1000),
-        carbs=random.randint(1, 1000),
-        protein=random.randint(1, 1000),
+        calories=500,
+        fats=40,
+        carbs=10,
+        protein=20,
     )
 
     serving = crud.create(obj_in=data, db=db, model=models.ServingSize)
@@ -99,10 +98,9 @@ def food_log(
     user_id = user.id
     food_id = food.id
     serving_size_id = serving.id
-    serving_amount = random.randint(1, 10)
-
+    serving_amount = 1
     data = {
-        "date": (user.start_date + timedelta(random.randint(1,100))).isoformat(),
+        "date": (user.start_date).isoformat(),
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
@@ -114,9 +112,8 @@ def food_log(
     return log
 
 @pytest.fixture()
-def daily_output(user:models.User, food_log:models.Food_Log):
-    # food_log.serving_size.calories = 
-    
+def daily_output(food_log:models.Food_Log): 
+    food_log.date = date(2022,12,7)
     return PersonsDay(
         height = 70,
         start_weight = 322.4,

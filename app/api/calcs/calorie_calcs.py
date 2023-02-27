@@ -21,7 +21,8 @@ class PersonsDay():
 
 
     def bmi(self, current_date:date):
-        return round((self.estimated_weight(current_date=current_date)/(self.height**2))*703,2)
+        est_weight = self.estimated_weight(current_date=current_date, total_calories_eaten=self.total_calories_eaten(current_date=current_date))
+        return round((est_weight/(self.height**2))*703,2)
 
 
     def total_calories_eaten(self, current_date:date):
@@ -29,7 +30,7 @@ class PersonsDay():
         total_calories_eaten = 0 
         # need to use a join on the logs to fix this.
         for log in self.user_logs:
-            if log.date < current_date and log.date >= self.start_date:
+            if log.date <= current_date and log.date >= self.start_date:
                 calories = log.serving_amount * log.serving_size.calories
                 total_calories_eaten += calories
             else:
@@ -39,8 +40,8 @@ class PersonsDay():
     def estimated_weight(self, current_date:date, total_calories_eaten:int=None):
         if total_calories_eaten is None:
             total_calories_eaten = self.total_calories_eaten(current_date=current_date)
-        
-        start_rmr = self.resting_rate(self.start_weight, self.age(current_date=self.birthdate))
+
+        start_rmr = self.resting_rate(weight=self.start_weight, age=self.age(current_date=self.start_date))
 
         days = (current_date - self.start_date).days
 
@@ -52,9 +53,9 @@ class PersonsDay():
         average_rmr = (ideal_rmr+start_rmr)/2
 
         total_ideal_calories = average_rmr * days
-
+        print(total_ideal_calories)        
         net_calories = total_ideal_calories - total_calories_eaten
-
+        
         est_weight = self.start_weight - (net_calories/3500)
         return round(est_weight,1)
 
