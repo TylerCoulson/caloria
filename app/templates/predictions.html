@@ -1,38 +1,39 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
-<div hx-trigger="click" hx-get="/prediction/1?user_id=1" hx-target="#prediction">Never Faulter</div>
-<div hx-trigger="click" hx-get="/prediction/2?user_id=1&current_date=2022-12-07" hx-target="#prediction">Update lbs lost per day</div>
-
 {% block content %}
-<table id="prediction" name="prediction">
-    <thead>
-        <tr>
-            <th id="day">"day"</th>
-            <th id="week">"week"</th>
-            <th id="date">"date"</th>
-            <th id="est_weight">"est_weight"</th>
-            <th id="resting_rate">"resting_rate"</th>
-            <th id="net_calories">"net_calories"</th>
-            <th id="total_lbs_lost">"total_lbs_lost"</th>
-            <th id="lbs_lost_today">"lbs_lost_today"</th>
-            <th id="bmi">"bmi"</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for pred in preds.values() %}
-        <tr>
-            <td headers="day">{{pred.day}}</td>
-            <td headers="week">{{pred.week}}</td>
-            <td headers="date">{{pred.date}}</td>
-            <td headers="est_weight">{{pred.est_weight}}</td>
-            <td headers="resting_rate">{{pred.resting_rate}}</td>
-            <td headers="net_calories">{{pred.net_calories}}</td>
-            <td headers="total_lbs_lost">{{pred.total_lbs_lost}}</td>
-            <td headers="lbs_lost_today">{{pred.lbs_lost_today}}</td>
-            <td headers="bmi">{{pred.bmi}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div id="prediction">
+    <div hx-trigger="click" hx-get="/prediction/1?user_id=1" hx-target="#prediction">Never Faulter</div>
+    <div hx-trigger="click" hx-get="/prediction/2?user_id=1&current_date=2022-12-07" hx-target="#prediction">Update lbs lost per day</div>
+    <table  name="prediction">
+        <thead>
+            <tr>
+                <th id="day">"day"</th>
+                <th id="week">"week"</th>
+                <th id="date">"date"</th>
+                <th id="est_weight">"est_weight"</th>
+                <th id="resting_rate">"resting_rate"</th>
+                <th id="net_calories">"net_calories"</th>
+                <th id="total_lbs_lost">"total_lbs_lost"</th>
+                <th id="lbs_lost_today">"lbs_lost_today"</th>
+                <th id="bmi">"bmi"</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pred in preds.values() %}
+            <tr>
+                <td headers="day">{{pred.day}}</td>
+                <td headers="week">{{pred.week}}</td>
+                <td headers="date">{{pred.date}}</td>
+                <td headers="est_weight">{{pred.est_weight}}</td>
+                <td headers="resting_rate">{{pred.resting_rate}}</td>
+                <td headers="net_calories">{{pred.net_calories}}</td>
+                <td headers="total_lbs_lost">{{pred.total_lbs_lost}}</td>
+                <td headers="lbs_lost_today">{{pred.lbs_lost_today}}</td>
+                <td headers="bmi">{{pred.bmi}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
