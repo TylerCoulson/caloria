@@ -75,7 +75,7 @@ class PersonsDay():
         lowest_allowed = 1200 if self.sex == 'female' else 1500
 
         rmr = self.resting_rate(weight=weight, age=age)
-        
+
         if weight > self.goal_weight:
             calorie_goal = max(rmr - ((self.lbs_per_day*7) * 500), lowest_allowed) 
         else:

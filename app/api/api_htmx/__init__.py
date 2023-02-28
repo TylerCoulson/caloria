@@ -1,1 +1,1 @@
-from app.api.api_htmx import food, page_index
+from app.api.api_htmx import food, page_index, predictions

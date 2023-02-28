@@ -7,7 +7,6 @@ from app.api.calcs.calorie_calcs import PersonsDay
 def test_prediction_never_faulter(daily_output:PersonsDay):
     with open('app/tests/test_data/prediction.json') as prediction_file:
         prediction_output = json.load(prediction_file)
-    # print(daily_output.prediction()['746'])
     assert daily_output.prediction() == prediction_output
 
 def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay, user:models.User):
@@ -19,7 +18,7 @@ def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay, user:models.
         log_data.lbs_per_day = log_data.total_lbs_lost(current_date=current_date) / total_days
 
     pred = log_data.prediction()  
-
+    
     with open('app/tests/test_data/prediction_update_weekly_lbs_lost.json') as prediction_file:
         prediction_output = json.load(prediction_file)
 

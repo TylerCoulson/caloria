@@ -36,6 +36,6 @@ def get_predictions_updates_lbs_to_lose(*, user_id:int, current_date:date, db: S
     
     if total_days:
         log_data.lbs_per_day = log_data.total_lbs_lost(current_date=current_date) / total_days
-
+    
     pred = log_data.prediction()    
     return pred
