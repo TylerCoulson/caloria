@@ -18,18 +18,17 @@ def random_date(start: date = date(1923, 1, 1), end: date = date(2010, 12, 31)) 
 
     return random_date
 
-
 def create_random_user_dict() -> dict:
     start_date = date(2022,12,6)
     password_hash = random_lower_string()
     email = f"{random_lower_string()}@{random_lower_string(6)}.com"
-    start_weight = 322.4
-    goal_weight = 150
-    sex = 'male'
-    birthdate = date(1992,12,5)
-    height = 70
-    lbs_per_week = 2
-    activity_level = 1.2
+    start_weight = random.randint(200, 700) + round(random.random(), 2)
+    goal_weight = random.randint(100, 180) + round(random.random(), 2)
+    sex = random.choice(["male", "female"])
+    birthdate = random_date()
+    height = random.randint(48, 84)
+    lbs_per_week = round(random.random() * 2)
+    activity_level = random.choice([1.2, 1.375, 1.55, 1.725, 1.9])
 
     user_dict = schemas.UserCreate(
         start_date=start_date,
@@ -48,9 +47,19 @@ def create_random_user_dict() -> dict:
 
 @pytest.fixture()
 def user(db) -> models.User:
-    # if user_dict is None:
-    user_dict = create_random_user_dict()
-    data = schemas.UserCreate(**user_dict)
+    
+    data = schemas.UserCreate(
+        start_date=date(2022,12,6),
+        password_hash=random_lower_string(),
+        email=f"{random_lower_string()}@{random_lower_string(6)}.com",
+        start_weight=322.4,
+        goal_weight=150,
+        sex='male',
+        birthdate=date(1992,12,5),
+        height=70,
+        lbs_per_week=2,
+        activity_level=1.2,
+    )
     user = crud.create(obj_in=data, db=db, model=models.User)
     return user
 
