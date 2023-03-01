@@ -8,7 +8,7 @@ class PersonsDay():
     sex - male or female
     goal_weight - lbs
     '''
-    def __init__(self, height:int, start_weight:float, start_date:date, lbs_per_day:float, birthdate:date, sex:str, activity_level:float, goal_weight:float, user_logs:list) -> None:
+    def __init__(self, height:int, start_weight:float, start_date:date, lbs_per_day:float, birthdate:date, sex:str, activity_level:float, goal_weight:float, profile_logs:list) -> None:
         self.height = height
         self.start_weight = start_weight
         self.start_date = start_date
@@ -17,7 +17,7 @@ class PersonsDay():
         self.sex = sex
         self.activity_level = activity_level
         self.goal_weight = goal_weight
-        self.user_logs = user_logs
+        self.profile_logs = profile_logs
 
 
     def bmi(self, current_date:date):
@@ -29,7 +29,7 @@ class PersonsDay():
 
         total_calories_eaten = 0 
         # need to use a join on the logs to fix this.
-        for log in self.user_logs:
+        for log in self.profile_logs:
             if log.date <= current_date and log.date >= self.start_date:
                 calories = log.serving_amount * log.serving_size.calories
                 total_calories_eaten += calories
@@ -62,7 +62,7 @@ class PersonsDay():
     def calories_eaten_today(self):
         calories_eaten_on_current_date = 0 
         # need to use a join on the logs to fix this.
-        for log in self.user_logs:
+        for log in self.profile_logs:
             if log.date == date:
                 calories = log.serving_amount * log.serving_size.calories
                 calories_eaten_on_current_date += calories

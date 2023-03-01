@@ -69,7 +69,7 @@ def get_create_serving(*, request: Request, hx_request: str | None = Header(defa
     status_code=status.HTTP_200_OK,
 )
 def get_create_daily(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    # output_data = jsonable_encoder(api_daily.get_daily(user_id=user_id, date=date, db=db))
+    # output_data = jsonable_encoder(api_daily.get_daily(profile_id=profile_id, date=date, db=db))
     context = {
             "request": request,
             "hx_request": hx_request,

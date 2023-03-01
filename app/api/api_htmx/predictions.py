@@ -22,9 +22,9 @@ tabs - which tab should be active in the navigation tab
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_never_faulter(*, user_id:int, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_predictions_never_faulter(*, profile_id:int, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page that allows foods searching for food"""
-    pred = predictions.get_predictions_never_fault(user_id=user_id, db=db)
+    pred = predictions.get_predictions_never_fault(profile_id=profile_id, db=db)
 
     context = {
             "request": request,
@@ -39,9 +39,9 @@ def get_predictions_never_faulter(*, user_id:int, request: Request,hx_request: s
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_updates(*, user_id:int, current_date:date, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_predictions_updates(*, profile_id:int, current_date:date, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page that allows foods searching for food"""
-    pred = predictions.get_predictions_updates_lbs_to_lose(user_id=user_id, current_date=current_date, db=db)
+    pred = predictions.get_predictions_updates_lbs_to_lose(profile_id=profile_id, current_date=current_date, db=db)
 
     context = {
             "request": request,

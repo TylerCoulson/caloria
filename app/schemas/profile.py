@@ -3,7 +3,7 @@ from datetime import date
 from typing import List
 
 
-class UserBase(BaseModel):
+class ProfileBase(BaseModel):
     start_date: date
     email: str
     password_hash: str
@@ -22,18 +22,18 @@ class UserBase(BaseModel):
     #     return values
 
 
-class UserCreate(UserBase):
+class ProfileCreate(ProfileBase):
     pass
 
-class User(UserBase):
+class Profile(ProfileBase):
     id: int
     class Config:
         orm_mode = True
 
-class UserLogs(User):
+class ProfileLogs(Profile):
     log: "List[FoodLog]"
     class Config:
         orm_mode = True
 
 from .food_log import FoodLog
-UserLogs.update_forward_refs()
+ProfileLogs.update_forward_refs()

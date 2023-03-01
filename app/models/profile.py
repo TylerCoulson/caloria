@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 
 from app.db import Base
 
-class User(Base):
-    __tablename__ = "user"
+class Profile(Base):
+    __tablename__ = "profile"
 
     id = Column(Integer, primary_key=True, index=True)
     start_date = Column(Date)
@@ -18,4 +18,4 @@ class User(Base):
     lbs_per_week = Column(Float)
     activity_level = Column(Float)
 
-    log = relationship('Food_Log', back_populates="user")
+    log = relationship('Food_Log', back_populates="profile")

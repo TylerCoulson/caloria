@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 
 class DailyOverviewInput(BaseModel):
-    user_id: int
+    profile_id: int
     date: date
     actual_weight: float | None = 0
 

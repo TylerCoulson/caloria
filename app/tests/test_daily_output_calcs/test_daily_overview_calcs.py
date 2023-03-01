@@ -9,10 +9,10 @@ def test_prediction_never_faulter(daily_output:PersonsDay):
         prediction_output = json.load(prediction_file)
     assert daily_output.prediction() == prediction_output
 
-def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay, user:models.User):
-    log_data = PersonsDay(height=user.height, start_weight=user.start_weight, start_date=user.start_date, lbs_per_day=(user.lbs_per_week/7), birthdate=user.birthdate, sex=user.sex, activity_level=user.activity_level, goal_weight=user.goal_weight, user_logs=user.log)
+def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay, profile:models.Profile):
+    log_data = PersonsDay(height=profile.height, start_weight=profile.start_weight, start_date=profile.start_date, lbs_per_day=(profile.lbs_per_week/7), birthdate=profile.birthdate, sex=profile.sex, activity_level=profile.activity_level, goal_weight=profile.goal_weight, profile_logs=profile.log)
     current_date = date(2022,12,7)
-    total_days = (current_date - user.start_date).days
+    total_days = (current_date - profile.start_date).days
     
     if total_days:
         log_data.lbs_per_day = log_data.total_lbs_lost(current_date=current_date) / total_days

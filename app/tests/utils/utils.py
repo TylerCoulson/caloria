@@ -18,7 +18,7 @@ def random_date(start: date = date(1923, 1, 1), end: date = date(2010, 12, 31)) 
 
     return random_date
 
-def create_random_user_dict() -> dict:
+def create_random_profile_dict() -> dict:
     start_date = date(2022,12,6)
     password_hash = random_lower_string()
     email = f"{random_lower_string()}@{random_lower_string(6)}.com"
@@ -30,7 +30,7 @@ def create_random_user_dict() -> dict:
     lbs_per_week = round(random.random() * 2)
     activity_level = random.choice([1.2, 1.375, 1.55, 1.725, 1.9])
 
-    user_dict = schemas.UserCreate(
+    profile_dict = schemas.ProfileCreate(
         start_date=start_date,
         password_hash=password_hash,
         email=email,
@@ -43,12 +43,12 @@ def create_random_user_dict() -> dict:
         activity_level=activity_level,
     )
 
-    return jsonable_encoder(user_dict)
+    return jsonable_encoder(profile_dict)
 
 @pytest.fixture()
-def user(db) -> models.User:
+def profile(db) -> models.Profile:
     
-    data = schemas.UserCreate(
+    data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
         password_hash=random_lower_string(),
         email=f"{random_lower_string()}@{random_lower_string(6)}.com",
@@ -60,8 +60,8 @@ def user(db) -> models.User:
         lbs_per_week=2,
         activity_level=1.2,
     )
-    user = crud.create(obj_in=data, db=db, model=models.User)
-    return user
+    profile = crud.create(obj_in=data, db=db, model=models.Profile)
+    return profile
 
 @pytest.fixture()
 def food(db) -> models.Food:
@@ -101,19 +101,19 @@ def serving(food, db) -> models.ServingSize:
 
 @pytest.fixture()
 def food_log(
-    user, food, serving, db
+    profile, food, serving, db
 ) -> models.Food_Log:
     
-    user_id = user.id
+    profile_id = profile.id
     food_id = food.id
     serving_size_id = serving.id
     serving_amount = 1
     data = {
-        "date": (user.start_date).isoformat(),
+        "date": (profile.start_date).isoformat(),
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
-        "user_id": user_id,
+        "profile_id": profile_id,
     }
 
     data = schemas.FoodLogCreate(**data)
@@ -132,5 +132,5 @@ def daily_output(food_log:models.Food_Log):
         sex = 'male',
         activity_level = 1.2,
         goal_weight = 150,
-        user_logs = [food_log],
+        profile_logs = [food_log],
     )

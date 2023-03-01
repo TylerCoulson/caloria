@@ -9,7 +9,7 @@ class FoodLogBase(BaseModel):
     food_id: int
     serving_size_id: int
     serving_amount: int
-    user_id: int
+    profile_id: int
 
 class FoodLogCreate(FoodLogBase):
     pass
@@ -21,18 +21,18 @@ class FoodLog(FoodLogBase):
     class Config:
         orm_mode = True
 
-class FoodLogUser(FoodLog):
-    user: "User"
+class FoodLogProfile(FoodLog):
+    profile: "Profile"
     class Config:
         orm_mode = True
 
 class DayLog(BaseModel):
-    # user: "User"
+    # profile: "Profile"
     log: List[FoodLog] = []
 
     class Config:
         orm_mode = True
 
-from .user import User
-FoodLogUser.update_forward_refs()
+from .profile import Profile
+FoodLogProfile.update_forward_refs()
 DayLog.update_forward_refs()

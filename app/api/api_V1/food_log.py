@@ -14,7 +14,7 @@ from app import crud
 
 @router.post(
     "",
-    response_model=schemas.FoodLogUser,
+    response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_201_CREATED,
 )
 def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
@@ -22,21 +22,21 @@ def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depends(deps
     return food_log_out
 
 @router.get(
-    "/{user_id}/{date}",
+    "/{profile_id}/{date}",
     response_model=schemas.DayLog,
     status_code=status.HTTP_200_OK,
 )
-def get_food_log_date(*, date: date, user_id:int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogUser]:
-    data = db.query(models.Food_Log).filter(models.Food_Log.date == date).filter(models.Food_Log.user_id == user_id).all()
-    user = crud.read(_id=user_id, db=db, model=models.User)
+def get_food_log_date(*, date: date, profile_id:int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogProfile]:
+    data = db.query(models.Food_Log).filter(models.Food_Log.date == date).filter(models.Food_Log.profile_id == profile_id).all()
+    profile = crud.read(_id=profile_id, db=db, model=models.Profile)
 
     if not data:
         raise HTTPException(status_code=404, detail="Food_log not found")
-    return {"user":user, "log":data}
+    return {"profile":profile, "log":data}
 
 @router.get(
     "/{food_log_id}",
-    response_model=schemas.FoodLogUser,
+    response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_200_OK,
 )
 def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db)):
@@ -50,8 +50,8 @@ def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db)):
     response_model=schemas.FoodLog,
     status_code=status.HTTP_200_OK,
 )
-def get_food_logs(*, user_id:int, db: Session = Depends(deps.get_db)):
-    data = db.query(models.Food_Log).filter(models.Food_Log.user_id == user_id).all()
+def get_food_logs(*, profile_id:int, db: Session = Depends(deps.get_db)):
+    data = db.query(models.Food_Log).filter(models.Food_Log.profile_id == profile_id).all()
 
     return data
 

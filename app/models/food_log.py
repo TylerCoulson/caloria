@@ -11,8 +11,8 @@ class Food_Log(Base):
     food_id = Column(Integer, ForeignKey("food.id", ondelete="CASCADE"), nullable=False)
     serving_size_id = Column(Integer, ForeignKey("serving_size.id", ondelete="CASCADE"), nullable=False)
     serving_amount = Column(Integer)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    profile_id = Column(Integer, ForeignKey("profile.id", ondelete="CASCADE"), nullable=False)
 
     food = relationship("Food")
     serving_size = relationship("ServingSize")
-    user = relationship('User', back_populates="log")
+    profile = relationship('Profile', back_populates="log")

@@ -13,24 +13,24 @@ router = APIRouter()
 
 
 
-def daily_log(user_id:int, current_date:date, db):
-    user_data = crud.read(_id=user_id, db=db, model=models.User)
+def daily_log(profile_id:int, current_date:date, db):
+    profile_data = crud.read(_id=profile_id, db=db, model=models.Profile)
 
-    log_data = PersonsDay(height=user_data.height, start_weight=user_data.start_weight, start_date=user_data.start_date, lbs_per_day=(user_data.lbs_per_week/7), birthdate=user_data.birthdate, sex=user_data.sex, activity_level=user_data.activity_level, goal_weight=user_data.goal_weight, user_logs=user_data.log) 
+    log_data = PersonsDay(height=profile_data.height, start_weight=profile_data.start_weight, start_date=profile_data.start_date, lbs_per_day=(profile_data.lbs_per_week/7), birthdate=profile_data.birthdate, sex=profile_data.sex, activity_level=profile_data.activity_level, goal_weight=profile_data.goal_weight, profile_logs=profile_data.log) 
 
-    user_age = log_data.age(current_date)
-    day = (current_date - user_data.start_date).days
+    profile_age = log_data.age(current_date)
+    day = (current_date - profile_data.start_date).days
     est_weight = log_data.estimated_weight(current_date=current_date)
-    current_rmr  = log_data.resting_rate(weight=est_weight, age=user_age)
+    current_rmr  = log_data.resting_rate(weight=est_weight, age=profile_age)
     calories_eaten_on_current_date = log_data.calories_eaten_today()
     calorie_goal = log_data.calorie_goal(weight=est_weight, age=log_data.age(current_date))
     total_lbs_lost = log_data.total_lbs_lost(current_date=current_date)
     total_calorie_surplus = log_data.calorie_surplus(current_date=current_date)
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == current_date)).first()
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
 
     output_data = {
         "date": current_date,
-        "user_id":user_id,
+        "profile_id":profile_id,
         'day':day,
         'week':(day//7)+1,
         'est_weight':est_weight,
@@ -55,7 +55,7 @@ def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depen
     
     log = crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
-    output_data = daily_log(user_id=log.user_id, current_date=log.date, db=db)
+    output_data = daily_log(profile_id=log.profile_id, current_date=log.date, db=db)
     return output_data
 
 @router.get(
@@ -63,53 +63,53 @@ def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depen
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-def get_all_daily(*, user_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
-    user_data = crud.read(_id=user_id, db=db, model=models.User)
+def get_all_daily(*, profile_id:int, n_days:int=50, db: Session = Depends(deps.get_db)):
+    profile_data = crud.read(_id=profile_id, db=db, model=models.Profile)
     output_data = []
     current_date = date.today()
-    start_date = user_data.start_date
+    start_date = profile_data.start_date
     total_days = (current_date - start_date).days
     for i in range(min(total_days, n_days)+1):
         i_date = current_date - timedelta(i)
-        output_data.append(daily_log(user_id=user_id, current_date=i_date, db=db))
+        output_data.append(daily_log(profile_id=profile_id, current_date=i_date, db=db))
     
     return output_data
 
 @router.get(
-    "/{user_id}/{current_date}",
+    "/{profile_id}/{current_date}",
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-def get_daily(*, user_id:int, current_date:date, db: Session = Depends(deps.get_db)):
-    output_data = daily_log(user_id=user_id, current_date=current_date, db=db)
+def get_daily(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
+    output_data = daily_log(profile_id=profile_id, current_date=current_date, db=db)
     return output_data
 
 @router.put(
-    "/{user_id}/{current_date}",
+    "/{profile_id}/{current_date}",
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
 def update_daily(
-    *, user_id:int, current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
+    *, profile_id:int, current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
 ):
     
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == current_date)).first()
-    # data = get_daily(user_id=user_id, current_date=current_date, db=db)
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
+    # data = get_daily(profile_id=profile_id, current_date=current_date, db=db)
     # 
 
     data = crud.update(db_obj=weight_data, data_in=daily_data, db=db)
     
-    output = daily_log(user_id, current_date, db)
+    output = daily_log(profile_id, current_date, db)
 
     return output
 
 
 @router.delete(
-    "/{user_id}/{current_date}",
+    "/{profile_id}/{current_date}",
     status_code=status.HTTP_200_OK,
 )
-def delete_food(*, user_id:int, current_date:date, db: Session = Depends(deps.get_db)):
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.user_id == user_id) & (models.DailyLog.date == current_date)).first()
+def delete_food(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
+    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
 
     data = crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
     return

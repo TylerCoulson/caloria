@@ -7,9 +7,9 @@ class DailyLog(Base):
     __tablename__ = "daily_overview"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    profile_id = Column(Integer, ForeignKey("profile.id", ondelete="CASCADE"), nullable=False)
     date = Column(Date)
     actual_weight = Column(Float)
     
 
-    user = relationship('User')
+    profile = relationship('Profile')

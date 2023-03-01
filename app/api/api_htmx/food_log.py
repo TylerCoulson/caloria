@@ -36,10 +36,10 @@ def post_food_log(*, request: Request, hx_request: str | None = Header(default=N
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), user_id:int, db: Session = Depends(deps.get_db)):
+def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), profile_id:int, db: Session = Depends(deps.get_db)):
     
     try:
-        logs = jsonable_encoder(api_food_log.get_food_logs(user_id=user_id, db=db))
+        logs = jsonable_encoder(api_food_log.get_food_logs(profile_id=profile_id, db=db))
         context = {
                 "request": request,
                 "hx_request": hx_request,
@@ -63,10 +63,10 @@ def get_food_logs(*, request: Request, hx_request: str | None = Header(default=N
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_food_logs_by_user_date(*, request: Request, hx_request: str | None = Header(default=None), date: date, user_id:int, db: Session = Depends(deps.get_db)):
+def get_food_logs_by_profile_date(*, request: Request, hx_request: str | None = Header(default=None), date: date, profile_id:int, db: Session = Depends(deps.get_db)):
 
     try:
-        logs = jsonable_encoder(api_food_log.get_food_log_date(date=date, user_id=user_id, db=db))['log']
+        logs = jsonable_encoder(api_food_log.get_food_log_date(date=date, profile_id=profile_id, db=db))['log']
         context = {
                 "request": request,
                 "hx_request": hx_request,
@@ -81,7 +81,7 @@ def get_food_logs_by_user_date(*, request: Request, hx_request: str | None = Hea
         context = {
             "request": request,
             "hx_request": hx_request,
-            "message": f"No logs for {date} by {user_id}"
+            "message": f"No logs for {date} by {profile_id}"
         }
         return templates.TemplateResponse("404.html", context)
         
@@ -106,7 +106,7 @@ def get_food_log_id(*, request: Request, hx_request: str | None = Header(default
 
     
 
-'''CREATE A ROUTE TO GET ALL USER FOOD LOGS. Be able to copy/add prior logs to the different days'''
+'''CREATE A ROUTE TO GET ALL PROFILE FOOD LOGS. Be able to copy/add prior logs to the different days'''
 # @router.put(
 #     "/{food_log_id}",
 #     response_class=HTMLResponse,

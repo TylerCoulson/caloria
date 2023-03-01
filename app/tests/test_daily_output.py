@@ -8,18 +8,18 @@ from app import schemas
 from app import models
 from app.api.calcs import calorie_calcs
 
-def test_daily_overview_get(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
-    start_date = user.start_date
+def test_daily_overview_get(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
+    start_date = profile.start_date
     end_date = food_log.date
     days = (end_date - start_date).days 
 
     data = {
-        "user_id": user.id,
+        "profile_id": profile.id,
         "current_date": end_date,
         "actual_weight": 308.8
     }
 
-    response= client.get(f"/api/v1/daily/{data['user_id']}/{data['current_date']}")
+    response= client.get(f"/api/v1/daily/{data['profile_id']}/{data['current_date']}")
     
     assert response.status_code == 200
     content = response.json()
@@ -36,17 +36,17 @@ def test_daily_overview_get(client:TestClient, db:Session, user:models.User, foo
         "calorie_goal": 1860,
         "total_lbs_lost": 10.7,
         "calorie_surplus": -19540,
-        "user_id": food_log.user_id,
+        "profile_id": food_log.profile_id,
         "bmi": 44.71
     }
 
     assert content.keys() == output.keys()
 
-def test_daily_overview_post(client:TestClient, db:Session, user: models.User):
+def test_daily_overview_post(client:TestClient, db:Session, profile: models.Profile):
 
     data = {
-        "user_id": user.id,
-        "date": (user.start_date + timedelta(32)).isoformat(),
+        "profile_id": profile.id,
+        "date": (profile.start_date + timedelta(32)).isoformat(),
         "actual_weight": 308.8
     }
     response= client.post(f"/api/v1/daily", json=data)
@@ -55,13 +55,13 @@ def test_daily_overview_post(client:TestClient, db:Session, user: models.User):
 
     assert content['actual_weight'] == 308.8
 
-def test_daily_overview_update(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
-    start_date = user.start_date
+def test_daily_overview_update(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
+    start_date = profile.start_date
     end_date = food_log.date
     days = (end_date - start_date).days 
 
     daily = {
-        "user_id": user.id,
+        "profile_id": profile.id,
         "date": end_date.isoformat(),
         "actual_weight": 308.8
     }
@@ -69,7 +69,7 @@ def test_daily_overview_update(client:TestClient, db:Session, user:models.User, 
 
     data.actual_weight == 256.7
 
-    response= client.put(f"/api/v1/daily/{data.user_id}/{data.date}", json=jsonable_encoder(data))
+    response= client.put(f"/api/v1/daily/{data.profile_id}/{data.date}", json=jsonable_encoder(data))
     assert response.status_code == 200
     content = response.json()
 
@@ -85,25 +85,25 @@ def test_daily_overview_update(client:TestClient, db:Session, user:models.User, 
         "calorie_goal": 1860,
         "total_lbs_lost": 10.7,
         "calorie_surplus": -19540,
-        "user_id": food_log.user_id,
+        "profile_id": food_log.profile_id,
         "bmi":44.71
     }
 
     assert content.keys() == output.keys() 
 
-def test_daily_overview_delete(client:TestClient, db:Session, user:models.User, food_log:models.Food_Log):    
+def test_daily_overview_delete(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
     end_date = food_log.date
 
 
     daily = {
-        "user_id": user.id,
+        "profile_id": profile.id,
         "date": end_date.isoformat(),
         "actual_weight": 308.8
     }
     data = crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
 
 
-    response= client.delete(f"/api/v1/daily/{data.user_id}/{data.date}")
+    response= client.delete(f"/api/v1/daily/{data.profile_id}/{data.date}")
     assert response.status_code == 200
 
     assert response.json() is None
