@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
 
 settings = Settings(
-    SQLALCHEMY_DATABASE_URI="sqlite:///./app/sql_app.db",
+    SQLALCHEMY_DATABASE_URI="sqlite+aiosqlite:///./app/sql_app.db",
     SQLALCHEMY_TEST_DATABASE_URI="sqlite:///./app/tests/test.db",
     APP_NAME="EVERLIGHT"
 )
