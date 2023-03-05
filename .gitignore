@@ -5,6 +5,6 @@
 wants
 htmlcov
 .coverage
-app/auth
+secrets.py
 venv
 scripts_tests
