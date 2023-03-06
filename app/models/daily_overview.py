@@ -12,4 +12,4 @@ class DailyLog(Base):
     actual_weight = Column(Float)
     
 
-    profile = relationship('Profile')
+    profile = relationship('Profile', lazy='selectin')

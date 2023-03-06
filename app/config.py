@@ -1,5 +1,5 @@
 from pydantic import BaseSettings
-
+import aiosqlite
 
 class Settings(BaseSettings):
     API_KEY: str = ""

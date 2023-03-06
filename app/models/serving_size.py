@@ -14,4 +14,4 @@ class ServingSize(Base):
     carbs = Column(Integer)
     protein = Column(Integer)
 
-    food = relationship("Food", back_populates="servings")
+    food = relationship("Food", back_populates="servings", lazy="selectin")

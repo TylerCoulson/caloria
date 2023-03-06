@@ -3,8 +3,17 @@ from app.api.api_v1 import api_router
 from app.api.api_htmx_v1 import htmx_router
 from app.auth.router import auth_router
 from app.config import settings
-from app.auth.db import create_db_and_tables
+from app.db import engine, Base
+
 app = FastAPI(title=settings.APP_NAME)
+
+
+
+
+async def create_db_and_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        
 
 @app.on_event("startup")
 async def on_startup():
