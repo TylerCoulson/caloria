@@ -18,9 +18,6 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
-    print('\n\n\n')
-    print(food)
-    print(db)
     food_out = await crud.create(obj_in=food, db=db, model=models.Food)
     return food_out
 

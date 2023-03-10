@@ -5,9 +5,8 @@ from app.crud import crud
 from app import models
 from app import schemas
 from datetime import date
-import pytest
 
-@pytest.mark.anyio
+
 async def test_food_create(client:AsyncClient, db:Session):
     data = {
         "brand": "generic",
@@ -23,7 +22,7 @@ async def test_food_create(client:AsyncClient, db:Session):
     for key in data.keys():
         assert content[key] == data[key]
 
-async def test_food_read(client:TestClient, db:Session, food:schemas.Food):
+async def test_food_read(client:AsyncClient, db:Session, food:schemas.Food):
 
     response= await client.get(f"/api/v1/food/{food.id}")
     assert response.status_code == 200
@@ -35,7 +34,7 @@ async def test_food_read(client:TestClient, db:Session, food:schemas.Food):
     }
 
 
-async def test_food_update(client:TestClient, db:Session, food:schemas.Food):
+async def test_food_update(client:AsyncClient, db:Session, food:schemas.Food):
     data = {
         "brand": "read_test",
         "name": "test123"
@@ -52,7 +51,7 @@ async def test_food_update(client:TestClient, db:Session, food:schemas.Food):
         "ingredients": []
     }
 
-async def test_food_delete(client:TestClient, db:Session, food:schemas.Food):
+async def test_food_delete(client:AsyncClient, db:Session, food:schemas.Food):
     response = await client.delete(f"/api/v1/food/{food.id}")
 
     assert response.status_code == 200

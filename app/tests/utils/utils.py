@@ -45,6 +45,7 @@ def create_random_profile_dict() -> dict:
 
     return jsonable_encoder(profile_dict)
 
+
 @pytest.fixture()
 async def profile(db) -> models.Profile:
     
@@ -61,7 +62,9 @@ async def profile(db) -> models.Profile:
         activity_level=1.2,
     )
     profile = await crud.create(obj_in=data, db=db, model=models.Profile)
+    # print("fixture", jsonable_encoder(profile))
     return profile
+
 
 @pytest.fixture()
 async def food(db) -> models.Food:
@@ -74,6 +77,7 @@ async def food(db) -> models.Food:
     food = schemas.Food(**jsonable_encoder(food))
     return food
 
+
 @pytest.fixture()
 async def food_2(db):
     brand = random_lower_string()
@@ -84,6 +88,7 @@ async def food_2(db):
     # food = schemas.Food(food)
     food = schemas.Food(**jsonable_encoder(food))
     return food
+
 
 @pytest.fixture()
 async def serving(food, db) -> models.ServingSize:
@@ -98,6 +103,7 @@ async def serving(food, db) -> models.ServingSize:
 
     serving = await crud.create(obj_in=data, db=db, model=models.ServingSize)
     return serving
+
 
 @pytest.fixture()
 async def food_log(
@@ -119,6 +125,7 @@ async def food_log(
     data = schemas.FoodLogCreate(**data)
     log = await crud.create(obj_in=data, db=db, model=models.Food_Log)
     return log
+
 
 @pytest.fixture()
 async def daily_output(food_log:models.Food_Log): 

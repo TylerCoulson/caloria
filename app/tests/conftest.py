@@ -25,7 +25,6 @@ async def db(anyio_backend) -> Generator:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with async_session_maker() as session:
-        print('12345')
         yield session
     # teardown
     async with engine.begin() as conn:
