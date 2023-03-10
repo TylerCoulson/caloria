@@ -18,8 +18,8 @@ engine = create_async_engine(
 )
 async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.fixture(scope="session")
 @pytest.mark.anyio
+@pytest.fixture(scope="session")
 async def db(anyio_backend) -> Generator:
     # setup
     async with engine.begin() as conn:
@@ -29,9 +29,8 @@ async def db(anyio_backend) -> Generator:
     # teardown
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-
-@pytest.fixture(scope="module")
 @pytest.mark.anyio
+@pytest.fixture(scope="module")
 async def client(db) -> Generator:
     async def override_get_db():
         try:
@@ -42,8 +41,7 @@ async def client(db) -> Generator:
     app.dependency_overrides[get_db] = override_get_db
     async with AsyncClient(app=app, base_url='http://test') as c:
         yield c
-
-@pytest.fixture(scope='session')
 @pytest.mark.anyio
+@pytest.fixture(scope='session')
 def anyio_backend():
     return 'asyncio'

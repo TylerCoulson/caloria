@@ -16,6 +16,11 @@ class Food(FoodBase):
     class Config:
         orm_mode = True
 
+class FoodNoIngredients(FoodBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 class FoodWithServings(Food):
     servings: List["Food"] | None = []
     class Config:

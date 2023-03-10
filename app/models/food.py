@@ -17,7 +17,7 @@ class Food(Base):
     name = Column(String)
 
     servings = relationship(
-        "ServingSize", back_populates="food",lazy="selectin"
+        "ServingSize", back_populates="food",lazy="joined"
     )
     # ingredients = relationship(
     #     "Food",

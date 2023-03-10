@@ -47,6 +47,7 @@ def create_random_profile_dict() -> dict:
 
 
 @pytest.fixture()
+@pytest.mark.asyncio
 async def profile(db) -> models.Profile:
     
     data = schemas.ProfileCreate(
@@ -67,6 +68,7 @@ async def profile(db) -> models.Profile:
 
 
 @pytest.fixture()
+@pytest.mark.asyncio
 async def food(db) -> models.Food:
     brand = random_lower_string()
     name = random_lower_string()
@@ -79,6 +81,7 @@ async def food(db) -> models.Food:
 
 
 @pytest.fixture()
+@pytest.mark.asyncio
 async def food_2(db):
     brand = random_lower_string()
     name = random_lower_string()
@@ -102,10 +105,13 @@ async def serving(food, db) -> models.ServingSize:
     )
 
     serving = await crud.create(obj_in=data, db=db, model=models.ServingSize)
+    # print("testing")
+    # print(jsonable_encoder(serving))
     return serving
 
 
 @pytest.fixture()
+@pytest.mark.asyncio
 async def food_log(
     profile, food, serving, db
 ) -> models.Food_Log:
@@ -128,6 +134,7 @@ async def food_log(
 
 
 @pytest.fixture()
+@pytest.mark.asyncio
 async def daily_output(food_log:models.Food_Log): 
     food_log.date = date(2022,12,7)
     return PersonsDay(

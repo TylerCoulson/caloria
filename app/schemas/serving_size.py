@@ -15,12 +15,18 @@ class ServingSizeCreate(ServingSizeBase):
 
 class ServingSize(ServingSizeBase):
     id: int
-
+    food: "FoodNoIngredients"
     class Config:
         orm_mode = True
+
+class ServingSizeNoFood(ServingSizeBase):
+    id:int
 
 class AllServings(BaseModel):
     servings: List[ServingSize] = []
 
     class Config:
         orm_mode = True
+
+from schemas import FoodNoIngredients
+ServingSize.update_forward_refs()
