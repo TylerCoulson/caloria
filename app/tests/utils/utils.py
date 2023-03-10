@@ -46,7 +46,7 @@ def create_random_profile_dict() -> dict:
     return jsonable_encoder(profile_dict)
 
 @pytest.fixture()
-def profile(db) -> models.Profile:
+async def profile(db) -> models.Profile:
     
     data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
@@ -60,33 +60,33 @@ def profile(db) -> models.Profile:
         lbs_per_week=2,
         activity_level=1.2,
     )
-    profile = crud.create(obj_in=data, db=db, model=models.Profile)
+    profile = await crud.create(obj_in=data, db=db, model=models.Profile)
     return profile
 
 @pytest.fixture()
-def food(db) -> models.Food:
+async def food(db) -> models.Food:
     brand = random_lower_string()
     name = random_lower_string()
     food_dict = schemas.FoodCreate(brand= brand, name= name)
 
-    food = crud.create(obj_in=food_dict, db=db, model=models.Food)
+    food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
     # food = schemas.Food(food)
     food = schemas.Food(**jsonable_encoder(food))
     return food
 
 @pytest.fixture()
-def food_2(db):
+async def food_2(db):
     brand = random_lower_string()
     name = random_lower_string()
     food_dict = schemas.FoodCreate(brand= brand, name= name)
 
-    food = crud.create(obj_in=food_dict, db=db, model=models.Food)
+    food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
     # food = schemas.Food(food)
     food = schemas.Food(**jsonable_encoder(food))
     return food
 
 @pytest.fixture()
-def serving(food, db) -> models.ServingSize:
+async def serving(food, db) -> models.ServingSize:
     data = schemas.ServingSizeCreate(
         food_id=food.id,
         description=random_lower_string(),
@@ -96,11 +96,11 @@ def serving(food, db) -> models.ServingSize:
         protein=20,
     )
 
-    serving = crud.create(obj_in=data, db=db, model=models.ServingSize)
+    serving = await crud.create(obj_in=data, db=db, model=models.ServingSize)
     return serving
 
 @pytest.fixture()
-def food_log(
+async def food_log(
     profile, food, serving, db
 ) -> models.Food_Log:
     
@@ -117,11 +117,11 @@ def food_log(
     }
 
     data = schemas.FoodLogCreate(**data)
-    log = crud.create(obj_in=data, db=db, model=models.Food_Log)
+    log = await crud.create(obj_in=data, db=db, model=models.Food_Log)
     return log
 
 @pytest.fixture()
-def daily_output(food_log:models.Food_Log): 
+async def daily_output(food_log:models.Food_Log): 
     food_log.date = date(2022,12,7)
     return PersonsDay(
         height = 70,

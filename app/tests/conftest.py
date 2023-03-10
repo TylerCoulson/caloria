@@ -1,8 +1,8 @@
 from typing import Generator
 
 import pytest
-from fastapi.testclient import TestClient
-
+# from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy import create_engine  # type:ignore
 from sqlalchemy.orm import sessionmaker  # type:ignore
 from app.db import Base  # type:ignore
@@ -10,31 +10,41 @@ from app.config import settings
 from app.main import app
 from app.deps import get_db
 from app.tests.utils import *
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-engine = create_engine(
+engine = create_async_engine(
     settings.SQLALCHEMY_TEST_DATABASE_URI,
-    pool_pre_ping=True,
     connect_args={"check_same_thread": False},
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @pytest.fixture(scope="session")
-def db() -> Generator:
+@pytest.mark.anyio
+async def db(anyio_backend) -> Generator:
     # setup
-    Base.metadata.create_all(bind=engine)
-    db = TestingSessionLocal()
-    yield db
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    async with async_session_maker() as session:
+        print('12345')
+        yield session
     # teardown
-    Base.metadata.drop_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
 @pytest.fixture(scope="module")
-def client(db) -> Generator:
-    def override_get_db():
+@pytest.mark.anyio
+async def client(db) -> Generator:
+    async def override_get_db():
         try:
             yield db
         finally:
-            db.close()
+            await db.close()
 
     app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app) as c:
+    async with AsyncClient(app=app, base_url='http://test') as c:
         yield c
+
+@pytest.fixture(scope='session')
+@pytest.mark.anyio
+def anyio_backend():
+    return 'asyncio'
