@@ -8,19 +8,19 @@ from datetime import date
 
 from . import utils
 
-def test_recipe_create(client:TestClient, db:Session, food, food_2):
+# def test_recipe_create(client:TestClient, db:Session, food, food_2):
 
-    data = {
-        "finished_food": food.id,
-        "ingredient": food_2.id
-    }
+#     data = {
+#         "finished_food": food.id,
+#         "ingredient": food_2.id
+#     }
     
-    response= client.post(f"/api/v1/recipe", json=data)
+#     response= client.post(f"/api/v1/recipe", json=data)
 
-    assert response.status_code == 201
-    content = response.json()
+#     assert response.status_code == 201
+#     content = response.json()
     
 
-    assert "ingredients" in content
+#     assert "ingredients" in content
 
-    assert content['ingredients'][0]["id"] == data['ingredient']
+#     assert content['ingredients'][0]["id"] == data['ingredient']

@@ -127,7 +127,8 @@ async def food_log(
 
 @pytest.fixture()
 async def daily_output(food_log:models.Food_Log): 
-    food_log.date = date(2022,12,7)
+    food_log['date'] = date(2022,12,7)
+    food_log = schemas.FoodLog(**food_log)
     return PersonsDay(
         height = 70,
         start_weight = 322.4,
