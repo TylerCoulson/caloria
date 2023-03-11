@@ -12,7 +12,7 @@ from app import crud
 
 @router.post(
     "",
-    response_model=schemas.ProfileLogs,
+    response_model=schemas.Profile,
     status_code=status.HTTP_201_CREATED,
 )
 async  def create_profile(*, profile: schemas.ProfileCreate, db: Session = Depends(deps.get_db)):

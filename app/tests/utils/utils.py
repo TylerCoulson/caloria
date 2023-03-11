@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import schemas
 from app import crud
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from app.api.calcs.calorie_calcs import PersonsDay
 
 def random_lower_string(k=32) -> str:
@@ -47,7 +47,6 @@ def create_random_profile_dict() -> dict:
 
 
 @pytest.fixture()
-@pytest.mark.asyncio
 async def profile(db) -> models.Profile:
     
     data = schemas.ProfileCreate(
@@ -63,40 +62,36 @@ async def profile(db) -> models.Profile:
         activity_level=1.2,
     )
     profile = await crud.create(obj_in=data, db=db, model=models.Profile)
-    # print("fixture", jsonable_encoder(profile))
-    return profile
+    
+    return jsonable_encoder(profile)
 
 
 @pytest.fixture()
-@pytest.mark.asyncio
 async def food(db) -> models.Food:
     brand = random_lower_string()
     name = random_lower_string()
     food_dict = schemas.FoodCreate(brand= brand, name= name)
 
     food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
-    # food = schemas.Food(food)
-    food = schemas.Food(**jsonable_encoder(food))
+    food = jsonable_encoder(food)
     return food
 
 
 @pytest.fixture()
-@pytest.mark.asyncio
 async def food_2(db):
     brand = random_lower_string()
     name = random_lower_string()
     food_dict = schemas.FoodCreate(brand= brand, name= name)
 
     food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
-    # food = schemas.Food(food)
-    food = schemas.Food(**jsonable_encoder(food))
+    food = jsonable_encoder(food)
     return food
 
 
 @pytest.fixture()
 async def serving(food, db) -> models.ServingSize:
     data = schemas.ServingSizeCreate(
-        food_id=food.id,
+        food_id=food['id'],
         description=random_lower_string(),
         calories=500,
         fats=40,
@@ -104,24 +99,21 @@ async def serving(food, db) -> models.ServingSize:
         protein=20,
     )
 
-    serving = await crud.create(obj_in=data, db=db, model=models.ServingSize)
-    # print("testing")
-    # print(jsonable_encoder(serving))
-    return serving
+    serving = await crud.create(obj_in=data, db=db, model=models.ServingSize)  
+    return jsonable_encoder(serving)
 
 
 @pytest.fixture()
-@pytest.mark.asyncio
 async def food_log(
     profile, food, serving, db
-) -> models.Food_Log:
-    
-    profile_id = profile.id
-    food_id = food.id
-    serving_size_id = serving.id
+):
+    profile_id = profile['id']
+    food_id = food['id']
+    serving_size_id = serving['id']
     serving_amount = 1
+    
     data = {
-        "date": (profile.start_date).isoformat(),
+        "date": profile['start_date'],
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
@@ -130,11 +122,10 @@ async def food_log(
 
     data = schemas.FoodLogCreate(**data)
     log = await crud.create(obj_in=data, db=db, model=models.Food_Log)
-    return log
+    return jsonable_encoder(log)
 
 
 @pytest.fixture()
-@pytest.mark.asyncio
 async def daily_output(food_log:models.Food_Log): 
     food_log.date = date(2022,12,7)
     return PersonsDay(

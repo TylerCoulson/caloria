@@ -24,9 +24,9 @@ async def post_serving_size(*, serving_size: schemas.ServingSizeCreate, db: Sess
     status_code=status.HTTP_200_OK,
 )
 async def get_serving_size_id(*, serving_id: int, db: Session = Depends(deps.get_db)):
-    print("test 1")
+
     data = await crud.read(_id=serving_id, db=db, model=models.ServingSize)
-    print("TESTING")
+
     if not data:
         raise HTTPException(status_code=404, detail="serving size not found")
     return data
@@ -41,6 +41,7 @@ async def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.g
 
     data = await db.execute(statement)
     test = data.unique().all()
+
     return {"servings":[value for value, in test]}
 
 @router.put(
