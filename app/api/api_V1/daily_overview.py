@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
+from sqlalchemy import select
 from sqlalchemy.orm import Session  # type: ignore
 from datetime import date, timedelta
 from app import deps
@@ -11,10 +12,15 @@ from app.api.calcs.calorie_calcs import PersonsDay
 router = APIRouter()
 
 
+async def get_weight(profile_id, current_date, db):
+    statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
+    data = await db.execute(statement)
+    return data.unique().scalar_one_or_none()
 
+async def daily_log(profile_id:int, current_date:date, db):
+    print("Testssss")
 
-def daily_log(profile_id:int, current_date:date, db):
-    profile_data = crud.read(_id=profile_id, db=db, model=models.Profile)
+    profile_data = await crud.read(_id=profile_id, db=db, model=models.Profile)
 
     log_data = PersonsDay(height=profile_data.height, start_weight=profile_data.start_weight, start_date=profile_data.start_date, lbs_per_day=(profile_data.lbs_per_week/7), birthdate=profile_data.birthdate, sex=profile_data.sex, activity_level=profile_data.activity_level, goal_weight=profile_data.goal_weight, profile_logs=profile_data.log) 
 
@@ -26,7 +32,7 @@ def daily_log(profile_id:int, current_date:date, db):
     calorie_goal = log_data.calorie_goal(weight=est_weight, age=log_data.age(current_date))
     total_lbs_lost = log_data.total_lbs_lost(current_date=current_date)
     total_calorie_surplus = log_data.calorie_surplus(current_date=current_date)
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
+    weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
 
     output_data = {
         "date": current_date,
@@ -43,7 +49,6 @@ def daily_log(profile_id:int, current_date:date, db):
         'bmi':log_data.bmi(current_date=current_date),
         'actual_weight':weight_data.actual_weight if weight_data else 0
     }
-
     return output_data
 
 @router.post(
@@ -51,11 +56,11 @@ def daily_log(profile_id:int, current_date:date, db):
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_201_CREATED,
 )
-def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)):
+async def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)):
     
-    log = crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
+    log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
-    output_data = daily_log(profile_id=log.profile_id, current_date=log.date, db=db)
+    output_data = await daily_log(profile_id=log.profile_id, current_date=log.date, db=db)
     return output_data
 
 @router.get(
@@ -80,8 +85,9 @@ def get_all_daily(*, profile_id:int, n_days:int=50, db: Session = Depends(deps.g
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-def get_daily(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
-    output_data = daily_log(profile_id=profile_id, current_date=current_date, db=db)
+async def get_daily(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
+    output_data = await daily_log(profile_id=profile_id, current_date=current_date, db=db)
+
     return output_data
 
 @router.put(
@@ -89,17 +95,15 @@ def get_daily(*, profile_id:int, current_date:date, db: Session = Depends(deps.g
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-def update_daily(
+async def update_daily(
     *, profile_id:int, current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
 ):
     
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
-    # data = get_daily(profile_id=profile_id, current_date=current_date, db=db)
-    # 
+    weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
 
-    data = crud.update(db_obj=weight_data, data_in=daily_data, db=db)
+    data = await crud.update(db_obj=weight_data, data_in=daily_data, db=db)
     
-    output = daily_log(profile_id, current_date, db)
+    output = await daily_log(profile_id, current_date, db)
 
     return output
 
@@ -108,8 +112,7 @@ def update_daily(
     "/{profile_id}/{current_date}",
     status_code=status.HTTP_200_OK,
 )
-def delete_food(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
-    weight_data = db.query(models.DailyLog).filter((models.DailyLog.profile_id == profile_id) & (models.DailyLog.date == current_date)).first()
-
-    data = crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
+async def delete_food(*, profile_id:int, current_date:date, db: Session = Depends(deps.get_db)):
+    weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
+    await crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
     return
