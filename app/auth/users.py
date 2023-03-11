@@ -10,8 +10,8 @@ from .db import User, get_user_db
 from .secrets import secrets
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    reset_password_token_secret = secrets['secret_key']
-    verification_token_secret = secrets['secret_key']
+    reset_password_token_secret = secrets['SECRET_KEY']
+    verification_token_secret = secrets['SECRET_KEY']
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
@@ -35,7 +35,7 @@ bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=secrets['secret_key'], lifetime_seconds=3600)
+    return JWTStrategy(secret=secrets['SECRET_KEY'], lifetime_seconds=3600)
 
 
 jwt_auth_backend = AuthenticationBackend(
