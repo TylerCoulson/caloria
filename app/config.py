@@ -1,5 +1,5 @@
 from pydantic import BaseSettings
-
+import aiosqlite
 
 class Settings(BaseSettings):
     API_KEY: str = ""
@@ -12,6 +12,6 @@ class Settings(BaseSettings):
 
 settings = Settings(
     SQLALCHEMY_DATABASE_URI="sqlite+aiosqlite:///./app/sql_app.db",
-    SQLALCHEMY_TEST_DATABASE_URI="sqlite:///./app/tests/test.db",
+    SQLALCHEMY_TEST_DATABASE_URI="sqlite+aiosqlite:///./app/tests/test.db",
     APP_NAME="EVERLIGHT"
 )

@@ -1,21 +1,24 @@
 from typing import Any
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
 
 
-def create(*, obj_in, db, model) -> Any:
+async def create(*, obj_in, db, model) -> Any:
     created = model(**obj_in.dict())
     db.add(created)
-    db.commit()
-    db.refresh(created)
+    await db.commit()
+    await db.refresh(created)
     return created
 
 
-def read(*, _id: int, db, model):
-    data = db.query(model).filter(model.id == _id).first()
-    return data
+async def read(*, _id: int, db, model):
+    statement = select(model).where(model.id == _id)
+    data = await db.execute(statement)
+    return  data.unique().scalar_one_or_none()
 
 
-def update(*, db_obj, data_in, db):
+async def update(*, db_obj, data_in, db):
     obj_data = jsonable_encoder(db_obj)
 
     if isinstance(data_in, dict):
@@ -27,12 +30,12 @@ def update(*, db_obj, data_in, db):
             setattr(db_obj, field, update_data[field])
 
     db.add(db_obj)
-    db.commit()
-    db.refresh(db_obj)
+    await db.commit()
+    await db.refresh(db_obj)
     return db_obj
 
 
-def delete(*, _id: int, db, db_obj):
-    db.delete(db_obj)
-    db.commit()
+async def delete(*, _id: int, db, db_obj):
+    await db.delete(db_obj)
+    await db.commit()
     return db_obj

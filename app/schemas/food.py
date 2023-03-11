@@ -6,12 +6,18 @@ class FoodBase(BaseModel):
     name: str
 
 class FoodCreate(FoodBase):
-    pass
+    class Config:
+        orm_mode = True
 
 class Food(FoodBase):
     id: int
     ingredients: List["Food"] | None = []
     # servings: List["Food"] | None = []
+    class Config:
+        orm_mode = True
+
+class FoodNoIngredients(FoodBase):
+    id: int
     class Config:
         orm_mode = True
 

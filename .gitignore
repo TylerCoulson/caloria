@@ -5,6 +5,7 @@
 wants
 htmlcov
 .coverage
+secrets.py
 venv
 scripts_tests
 secrets.py

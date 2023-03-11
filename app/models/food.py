@@ -17,13 +17,14 @@ class Food(Base):
     name = Column(String)
 
     servings = relationship(
-        "ServingSize", back_populates="food"
+        "ServingSize", back_populates="food",lazy="joined"
     )
-    ingredients = relationship(
-        "Food",
-        secondary=recipe_table,
-        primaryjoin=id==recipe_table.c.finished_food,
-        secondaryjoin=id==recipe_table.c.ingredient,
-        backref="parents"
-    )
+    # ingredients = relationship(
+    #     "Food",
+    #     secondary=recipe_table,
+    #     primaryjoin=id==recipe_table.c.finished_food,
+    #     secondaryjoin=id==recipe_table.c.ingredient,
+    #     backref="parents",
+    #     lazy='selectin'
+    # )
 

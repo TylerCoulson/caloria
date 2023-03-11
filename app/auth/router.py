@@ -1,21 +1,16 @@
-import uuid
-from fastapi import APIRouter, Depends
-from fastapi_users import FastAPIUsers
+from fastapi import Depends, APIRouter
 
-from app.auth.schemas import UserRead, UserUpdate, UserCreate
-from app.auth.model import User
-from app.auth.user_manager import get_user_manager, auth_backend
+from .db import User
+from .schemas import UserCreate, UserRead, UserUpdate
+from .users import cookie_auth_backend, jwt_auth_backend, current_active_user, fastapi_users
 
-fastapi_users = FastAPIUsers[User, uuid.UUID](
-    get_user_manager,
-    [auth_backend],
-)
-current_active_user = fastapi_users.current_user(active=True)
-
-auth_router = APIRouter(prefix="/api/v1")
+auth_router = APIRouter()
 
 auth_router.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
+    fastapi_users.get_auth_router(jwt_auth_backend), prefix="/auth/jwt", tags=["auth"]
+)
+auth_router.include_router(
+    fastapi_users.get_auth_router(cookie_auth_backend), prefix="/auth/cookie", tags=["auth"]
 )
 auth_router.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
@@ -42,3 +37,5 @@ auth_router.include_router(
 @auth_router.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}
+
+
