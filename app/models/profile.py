@@ -18,4 +18,4 @@ class Profile(Base):
     lbs_per_week = Column(Float)
     activity_level = Column(Float)
 
-    log = relationship('Food_Log', back_populates="profile", lazy='selectin')
+    log = relationship('Food_Log')
