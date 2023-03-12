@@ -2,7 +2,6 @@ from pydantic import BaseModel, validator
 from datetime import date
 from typing import List
 
-
 class ProfileBase(BaseModel):
     start_date: date
     email: str
@@ -14,7 +13,7 @@ class ProfileBase(BaseModel):
     height: int
     lbs_per_week: float
     activity_level: float
-
+    user_id: int
     # @validator("start_weight", "goal_weight")
     # def check_start_weight_less_than_goal_weight(cls, values):
     #     if values['start_weight'] <= values['goal_weight']:

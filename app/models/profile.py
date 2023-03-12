@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, Date, String, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 
@@ -17,5 +17,8 @@ class Profile(Base):
     height = Column(Integer)
     lbs_per_week = Column(Float)
     activity_level = Column(Float)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="profile")
 
     log = relationship('Food_Log', back_populates="profile", lazy='joined')

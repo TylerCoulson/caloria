@@ -47,8 +47,7 @@ def create_random_profile_dict() -> dict:
 
 
 @pytest.fixture()
-async def profile(db) -> models.Profile:
-    
+async def profile(db, user) -> models.Profile:
     data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
         password_hash=random_lower_string(),
@@ -60,6 +59,7 @@ async def profile(db) -> models.Profile:
         height=70,
         lbs_per_week=2,
         activity_level=1.2,
+        user_id=user.id
     )
     profile = await crud.create(obj_in=data, db=db, model=models.Profile)
     
@@ -140,3 +140,14 @@ async def daily_output(food_log:models.Food_Log):
         goal_weight = 150,
         profile_logs = [food_log],
     )
+
+from app.auth.db import User
+from .utils import random_lower_string
+
+@pytest.fixture()
+async def user(db):
+    user_create = User(email=f"{random_lower_string()}@example.com", hashed_password="string")
+    db.add(user_create)
+    await db.commit()
+    await db.refresh(user_create)
+    return user_create

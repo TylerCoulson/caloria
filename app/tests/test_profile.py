@@ -5,11 +5,34 @@ from app import models
 from app import schemas
 from app import crud
 from . import utils
+from datetime import date
 
-
-async def test_profile_create(client:TestClient, db:Session):
-    data = utils.create_random_profile_dict()
-
+async def test_profile_create(client:TestClient, db:Session, user):
+    start_date = date(2022,12,6)
+    password_hash = "password"
+    email = f"user@example.com"
+    start_weight = 322.4
+    goal_weight = 150
+    sex = 'male'
+    birthdate = date(1992,12,5)
+    height = 70
+    lbs_per_week = 1.2
+    activity_level = 1.2
+    
+    data = schemas.ProfileCreate(
+        start_date=start_date,
+        password_hash=password_hash,
+        email=email,
+        start_weight=start_weight,
+        goal_weight=goal_weight,
+        sex=sex,
+        birthdate=birthdate,
+        height=height,
+        lbs_per_week=lbs_per_week,
+        activity_level=activity_level,
+        user_id=user.id
+    )
+    data = jsonable_encoder(data)
     response= await client.post(f"/api/v1/profile", json=data)
     
     assert response.status_code == 201
