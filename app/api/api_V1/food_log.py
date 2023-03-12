@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session  # type: ignore
 from typing import List
 
+from app.auth.router import get_current_profile
 from app import deps
 from app import schemas
 from app import models
@@ -24,16 +25,16 @@ async def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depend
     return food_log_out
 
 @router.get(
-    "/{profile_id}/{date}",
+    "/date/{date}",
     response_model=schemas.DayLog,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_date(*, date: date, profile_id:int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogProfile]:
-    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id).where(models.Food_Log.date == date)
+async def get_food_log_date(*, date: date, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogProfile]:
+    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile['id']).where(models.Food_Log.date == date)
     data = await db.execute(statement)
     test = data.unique().all()
 
-    profile = await crud.read(_id=profile_id, db=db, model=models.Profile)
+    profile = await crud.read(_id=profile['id'], db=db, model=models.Profile)
 
     return {"profile":profile, "log":[value for value, in test]}
 
@@ -53,7 +54,8 @@ async def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db
     response_model=List[schemas.FoodLog],
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs(*, profile_id:int, db: Session = Depends(deps.get_db)):
+async def get_food_logs(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+    profile_id = profile['id']
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id)
     data = await db.execute(statement)
     test = data.unique().all()

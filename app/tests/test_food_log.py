@@ -24,7 +24,7 @@ async def test_food_log_create(client:TestClient, profile:models.Profile, servin
         assert content[key] == data[key]
 
 async def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_Log):
-    response= await client.get(f"/api/v1/food_log/{food_log['profile_id']}/{food_log['date']}")
+    response= await client.get(f"/api/v1/food_log/date/{food_log['date']}")
 
     assert response.status_code == 200
     content = response.json()
