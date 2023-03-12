@@ -23,6 +23,17 @@ async def test_food_log_create(client:TestClient, profile:models.Profile, servin
     for key in data.keys():
         assert content[key] == data[key]
 
+async def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_Log):
+    response= await client.get(f"/api/v1/food_log/{food_log['profile_id']}/{food_log['date']}")
+
+    assert response.status_code == 200
+    content = response.json()
+    print('content', content["log"])
+    print('fix', food_log)
+    
+    assert content['profile'] == food_log['profile']
+    food_log.pop('profile')
+    assert content['log'] == [food_log]
 
 async def test_food_log_read_id(client:TestClient, db:Session, food_log:models.Food_Log):
     response= await client.get(f"/api/v1/food_log/{food_log['id']}")
@@ -30,20 +41,6 @@ async def test_food_log_read_id(client:TestClient, db:Session, food_log:models.F
     assert response.status_code == 200
     content = response.json()
     assert content == jsonable_encoder(food_log)
-
-async def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_Log):
-
-
-    response= await client.get(f"/api/v1/food_log/{food_log['profile_id']}/{food_log['date']}")
-
-    assert response.status_code == 200
-    content = response.json()
-    print('content', content)
-    print('fix', food_log)
-    
-    assert content['profile'] == food_log['profile']
-    food_log.pop('profile')
-    assert content['log'] == [food_log]
 
 async def test_food_update(client:TestClient, db:Session, food_log:models.Food_Log):
     food_log['serving_amount'] += 2

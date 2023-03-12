@@ -20,4 +20,4 @@ class Profile(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["User"] = relationship(back_populates="profile")
 
-    log = relationship('Food_Log', back_populates="profile", lazy='joined')
+    log = relationship('Food_Log', cascade="all, delete", back_populates="profile", lazy='joined')

@@ -87,6 +87,24 @@ async def food_2(db):
     food = jsonable_encoder(food)
     return food
 
+@pytest.fixture()
+async def profile(db, user) -> models.Profile:
+    data = schemas.ProfileCreate(
+        start_date=date(2022,12,6),
+        password_hash=random_lower_string(),
+        email=f"{random_lower_string()}@{random_lower_string(6)}.com",
+        start_weight=322.4,
+        goal_weight=150,
+        sex='male',
+        birthdate=date(1992,12,5),
+        height=70,
+        lbs_per_week=2,
+        activity_level=1.2,
+        user_id=user.id
+    )
+    profile = await crud.create(obj_in=data, db=db, model=models.Profile)
+    
+    return jsonable_encoder(profile)
 
 @pytest.fixture()
 async def serving(food, db) -> models.ServingSize:
@@ -105,15 +123,15 @@ async def serving(food, db) -> models.ServingSize:
 
 @pytest.fixture()
 async def food_log(
-    profile, food, serving, db
+    module_session, food, serving, db
 ):
-    profile_id = profile['id']
+    profile_id = module_session['id']
     food_id = food['id']
     serving_size_id = serving['id']
     serving_amount = 1
     
     data = {
-        "date": profile['start_date'],
+        "date": module_session['start_date'],
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
@@ -152,20 +170,20 @@ async def user(db):
     await db.refresh(user_create)
     return user_create
 
-@pytest.fixture(scope="session")
-async def session_user(db):
+@pytest.fixture(scope="module")
+async def module_user(db):
     user_create = User(email=f"{random_lower_string()}@example.com", hashed_password="string")
     db.add(user_create)
     await db.commit()
     await db.refresh(user_create)
     return user_create
 
-@pytest.fixture(scope="session")
-async def session_profile(db, session_user) -> models.Profile:
+@pytest.fixture(scope="module")
+async def module_session(db, module_user) -> models.Profile:
     data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
-        password_hash=random_lower_string(),
-        email=f"{random_lower_string()}@{random_lower_string(6)}.com",
+        password_hash=module_user.hashed_password,
+        email=module_user.email,
         start_weight=322.4,
         goal_weight=150,
         sex='male',
@@ -173,7 +191,7 @@ async def session_profile(db, session_user) -> models.Profile:
         height=70,
         lbs_per_week=2,
         activity_level=1.2,
-        user_id=session_user.id
+        user_id=module_user.id
     )
     profile = await crud.create(obj_in=data, db=db, model=models.Profile)
     

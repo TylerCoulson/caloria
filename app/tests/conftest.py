@@ -33,7 +33,7 @@ async def db(anyio_backend) -> Generator:
 
 
 @pytest.fixture(scope="module")
-async def client(db, session_profile) -> Generator:
+async def client(db, module_session) -> Generator:
     async def override_get_db():
         try:
             yield db
@@ -41,7 +41,7 @@ async def client(db, session_profile) -> Generator:
             await db.close()
 
     async def override_auth():
-        return session_profile
+        return module_session
 
 
     app.dependency_overrides[get_db] = override_get_db

@@ -26,30 +26,33 @@ async  def create_profile(*, profile: schemas.ProfileCreate, db: Session = Depen
     status_code=status.HTTP_200_OK,
 )
 async def get_profile_id(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
-    # data = await crud.read(_id=profile_id, db=db, model=models.Profile)
-    return profile
+    data = await crud.read(_id=profile['id'], db=db, model=models.Profile)
+    return data
 
 
 @router.put(
-    "/{profile_id}",
-    response_model=schemas.ProfileLogs,
+    "/me",
+    response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
 async def update_profile(
-    *, profile_id: int, profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
+    *, profile: models.Profile = Depends(get_current_profile), profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
 ):
-    data = await get_profile_id(profile_id=profile_id, db=db)
+    data = await get_profile_id(profile=profile, db=db)
     data = await crud.update(db_obj=data, data_in=profile_in, db=db)
     
     return data
 
 
 @router.delete(
-    "/{profile_id}",
+    "/me",
     status_code=status.HTTP_200_OK,
 )
-async def delete_profile(*, profile_id: int, db: Session = Depends(deps.get_db)):
-    data = await get_profile_id(profile_id=profile_id, db=db)
+async def delete_profile(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
 
-    data = await crud.delete(_id=profile_id, db=db, db_obj=data)
+    print("234")
+    data = await get_profile_id(profile=profile, db=db)
+    print('567')
+    data = await crud.delete(_id=profile['id'], db=db, db_obj=data)
+    print('987')
     return
