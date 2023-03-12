@@ -43,12 +43,12 @@ async def test_profile_create(client:TestClient, db:Session, user):
         assert content[key] == data[key]
 
 
-async def test_profile_read(client:TestClient, db:Session, profile:models.Profile):
-    response= await client.get(f"/api/v1/profile/{profile['id']}")
+async def test_profile_read(client:TestClient, db:Session, session_profile):
+    response= await client.get(f"/api/v1/profile/me")
     content = response.json()
     assert response.status_code == 200
     
-    assert content == jsonable_encoder(profile)
+    assert content == jsonable_encoder(session_profile)
 
 async def test_profiles_food_logs(client:TestClient, db:Session, food_log:models.Food_Log):
 

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
 
 from app import deps
+from app.auth.router import get_current_profile
 from app import schemas
 from app import models
 
@@ -20,13 +21,13 @@ async  def create_profile(*, profile: schemas.ProfileCreate, db: Session = Depen
     return profile_out
 
 @router.get(
-    "/{profile_id}",
+    "/me",
     response_model=schemas.ProfileLogs,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile_id(*, profile_id: int, db: Session = Depends(deps.get_db)):
-    data = await crud.read(_id=profile_id, db=db, model=models.Profile)
-    return data
+async def get_profile_id(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+    # data = await crud.read(_id=profile_id, db=db, model=models.Profile)
+    return profile
 
 
 @router.put(

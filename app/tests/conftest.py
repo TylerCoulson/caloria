@@ -9,6 +9,7 @@ from app.db import Base  # type:ignore
 from app.config import settings
 from app.main import app
 from app.deps import get_db
+from app.auth.users import get_current_profile
 from app.tests.utils import *
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
@@ -18,7 +19,7 @@ engine = create_async_engine(
 )
 async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@pytest.mark.anyio
+
 @pytest.fixture(scope="session")
 async def db(anyio_backend) -> Generator:
     # setup
@@ -29,19 +30,28 @@ async def db(anyio_backend) -> Generator:
     # teardown
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-@pytest.mark.anyio
+
+
 @pytest.fixture(scope="module")
-async def client(db) -> Generator:
+async def client(db, session_profile) -> Generator:
     async def override_get_db():
         try:
             yield db
         finally:
             await db.close()
 
+    async def override_auth():
+        return session_profile
+
+
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_current_profile] = override_auth
+
     async with AsyncClient(app=app, base_url='http://test') as c:
         yield c
-@pytest.mark.anyio
+
+
+
 @pytest.fixture(scope='session')
 def anyio_backend():
     return 'asyncio'
