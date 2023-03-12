@@ -1,6 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, Date, String, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from app.db import Base
 
 class Profile(Base):

@@ -2,7 +2,8 @@ from fastapi import Depends, APIRouter
 
 from .db import User
 from .schemas import UserCreate, UserRead, UserUpdate
-from .users import cookie_auth_backend, jwt_auth_backend, current_active_user, fastapi_users
+from .users import cookie_auth_backend, jwt_auth_backend, current_active_user, fastapi_users, get_current_profile
+from app.models import Profile
 
 auth_router = APIRouter()
 
@@ -35,7 +36,7 @@ auth_router.include_router(
 
 
 @auth_router.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
+async def authenticated_route(profile: Profile = Depends(get_current_profile)):
+    return profile
 
 

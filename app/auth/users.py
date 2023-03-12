@@ -1,4 +1,3 @@
-import uuid
 from typing import Optional
 
 from fastapi import Depends, Request
@@ -6,6 +5,9 @@ from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, CookieTransport, JWTStrategy
 from fastapi_users.db import SQLAlchemyUserDatabase
 
+import crud
+from app import models
+from app.deps import get_db
 from .db import User, get_user_db
 from .secrets import secrets
 
@@ -55,3 +57,7 @@ cookie_auth_backend = AuthenticationBackend(
 fastapi_users = FastAPIUsers[User, int](get_user_manager, [jwt_auth_backend, cookie_auth_backend])
 
 current_active_user = fastapi_users.current_user(active=True)
+
+async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
+    profile = await crud.read(_id=user.id, db=db, model=models.Profile)
+    return profile
