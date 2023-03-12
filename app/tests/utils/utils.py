@@ -123,15 +123,15 @@ async def serving(food, db) -> models.ServingSize:
 
 @pytest.fixture()
 async def food_log(
-    module_session, food, serving, db
+    module_profile, food, serving, db
 ):
-    profile_id = module_session['id']
+    profile_id = module_profile['id']
     food_id = food['id']
     serving_size_id = serving['id']
     serving_amount = 1
     
     data = {
-        "date": module_session['start_date'],
+        "date": module_profile['start_date'],
         "food_id": food_id,
         "serving_size_id": serving_size_id,
         "serving_amount": serving_amount,
@@ -176,14 +176,14 @@ async def module_user(db):
     db.add(user_create)
     await db.commit()
     await db.refresh(user_create)
-    return user_create
+    return jsonable_encoder(user_create)
 
 @pytest.fixture(scope="module")
-async def module_session(db, module_user) -> models.Profile:
+async def module_profile(db, module_user) -> models.Profile:
     data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
-        password_hash=module_user.hashed_password,
-        email=module_user.email,
+        password_hash=module_user['hashed_password'],
+        email=module_user['email'],
         start_weight=322.4,
         goal_weight=150,
         sex='male',
@@ -191,7 +191,7 @@ async def module_session(db, module_user) -> models.Profile:
         height=70,
         lbs_per_week=2,
         activity_level=1.2,
-        user_id=module_user.id
+        user_id=module_user['id']
     )
     profile = await crud.create(obj_in=data, db=db, model=models.Profile)
     

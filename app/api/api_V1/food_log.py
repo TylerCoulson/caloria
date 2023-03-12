@@ -20,7 +20,8 @@ from app import crud
     response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
+async def post_food_log(*, profile: models.Profile = Depends(get_current_profile), food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
+    food_log.profile_id = profile.id
     food_log_out = await crud.create(obj_in=food_log, db=db, model=models.Food_Log)
     return food_log_out
 
@@ -30,11 +31,11 @@ async def post_food_log(*, food_log: schemas.FoodLogCreate, db: Session = Depend
     status_code=status.HTTP_200_OK,
 )
 async def get_food_log_date(*, date: date, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogProfile]:
-    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile['id']).where(models.Food_Log.date == date)
+    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile.id).where(models.Food_Log.date == date)
     data = await db.execute(statement)
     test = data.unique().all()
 
-    profile = await crud.read(_id=profile['id'], db=db, model=models.Profile)
+    profile = await crud.read(_id=profile.id, db=db, model=models.Profile)
 
     return {"profile":profile, "log":[value for value, in test]}
 
@@ -43,7 +44,7 @@ async def get_food_log_date(*, date: date, profile: models.Profile = Depends(get
     response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db)):
+async def get_food_log_id(*, profile: models.Profile = Depends(get_current_profile), food_log_id: int, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=food_log_id, db=db, model=models.Food_Log)
     if not data:
         raise HTTPException(status_code=404, detail="Food_log not found")
@@ -55,7 +56,7 @@ async def get_food_log_id(*, food_log_id: int, db: Session = Depends(deps.get_db
     status_code=status.HTTP_200_OK,
 )
 async def get_food_logs(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
-    profile_id = profile['id']
+    profile_id = profile.id
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id)
     data = await db.execute(statement)
     test = data.unique().all()

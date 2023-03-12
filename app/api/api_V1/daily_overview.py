@@ -69,7 +69,7 @@ async def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session =
     status_code=status.HTTP_200_OK,
 )
 def get_all_daily(*, profile: models.Profile = Depends(get_current_profile), n_days:int=50, db: Session = Depends(deps.get_db)):
-    profile_id = profile['id']
+    profile_id = profile.id
     profile_data = crud.read(_id=profile_id, db=db, model=models.Profile)
     output_data = []
     current_date = date.today()
@@ -87,7 +87,7 @@ def get_all_daily(*, profile: models.Profile = Depends(get_current_profile), n_d
     status_code=status.HTTP_200_OK,
 )
 async def get_daily(*, profile: models.Profile = Depends(get_current_profile), current_date:date, db: Session = Depends(deps.get_db)):
-    profile_id = profile['id']
+    profile_id = profile.id
     output_data = await daily_log(profile_id=profile_id, current_date=current_date, db=db)
 
     return output_data
@@ -100,7 +100,7 @@ async def get_daily(*, profile: models.Profile = Depends(get_current_profile), c
 async def update_daily(
     *, profile: models.Profile = Depends(get_current_profile), current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
 ):
-    profile_id = profile['id']
+    profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
 
     data = await crud.update(db_obj=weight_data, data_in=daily_data, db=db)
@@ -115,7 +115,7 @@ async def update_daily(
     status_code=status.HTTP_200_OK,
 )
 async def delete_food(*, profile: models.Profile = Depends(get_current_profile), current_date:date, db: Session = Depends(deps.get_db)):
-    profile_id = profile['id']
+    profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
     await crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
     return

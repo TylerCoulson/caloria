@@ -13,7 +13,7 @@ class ProfileBase(BaseModel):
     height: int
     lbs_per_week: float
     activity_level: float
-    user_id: int
+    
     # @validator("start_weight", "goal_weight")
     # def check_start_weight_less_than_goal_weight(cls, values):
     #     if values['start_weight'] <= values['goal_weight']:
@@ -22,9 +22,10 @@ class ProfileBase(BaseModel):
 
 
 class ProfileCreate(ProfileBase):
+    user_id: int
     pass
 
-class Profile(ProfileBase):
+class Profile(ProfileCreate):
     id: int
     class Config:
         orm_mode = True

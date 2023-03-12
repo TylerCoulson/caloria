@@ -7,13 +7,13 @@ from app import schemas
 from datetime import date
 from . import utils
 
-async def test_food_log_create(client:TestClient, profile:models.Profile, serving, db:Session):
+async def test_food_log_create(client:TestClient, module_profile:models.Profile, serving, db:Session):
     data = {
         "date": date(2023,1,23).isoformat(), 
         "food_id": serving['food_id'],
         "serving_size_id": serving['id'],
         "serving_amount": 1,
-        "profile_id": profile['id']
+        "profile_id": module_profile['id']
     }
     response= await client.post(f"/api/v1/food_log", json=data)
     assert response.status_code == 201
