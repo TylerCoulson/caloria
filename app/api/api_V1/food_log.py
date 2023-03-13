@@ -69,7 +69,7 @@ async def get_food_logs(*, profile: models.Profile = Depends(get_current_profile
     status_code=status.HTTP_200_OK,
 )
 async def update_food_log(
-    *, food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)
+    *, food_log_id: int, food_log_in: schemas.FoodLogBase, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)
 ):
 
     data = await get_food_log_id(food_log_id=food_log_id, db=db)
@@ -83,7 +83,7 @@ async def update_food_log(
     "/{food_log_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food_log(*, food_log_id: int, db: Session = Depends(deps.get_db)):
+async def delete_food_log(*, food_log_id: int, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
     data = await get_food_log_id(food_log_id=food_log_id, db=db)
 
     data = await crud.delete(_id=food_log_id, db=db, db_obj=data)

@@ -56,7 +56,7 @@ async def daily_log(profile_id:int, current_date:date, db):
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_daily(*, actual_weight: schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)):
+async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
     
     log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
