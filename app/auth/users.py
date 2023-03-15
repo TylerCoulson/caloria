@@ -26,6 +26,11 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
 
+    async def on_after_login(
+        self, user: User, request: Optional[Request] = None
+    ) -> None:
+        print(f'{user.email} has logged in')
+        return  # pragma: no cover
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db)
