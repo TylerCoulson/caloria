@@ -1,0 +1,15 @@
+<h1> Add Profile</h1>
+<form hx-post="/profile" hx-target="#profile" hx-ext='json-enc' >
+    start_date - <input type="date" name="start_date">
+    email - <input type="email" name="email">
+    start_weight - <input type="number" step=".1" name="start_weight">
+    goal_weight - <input type="number" step=".1" name="goal_weight">
+    sex - <input type="text" name="sex">
+    birthdate - <input type="date" name="birthdate">
+    height - <input type="number" name="height">
+    lbs_per_week - <input type="number" min="0" max="2" step=".1" name="lbs_per_week">
+    activity_level - <input type="number" min="1" max="2" step=".1" name="activity_level">
+    <button type="submit">Submit</button>
+</form>
+
+<div id="profile"></div>

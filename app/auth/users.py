@@ -31,6 +31,23 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     ) -> None:
         print(f'{user.email} has logged in')
         return  # pragma: no cover
+    
+    async def validate_password(
+        self, password: str, user: User
+    ) -> None:
+        """
+        Validate a password.
+
+        *You should overload this method to add your own validation logic.*
+
+        :param password: The password to validate.
+        :param user: The user associated to this password.
+        :raises InvalidPasswordException: The password is invalid.
+        :return: None if the password is valid.
+        """
+        print(f"the password is {password}")
+        print(f"the user is {user}")
+        return  # pragma: no cover
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db)
