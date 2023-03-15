@@ -1,10 +1,14 @@
-<form hx-post="/login" hx-target="#content" hx-ext='json-enc'>
-    <label for="profilename">Profilename:</label>
-    <input type="text" id="profilename" name="profilename">
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<form hx-post="/api/v1/auth/cookie/login" hx-target="#login_div">
+    <label for="username">Email:</label>
+    <input type="text" id="username" name="username">
     
     <label for="password">Password:</label>
     <input type="password" id="password" name="password">
     
     <input type="submit" value="Login">
 </form>
-  
+<div hidden id="login_div" hx-get="/" hx-target="#content" hx-trigger="htmx:beforeSwap"></div>
+{% endblock %}
