@@ -8,19 +8,18 @@ from app import schemas
 from app import models
 from app.api.calcs import calorie_calcs
 
-async def test_daily_overview_get(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
-    start_date = datetime.strptime(profile['start_date'],'%Y-%m-%d')
+async def test_daily_overview_get(client:TestClient, db:Session, food_log:models.Food_Log):    
+    start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
     end_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
 
     days = (end_date - start_date).days 
 
     data = {
-        "profile_id": profile['id'],
         "current_date": food_log['date'],
         "actual_weight": 308.8
     }
 
-    response= await client.get(f"/api/v1/daily/{data['profile_id']}/{data['current_date']}")
+    response= await client.get(f"/api/v1/daily/{data['current_date']}")
 
     assert response.status_code == 200
     content = response.json()
@@ -56,14 +55,14 @@ async def test_daily_overview_post(client:TestClient, db:Session, profile: model
 
     assert content['actual_weight'] == 308.8
 
-async def test_daily_overview_update(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
-    start_date = datetime.strptime(profile['start_date'],'%Y-%m-%d')
+async def test_daily_overview_update(client:TestClient, db:Session,  food_log:models.Food_Log):    
+    start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
     end_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
 
     days = (end_date - start_date).days 
 
     daily = {
-        "profile_id": profile['id'],
+        "profile_id": food_log['profile']['id'],
         "date": food_log['date'],
         "actual_weight": 308.8
     }
@@ -71,7 +70,7 @@ async def test_daily_overview_update(client:TestClient, db:Session, profile:mode
 
 
     data.actual_weight == 256.7
-    response= await client.put(f"/api/v1/daily/{data.profile_id}/{data.date}", json=jsonable_encoder(data))
+    response= await client.put(f"/api/v1/daily/{data.date}", json=jsonable_encoder(data))
     assert response.status_code == 200
     content = response.json()
 
@@ -93,19 +92,18 @@ async def test_daily_overview_update(client:TestClient, db:Session, profile:mode
 
     assert content.keys() == output.keys() 
 
-async def test_daily_overview_delete(client:TestClient, db:Session, profile:models.Profile, food_log:models.Food_Log):    
-    end_date = food_log['date']
-
+async def test_daily_overview_delete(client:TestClient, db:Session, profile, food_log:models.Food_Log):    
+    end_date = "2023-12-07"
 
     daily = {
-        "profile_id": profile['id'],
+        "profile_id": food_log['profile']['id'],
         "date": end_date,
         "actual_weight": 308.8
     }
     data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
 
 
-    response= await client.delete(f"/api/v1/daily/{data.profile_id}/{data.date}")
+    response= await client.delete(f"/api/v1/daily/{data.date}")
     assert response.status_code == 200
 
     assert response.json() is None

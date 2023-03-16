@@ -8,3 +8,4 @@ htmlcov
 secrets.py
 venv
 scripts_tests
+secrets.py

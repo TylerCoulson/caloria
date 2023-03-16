@@ -27,7 +27,6 @@ async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_
     status_code=status.HTTP_200_OK,
 )
 async def get_food_search(*, search_for:str, search_word:str, n:int=25, db: Session = Depends(deps.get_db)):
-    print('\napi')
     statement = select(models.Food).where(getattr(models.Food, search_for).contains(search_word)).limit(n)
     data = await db.execute(statement)
     all_data = data.unique().all()

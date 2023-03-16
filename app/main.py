@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.api.api_v1 import api_router
 from app.api.api_htmx_v1 import htmx_router
 
+from app.auth.router import auth_router
 from app.config import settings
 from app.db import engine, Base
 
