@@ -1,6 +1,11 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
 <h1> Add Food</h1>        
-<form hx-post="/food_log" hx-target="#food" hx-ext='json-enc' >
+<form hx-post="/food" hx-target="#food" hx-ext='json-enc' >
     BRAND - <input type="text" name="brand"></input>
     NAME - <input type="text" name="name"></input>
-    <button type="submit">Submit</button>
+    <input type="submit">
 </form>
+<div id="food"></div>
+{% endblock %}

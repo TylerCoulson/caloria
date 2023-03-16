@@ -72,14 +72,12 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
     """Returns the results of searching for food"""
     try:
         data = await api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
-        headers = jsonable_encoder(data[0]).keys()
 
         context = {
             "request": request,
             "hx_request": hx_request,
             "foods": jsonable_encoder(data),
             "trigger": "click",
-            "headers": headers,
             }
 
         return templates.TemplateResponse("food.html", context)

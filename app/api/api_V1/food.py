@@ -27,12 +27,15 @@ async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_
     status_code=status.HTTP_200_OK,
 )
 async def get_food_search(*, search_for:str, search_word:str, n:int=25, db: Session = Depends(deps.get_db)):
+    print('\napi')
     statement = select(models.Food).where(getattr(models.Food, search_for).contains(search_word)).limit(n)
     data = await db.execute(statement)
-    if not data:
+    all_data = data.unique().all()
+
+    if not all_data:
         raise HTTPException(status_code=404, detail="Food not found")
-    
-    return [value for value, in data.all()]
+
+    return [value for value, in all_data]
 
 @router.get(
     "/all",
