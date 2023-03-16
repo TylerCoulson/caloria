@@ -9,8 +9,6 @@ from datetime import date
 
 async def test_profile_create(client:TestClient, db:Session, module_user):
     start_date = date(2022,12,6)
-    password_hash = "password"
-    email = f"user@example.com"
     start_weight = 322.4
     goal_weight = 150
     sex = 'male'
@@ -21,8 +19,6 @@ async def test_profile_create(client:TestClient, db:Session, module_user):
 
     data = schemas.ProfileBase(
         start_date=start_date,
-        password_hash=password_hash,
-        email=email,
         start_weight=start_weight,
         goal_weight=goal_weight,
         sex=sex,

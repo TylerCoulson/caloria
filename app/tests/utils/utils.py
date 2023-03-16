@@ -183,8 +183,6 @@ async def module_user(db):
 async def module_profile(db, module_user) -> models.Profile:
     data = schemas.ProfileCreate(
         start_date=date(2022,12,6),
-        password_hash=module_user['hashed_password'],
-        email=module_user['email'],
         start_weight=322.4,
         goal_weight=150,
         sex='male',

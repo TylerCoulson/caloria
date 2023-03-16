@@ -4,8 +4,6 @@ from typing import List
 
 class ProfileBase(BaseModel):
     start_date: date
-    email: str
-    password_hash: str
     start_weight: float
     goal_weight: float
     sex: str
