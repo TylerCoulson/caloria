@@ -1,7 +1,9 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
 <h1> Add Profile</h1>
-<form hx-post="/profile" hx-target="#profile" hx-ext='json-enc' >
+<form hx-post="/profile" hx-target="#profile" name='profile' hx-ext='json-enc' >
     start_date - <input type="date" name="start_date">
-    email - <input type="email" name="email">
     start_weight - <input type="number" step=".1" name="start_weight">
     goal_weight - <input type="number" step=".1" name="goal_weight">
     sex - <input type="text" name="sex">
@@ -13,3 +15,4 @@
 </form>
 
 <div id="profile"></div>
+{% endblock %}

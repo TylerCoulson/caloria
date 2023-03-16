@@ -17,7 +17,7 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async  def create_profile(*, profile: schemas.ProfileBase, user:dict=Depends(current_active_user), db: Session = Depends(deps.get_db)):
-
+    
     profile = schemas.ProfileCreate(**profile.dict(), user_id=user.id) 
     profile_out = await crud.create(obj_in=profile, db=db, model=models.Profile)
     return profile_out

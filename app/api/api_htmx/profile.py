@@ -8,7 +8,7 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import profile as api_profile
-
+from app.auth.router import get_current_profile, current_active_user
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
@@ -17,14 +17,14 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: schemas.ProfileCreate, db: Session = Depends(deps.get_db)):
-    food_out = jsonable_encoder(api_profile.create_profile(profile=profile, db=db))
-    # food_out = [schemas.FoodBase(**jsonable_encoder(food_db))]
+async def create_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: schemas.ProfileBase, user:dict=Depends(current_active_user), db: Session = Depends(deps.get_db)):
+    print("\ntesting\n")
+    profile = await api_profile.create_profile(profile=profile, user=user, db=db)
 
     context = {
             "request": request,
             "hx_request": hx_request,
-            "profile": [food_out]
+            "profile": profile
         }
     return templates.TemplateResponse("profile.html", context)
 
