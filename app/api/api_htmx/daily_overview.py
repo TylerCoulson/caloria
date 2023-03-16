@@ -14,7 +14,6 @@ templates = Jinja2Templates("app/templates")
 
 from app import crud
 
-tabs = {'daily': 'active'}
 @router.post(
     "",
     response_class=HTMLResponse,
@@ -26,7 +25,6 @@ def post_daily(*, request: Request,hx_request: str | None = Header(default=None)
                 "request": request,
                 "hx_request": hx_request,
                 "dailies": [output_data],
-                "tabs": tabs
             }
 
     return templates.TemplateResponse("daily.html", context)
@@ -44,7 +42,6 @@ def get_daily(*, request: Request,hx_request: str | None = Header(default=None),
                 "request": request,
                 "hx_request": hx_request,
                 "dailies": [output_data],
-                "tabs": tabs
             }
     return templates.TemplateResponse("daily.html", context)
     
@@ -63,7 +60,6 @@ def get_all_daily(*, request: Request,hx_request: str | None = Header(default=No
                 "request": request,
                 "hx_request": hx_request,
                 "dailies": output_data,
-                "tabs": tabs
             }
     
     return templates.TemplateResponse("daily.html", context)

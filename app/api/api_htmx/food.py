@@ -13,7 +13,6 @@ from app.api.api_V1 import food as api_food
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
-tabs = {'food': 'active'}
 '''
 hx_request - Checks if request was made through an hx_request
 tabs - which tab should be active in the navigation tab
@@ -23,9 +22,8 @@ tabs - which tab should be active in the navigation tab
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def post_food(*, request: Request,hx_request: str | None = Header(default=None), food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
-    food_out = jsonable_encoder(api_food.post_food(food=food, db=db))
-    # food_out = [schemas.FoodBase(**jsonable_encoder(food_db))]
+async def post_food(*, request: Request,hx_request: str | None = Header(default=None), food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
+    food_out = await api_food.post_food(food=food, db=db)
 
     context = {
             "request": request,
@@ -44,7 +42,6 @@ def get_search_food(*, request: Request,hx_request: str | None = Header(default=
     context = {
             "request": request,
             "hx_request": hx_request,
-            "tabs": tabs
         }
     return templates.TemplateResponse("food_search.html", context)
 
@@ -63,7 +60,6 @@ def get_food(*, request: Request,hx_request: str | None = Header(default=None), 
             "trigger": None,
             "include_servings": True,
             "foods": [food_out],
-            "tabs": tabs
         }
     return templates.TemplateResponse("food.html", context)
 
@@ -72,11 +68,10 @@ def get_food(*, request: Request,hx_request: str | None = Header(default=None), 
 response_class=HTMLResponse,
 status_code=status.HTTP_200_OK,
 )
-def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_for:str, search_word:str, db: Session = Depends(deps.get_db)):
+async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_for:str, search_word:str, db: Session = Depends(deps.get_db)):
     """Returns the results of searching for food"""
     try:
-        data = api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
-        
+        data = await api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
         headers = jsonable_encoder(data[0]).keys()
 
         context = {
@@ -85,7 +80,6 @@ def get_search_food_results(*, request: Request,hx_request: str | None = Header(
             "foods": jsonable_encoder(data),
             "trigger": "click",
             "headers": headers,
-            "tabs": tabs
             }
 
         return templates.TemplateResponse("food.html", context)
@@ -110,6 +104,5 @@ def get_all_foods(*, request: Request, hx_request: str | None = Header(default=N
             "request": request,
             "hx_request": hx_request,
             "foods": data,
-            "tabs": tabs
         }
     return templates.TemplateResponse("food.html", context)

@@ -6,7 +6,6 @@ from fastapi.templating import Jinja2Templates
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
-tabs = {"home":'active'}
 @router.get(
     "/",
     response_class=HTMLResponse,
@@ -16,7 +15,6 @@ def get_index(request: Request, hx_request: str | None = Header(default=None)):
     context = {
         "request": request,
         "hx_request":hx_request,
-        "tabs": tabs
     }
 
     return templates.TemplateResponse("index.html", context)
@@ -30,7 +28,6 @@ def get_navbar(request: Request, hx_request: str | None = Header(default=None)):
     context = {
         "request": request,
         "hx_request":hx_request,
-        "tabs": tabs
     }
 
     return templates.TemplateResponse("nav.html", context)

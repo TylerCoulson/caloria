@@ -25,7 +25,6 @@ def get_create_log(*, request: Request, hx_request: str | None = Header(default=
     context = {
             "request": request,
             "hx_request": hx_request,
-            "tabs": {"food_log":"active"},
             "trigger": 'click'
         }
 
@@ -41,7 +40,6 @@ def get_create_serving(*, request: Request, hx_request: str | None = Header(defa
     context = {
             "request": request,
             "hx_request": hx_request,
-            "tabs": {"food":"active"},
             "trigger": 'click'
         }
 
@@ -57,7 +55,6 @@ def get_create_serving(*, request: Request, hx_request: str | None = Header(defa
     context = {
             "request": request,
             "hx_request": hx_request,
-            "tabs": {"food":"active"},
             "trigger": 'click'
         }
 
@@ -74,7 +71,6 @@ def get_create_daily(*, request: Request, hx_request: str | None = Header(defaul
             "request": request,
             "hx_request": hx_request,
             # "day": [output_data],
-            "tabs": {"daily":"active"},
             "trigger": 'click'
         }
 

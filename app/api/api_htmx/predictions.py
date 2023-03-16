@@ -11,7 +11,7 @@ from app.api.api_V1 import predictions
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
-tabs = {'prediction': 'active'}
+
 '''
 hx_request - Checks if request was made through an hx_request
 tabs - which tab should be active in the navigation tab
@@ -29,8 +29,7 @@ def get_predictions_never_faulter(*, profile_id:int, request: Request,hx_request
     context = {
             "request": request,
             "hx_request": hx_request,
-            "preds": pred,
-            "tabs": tabs
+            "preds": pred
         }
     return templates.TemplateResponse("predictions.html", context)
 
@@ -46,7 +45,6 @@ def get_predictions_updates(*, profile_id:int, current_date:date, request: Reque
     context = {
             "request": request,
             "hx_request": hx_request,
-            "preds": pred,
-            "tabs": tabs
+            "preds": pred
         }
     return templates.TemplateResponse("predictions.html", context)

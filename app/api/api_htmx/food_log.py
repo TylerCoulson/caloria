@@ -14,7 +14,6 @@ router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
 
-tabs = {'food_log': 'active'}
 @router.post(
     "",
     response_class=HTMLResponse,
@@ -27,7 +26,6 @@ def post_food_log(*, request: Request, hx_request: str | None = Header(default=N
             "request": request,
             "hx_request": hx_request,
             "logs": [log],
-            "tabs": tabs
         }
     return templates.TemplateResponse("food_log.html", context)
 
@@ -44,7 +42,6 @@ def get_food_logs(*, request: Request, hx_request: str | None = Header(default=N
                 "request": request,
                 "hx_request": hx_request,
                 "logs": logs,
-                "tabs": tabs,
                 "trigger": 'click'
             }
 
@@ -71,7 +68,6 @@ def get_food_logs_by_profile_date(*, request: Request, hx_request: str | None = 
                 "request": request,
                 "hx_request": hx_request,
                 "logs": logs,
-                "tabs": tabs,
                 "trigger": 'click'
             }
 
@@ -97,7 +93,6 @@ def get_food_log_id(*, request: Request, hx_request: str | None = Header(default
             "request": request,
             "hx_request": hx_request,
             "logs": [log],
-            "tabs": tabs,
             "trigger": None
         }
     return templates.TemplateResponse("food_log.html", context)

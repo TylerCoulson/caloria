@@ -26,8 +26,7 @@ def post_servings(*, request: Request, hx_request: str | None = Header(default=N
             "request": request,
             "hx_request": hx_request,
             "trigger": "click",
-            "servings": [servings_out],
-            "tabs": tabs
+            "servings": [servings_out]
         }
 
     return templates.TemplateResponse("servings.html", context)
@@ -44,8 +43,7 @@ def get_serving_size_id(*, request: Request, hx_request: str | None = Header(def
             "request": request,
             "hx_request": hx_request,
             "trigger": None,
-            "servings": [servings_out],
-            "tabs": tabs
+            "servings": [servings_out]
         }
     return templates.TemplateResponse("servings.html", context)
 
@@ -60,7 +58,6 @@ def get_serving_size_by_food(*, request: Request, hx_request: str | None = Heade
             "request": request,
             "hx_request": hx_request,
             "trigger": "click",
-            "servings": servings_out['servings'],
-            "tabs": tabs
+            "servings": servings_out['servings']
         }
     return templates.TemplateResponse("servings.html", context)
