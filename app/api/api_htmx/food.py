@@ -10,13 +10,41 @@ from app import models
 from app.api.api_V1 import food as api_food
 
 
-router = APIRouter()
+router = APIRouter(prefix="/food")
 templates = Jinja2Templates("app/templates")
 
 '''
 hx_request - Checks if request was made through an hx_request
 tabs - which tab should be active in the navigation tab
 '''
+@router.get(
+    "/create",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_create_serving_page(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+    
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "trigger": 'click'
+        }
+
+    return templates.TemplateResponse("create_food.html", context)
+
+@router.get(
+    "",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+def get_search_page(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+    """ returns page that allows foods searching for food"""
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+        }
+    return templates.TemplateResponse("food_search.html", context)
+
 @router.post(
     "",
     response_class=HTMLResponse,
@@ -32,28 +60,15 @@ async def post_food(*, request: Request,hx_request: str | None = Header(default=
         }
     return templates.TemplateResponse("food.html", context)
 
-@router.get(
-    "",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-def get_search_food(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    """ returns page that allows foods searching for food"""
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-        }
-    return templates.TemplateResponse("food_search.html", context)
-
-
 
 @router.get(
     "/{food_id:int}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
-    food_out = jsonable_encoder(api_food.get_food_id(food_id=food_id, db=db))
+async def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
+    food_out = await api_food.get_food_id(food_id=food_id, db=db)
+    
     context = {
             "request": request,
             "hx_request": hx_request,

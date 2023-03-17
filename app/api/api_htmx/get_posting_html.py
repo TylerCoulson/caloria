@@ -11,7 +11,7 @@ from app.api.api_V1 import daily_overview as api_daily
 from app import crud
 
 
-router = APIRouter()
+router = APIRouter(prefix="/create")
 templates = Jinja2Templates("app/templates")
 
 
@@ -44,21 +44,6 @@ def get_create_serving(*, request: Request, hx_request: str | None = Header(defa
         }
 
     return templates.TemplateResponse("create_servings.html", context)
-
-@router.get(
-    "/food",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-def get_create_serving(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "trigger": 'click'
-        }
-
-    return templates.TemplateResponse("create_food.html", context)
 
 @router.get(
     "/daily",
