@@ -15,7 +15,7 @@
     </thead>
     <tbody>
     {% for serving in servings %}
-        <tr name="serving_id" hx-push-url="true" hx-trigger={{trigger}} hx-get="/servings/{{serving.id}}" hx-target="#content">
+        <tr name="serving_id" hx-push-url="true" hx-get="/food/{{serving.food_id}}/serving/{{serving.id}}" hx-target="#content">
             <td headers="id">{{serving.id}}</td>
             <td headers="food_id">{{serving.food_id}}</td>
             <td headers="description">{{serving.description}}</td>
