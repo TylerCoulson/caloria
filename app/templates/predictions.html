@@ -1,21 +1,20 @@
-{% if not hx_request %}{% extends "index.html" %}{% endif %}
+{% if not hx_request %}{% include "create_prediction.html" %}{% endif %}
 
 {% block content %}
+
 <div id="prediction">
-    <div hx-trigger="click" hx-get="/prediction/1?profile_id=1" hx-target="#prediction">Never Faulter</div>
-    <div hx-trigger="click" hx-get="/prediction/2?profile_id=1&current_date=2022-12-07" hx-target="#prediction">Update lbs lost per day</div>
     <table  name="prediction">
         <thead>
             <tr>
-                <th id="day">"day"</th>
-                <th id="week">"week"</th>
-                <th id="date">"date"</th>
-                <th id="est_weight">"est_weight"</th>
-                <th id="resting_rate">"resting_rate"</th>
-                <th id="net_calories">"net_calories"</th>
-                <th id="total_lbs_lost">"total_lbs_lost"</th>
-                <th id="lbs_lost_today">"lbs_lost_today"</th>
-                <th id="bmi">"bmi"</th>
+                <th id="day">day</th>
+                <th id="week">week</th>
+                <th id="date">date</th>
+                <th id="est_weight">est_weight</th>
+                <th id="resting_rate">resting_rate</th>
+                <th id="net_calories">net_calories</th>
+                <th id="total_lbs_lost">total_lbs_lost</th>
+                <th id="lbs_lost_today">lbs_lost_today</th>
+                <th id="bmi">bmi</th>
             </tr>
         </thead>
         <tbody>

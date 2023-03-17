@@ -6,26 +6,37 @@ from fastapi.templating import Jinja2Templates
 from datetime import date
 from app import deps
 from app.api.api_V1 import predictions
+from app.api.api_V1.predictions import weight_params
 
-
-router = APIRouter()
+router = APIRouter(prefix="/prediction")
 templates = Jinja2Templates("app/templates")
 
 
-'''
-hx_request - Checks if request was made through an hx_request
-tabs - which tab should be active in the navigation tab
-'''
-
 @router.get(
-        "/1",
+    "",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_never_faulter(*, profile_id:int, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_predictions_never_faulter(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page that allows foods searching for food"""
-    pred = predictions.get_predictions_never_fault(profile_id=profile_id, db=db)
 
+    context = {
+            "request": request,
+            "hx_request": hx_request
+        }
+    return templates.TemplateResponse("create_prediction.html", context)
+
+
+@router.get(
+    "/never_faulter",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+    """ returns page for predictions that never faultered on calories lost """
+    print('\n\ntesting 1\n')
+    pred = await predictions.get_predictions_never_fault(params=params, db=db)
+    print('\n\ntesting 2\n')
     context = {
             "request": request,
             "hx_request": hx_request,
@@ -34,13 +45,13 @@ def get_predictions_never_faulter(*, profile_id:int, request: Request,hx_request
     return templates.TemplateResponse("predictions.html", context)
 
 @router.get(
-        "/2",
+    "/get_predictions_updates_lbs_to_lose",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_updates(*, profile_id:int, current_date:date, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    """ returns page that allows foods searching for food"""
-    pred = predictions.get_predictions_updates_lbs_to_lose(profile_id=profile_id, current_date=current_date, db=db)
+def get_predictions_updates(*, params: dict=Depends(weight_params), current_date:date=None, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+    """ returns page for predictions that your activity level is updated based on what you actually ate"""
+    pred = predictions.get_predictions_updates_lbs_to_lose(params=params, current_date=current_date, db=db)
 
     context = {
             "request": request,

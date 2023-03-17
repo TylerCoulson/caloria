@@ -32,8 +32,10 @@ async def get_predictions_never_fault(*, params: dict=Depends(weight_params), db
     response_model=Dict[int, schemas.Prediction],
     status_code=status.HTTP_200_OK,
 )
-async def get_predictions_updates_lbs_to_lose(*, params: dict=Depends(weight_params), current_date:date, db: Session = Depends(deps.get_db)):
+async def get_predictions_updates_lbs_to_lose(*, params: dict=Depends(weight_params), current_date:date = None, db: Session = Depends(deps.get_db)):
     
+    if current_date is None:
+        current_date = params['start_date']
     log_data = PersonsDay(height=params['height'], start_weight=params['start_weight'], start_date=params['start_date'], lbs_per_day=params['lbs_per_week']/7, birthdate=params['birthdate'], sex=params['sex'], activity_level=params['activity_level'], goal_weight=params['goal_weight'], profile_logs=params['log']) 
     total_days = (current_date - params['start_date']).days
     

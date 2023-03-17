@@ -12,6 +12,6 @@ htmx_router.include_router(serving_size.router, prefix="/servings", tags=['htmx-
 htmx_router.include_router(daily_overview.router, prefix="/daily", tags=['htmx-daily'])
 htmx_router.include_router(food_log.router, prefix="/food_log", tags=['htmx-food_log'])
 htmx_router.include_router(get_posting_html.router, prefix="/create", tags=['htmx-create'])
-htmx_router.include_router(predictions.router, prefix="/prediction", tags=['htmx-prediction'])
+htmx_router.include_router(predictions.router, tags=['htmx-prediction'])
 htmx_router.include_router(page_routers.router, tags=['htmx-auth-pages'])
 htmx_router.include_router(validation.router, tags=['htmx-validation'])
