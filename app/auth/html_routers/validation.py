@@ -59,16 +59,16 @@ async def validate_email(*, email:str, db = Depends(get_user_db)):
     
     if existing_user is not None:
         return f'''
-            <div class="form-group" hx-target="this" hx-swap=""outerHTML>
+            <div hx-target="this" hx-swap=""outerHTML>
                 <label for="email">Email:</label>
-                <input class='form-control is-invalid' type="text" id="email" name="email" hx-get="/validate/email" value="{email}">
-                <div class='invalid-feedback'>This email is already taken</div>
+                <input type="text" id="email" name="email" hx-get="/validate/email" value="{email}" required minlength="2" pattern=".+@.+\..+" aria-invalid="true">
+                <div class='warning'>This email is already taken</div>
             </div>
         '''
     return f'''
             <div class='form-group valid' hx-target="this" hx-swap=""outerHTML>
                 <label for="email">Email:</label>
-                <input class='form-control' type="text" id="email" name="email" hx-get="/validate/email" value="{email}">
+                <input class='form-control' type="text" id="email" name="email" hx-get="/validate/email" value="{email}" required minlength="2" pattern=".+@.+\..+" aria-invalid="false">
             </div>
         '''
     
