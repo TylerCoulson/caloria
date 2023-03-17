@@ -9,7 +9,7 @@ from app import schemas
 from app import models
 from app.api.api_V1 import profile as api_profile
 from app.auth.router import get_current_profile, current_active_user
-router = APIRouter()
+router = APIRouter(prefix="/profile")
 templates = Jinja2Templates("app/templates")
 
 @router.post(
@@ -18,7 +18,6 @@ templates = Jinja2Templates("app/templates")
     status_code=status.HTTP_201_CREATED,
 )
 async def create_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: schemas.ProfileBase, user:dict=Depends(current_active_user), db: Session = Depends(deps.get_db)):
-    print("\ntesting\n")
     profile = await api_profile.create_profile(profile=profile, user=user, db=db)
 
     context = {
@@ -33,9 +32,9 @@ async def create_profile(*, request: Request,hx_request: str | None = Header(def
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile_id: int, db: Session = Depends(deps.get_db)):
+async def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
     try:
-        profile_out = jsonable_encoder(api_profile.get_profile_id(profile_id=profile_id, db=db))
+        profile_out = await api_profile.get_profile_id(profile=profile, db=db)
 
         context = {
                 "request": request,
@@ -49,6 +48,6 @@ def get_profile(*, request: Request,hx_request: str | None = Header(default=None
         context = {
             "request": request,
             "hx_request": hx_request,
-            "message": f"Profile with id {profile_id} does not exist"
+            "message": f"Profile with id {profile.id} does not exist"
         }
         return templates.TemplateResponse("404.html", context)
