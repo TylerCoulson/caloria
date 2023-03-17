@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from app.api.api_v1 import api_router
 from app.api.api_htmx_v1 import htmx_router
 
@@ -9,7 +10,7 @@ from app.db import engine, Base
 app = FastAPI(title=settings.APP_NAME)
 
 
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 async def create_db_and_tables():
     async with engine.begin() as conn:
