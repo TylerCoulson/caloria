@@ -1,7 +1,17 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
 <form hx-post="/daily" hx-ext='json-enc' hx-target="#test_create">
-    Profile_id - <input type='number' min="1" name='profile_id'></input>
-    Date - <input type='date' name='date'></input>
-    Actual_Weight - <input type='number' min='1' step=".2" name='actual_weight'></input>
-    <button type="submit">Submit</button>
+    <!-- <label for="profile_id">Start Date:</label> -->
+    <!-- <input type='number' min="1" name='profile_id'> -->
+    
+    <label for="date">Date:</label>
+    <input type='date' id='date' name='date'>
+
+    <label for="date">Actual_Weight:</label>
+    <input type='number' min='1' step=".1" id='actual_weight' name='actual_weight'>
+    
+    <input type="submit" value="Add Weight">
 </form>
 <div id="test_create"></div>
+{% endblock %}

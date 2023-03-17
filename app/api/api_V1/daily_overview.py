@@ -18,8 +18,6 @@ async def get_weight(profile_id, current_date, db):
     return data.unique().scalar_one_or_none()
 
 async def daily_log(profile_id:int, current_date:date, db):
-    print("Testssss")
-
     profile_data = await crud.read(_id=profile_id, db=db, model=models.Profile)
 
     log_data = PersonsDay(height=profile_data.height, start_weight=profile_data.start_weight, start_date=profile_data.start_date, lbs_per_day=(profile_data.lbs_per_week/7), birthdate=profile_data.birthdate, sex=profile_data.sex, activity_level=profile_data.activity_level, goal_weight=profile_data.goal_weight, profile_logs=profile_data.log) 
@@ -57,27 +55,27 @@ async def daily_log(profile_id:int, current_date:date, db):
     status_code=status.HTTP_201_CREATED,
 )
 async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
-    
+    actual_weight.profile_id = profile.id
     log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
     output_data = await daily_log(profile_id=log.profile_id, current_date=log.date, db=db)
     return output_data
 
 @router.get(
-    "/all",
+    "",
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-def get_all_daily(*, profile: models.Profile = Depends(get_current_profile), n_days:int=50, db: Session = Depends(deps.get_db)):
+async def get_all_daily(*, profile: models.Profile = Depends(get_current_profile), n_days:int=50, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
-    profile_data = crud.read(_id=profile_id, db=db, model=models.Profile)
     output_data = []
     current_date = date.today()
-    start_date = profile_data.start_date
+    start_date = profile.start_date
     total_days = (current_date - start_date).days
+    
     for i in range(min(total_days, n_days)+1):
         i_date = current_date - timedelta(i)
-        output_data.append(daily_log(profile_id=profile_id, current_date=i_date, db=db))
+        output_data.append( await daily_log(profile_id=profile_id, current_date=i_date, db=db))
     
     return output_data
 

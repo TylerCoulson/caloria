@@ -2,9 +2,10 @@ from pydantic import BaseModel
 from datetime import date
 
 class DailyOverviewInput(BaseModel):
-    profile_id: int
+    profile_id: int = 0
     date: date
     actual_weight: float | None = 0
+
 
 
 class DailyOverview(DailyOverviewInput):
