@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
 
 from app import deps
-from app.auth.router import get_current_profile, current_active_user
+from app.auth.router import Annotated_Profile, current_active_user
 from app import schemas
 from app import models
 
@@ -27,7 +27,7 @@ async  def create_profile(*, profile: schemas.ProfileBase, user:dict=Depends(cur
     response_model=schemas.ProfileLogs,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile_id(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=profile.id, db=db, model=models.Profile)
     return data
 
@@ -38,7 +38,7 @@ async def get_profile_id(*, profile: models.Profile = Depends(get_current_profil
     status_code=status.HTTP_200_OK,
 )
 async def update_profile(
-    *, profile: models.Profile = Depends(get_current_profile), profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
+    *, profile: Annotated_Profile, profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
 ):
     data = await get_profile_id(profile=profile, db=db)
     data = await crud.update(db_obj=data, data_in=profile_in, db=db)
@@ -50,7 +50,7 @@ async def update_profile(
     "/me",
     status_code=status.HTTP_200_OK,
 )
-async def delete_profile(*, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+async def delete_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
 
     print("234")
     data = await get_profile_id(profile=profile, db=db)

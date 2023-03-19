@@ -8,7 +8,7 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import profile as api_profile
-from app.auth.router import get_current_profile, current_active_user
+from app.auth.router import Annotated_Profile, current_active_user
 router = APIRouter(prefix="/profile")
 templates = Jinja2Templates("app/templates")
 
@@ -32,7 +32,7 @@ async def create_profile(*, request: Request,hx_request: str | None = Header(def
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+async def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     try:
         profile_out = await api_profile.get_profile_id(profile=profile, db=db)
 

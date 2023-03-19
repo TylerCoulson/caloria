@@ -9,7 +9,7 @@ from app import schemas
 from app import models
 
 from app.api.api_V1 import daily_overview as api_daily
-from app.auth.router import get_current_profile
+from app.auth.router import Annotated_Profile
 
 router = APIRouter(prefix="/daily")
 templates = Jinja2Templates("app/templates")
@@ -37,7 +37,7 @@ def get_create_daily(*, request: Request, hx_request: str | None = Header(defaul
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+async def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     output_data = await api_daily.post_daily(actual_weight=actual_weight, profile=profile, db=db)
     context = {
                 "request": request,
@@ -52,7 +52,7 @@ async def post_daily(*, request: Request,hx_request: str | None = Header(default
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: models.Profile = Depends(get_current_profile), n_days:int=50, db: Session = Depends(deps.get_db)):
+async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, n_days:int=50, db: Session = Depends(deps.get_db)):
 
     output_data = await api_daily.get_all_daily(profile=profile, n_days=n_days, db=db)
     context = {
@@ -68,7 +68,7 @@ async def get_all_daily(*, request: Request,hx_request: str | None = Header(defa
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), profile: models.Profile = Depends(get_current_profile),  date:date = date.today(), db: Session = Depends(deps.get_db)):
+async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile,  date:date = date.today(), db: Session = Depends(deps.get_db)):
     output_data = await api_daily.get_daily(profile=profile,current_date=date, db=db)
     
     context = {

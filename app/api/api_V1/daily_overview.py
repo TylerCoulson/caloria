@@ -8,7 +8,7 @@ from app import models
 from app import crud
 
 from app.api.calcs.calorie_calcs import PersonsDay 
-from app.auth.router import get_current_profile
+from app.auth.router import Annotated_Profile
 router = APIRouter()
 
 
@@ -54,7 +54,7 @@ async def daily_log(profile_id:int, current_date:date, db):
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: models.Profile = Depends(get_current_profile), db: Session = Depends(deps.get_db)):
+async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     actual_weight.profile_id = profile.id
     log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
     
@@ -66,7 +66,7 @@ async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: mode
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, profile: models.Profile = Depends(get_current_profile), n_days:int=50, db: Session = Depends(deps.get_db)):
+async def get_all_daily(*, profile: Annotated_Profile, n_days:int=50, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
     output_data = []
     current_date = date.today()
@@ -84,7 +84,7 @@ async def get_all_daily(*, profile: models.Profile = Depends(get_current_profile
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, profile: models.Profile = Depends(get_current_profile), current_date:date, db: Session = Depends(deps.get_db)):
+async def get_daily(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
     output_data = await daily_log(profile_id=profile_id, current_date=current_date, db=db)
 
@@ -96,7 +96,7 @@ async def get_daily(*, profile: models.Profile = Depends(get_current_profile), c
     status_code=status.HTTP_200_OK,
 )
 async def update_daily(
-    *, profile: models.Profile = Depends(get_current_profile), current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
+    *, profile: Annotated_Profile, current_date:date, daily_data:schemas.DailyOverviewInput, db: Session = Depends(deps.get_db)
 ):
     profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
@@ -112,7 +112,7 @@ async def update_daily(
     "/{current_date}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food(*, profile: models.Profile = Depends(get_current_profile), current_date:date, db: Session = Depends(deps.get_db)):
+async def delete_food(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
     await crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)

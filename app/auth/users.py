@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
@@ -84,3 +84,5 @@ current_active_user = fastapi_users.current_user(active=True)
 async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
     profile = await crud.read(_id=user.id, db=db, model=models.Profile)
     return profile
+
+Annotated_Profile = Annotated[models.Profile, Depends(get_current_profile)]
