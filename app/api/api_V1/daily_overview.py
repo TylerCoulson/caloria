@@ -107,13 +107,24 @@ async def update_daily(
 
     return output
 
+@router.delete(
+    "/{_id:int}",
+    status_code=status.HTTP_200_OK,
+)
+async def delete_daily_by_id(*, profile: Annotated_Profile, _id:int, db: Session = Depends(deps.get_db)):
+    profile_id = profile.id
+    statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.id == _id)
+    weight_data = await db.execute(statement)
+    data = weight_data.unique().scalar_one_or_none()
+    await crud.delete(_id=data.id, db=db, db_obj=data)
 
 @router.delete(
     "/{current_date}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
+async def delete_daily_by_date(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
     await crud.delete(_id=weight_data.id, db=db, db_obj=weight_data)
     return
+
