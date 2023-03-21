@@ -59,16 +59,15 @@ class PersonsDay():
         est_weight = self.start_weight - (net_calories/3500)
         return round(est_weight,1)
 
-    def calories_eaten_today(self):
+    def calories_eaten_on_date(self, current_date:date):
         calories_eaten_on_current_date = 0 
         # need to use a join on the logs to fix this.
         for log in self.profile_logs:
-            if log.date == date:
+            if log.date == current_date:
                 calories = log.serving_amount * log.serving_size.calories
                 calories_eaten_on_current_date += calories
             else:
                 continue
-        
         return round(calories_eaten_on_current_date,0)
 
     def calorie_goal(self, weight:float, age:float):

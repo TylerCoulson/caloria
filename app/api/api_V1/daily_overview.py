@@ -26,7 +26,7 @@ async def daily_log(profile_id:int, current_date:date, db):
     day = (current_date - profile_data.start_date).days
     est_weight = log_data.estimated_weight(current_date=current_date)
     current_rmr  = log_data.resting_rate(weight=est_weight, age=profile_age)
-    calories_eaten_on_current_date = log_data.calories_eaten_today()
+    calories_eaten_on_current_date = log_data.calories_eaten_on_date(current_date=current_date)
     calorie_goal = log_data.calorie_goal(weight=est_weight, age=log_data.age(current_date))
     total_lbs_lost = log_data.total_lbs_lost(current_date=current_date)
     total_calorie_surplus = log_data.calorie_surplus(current_date=current_date)
@@ -63,7 +63,7 @@ async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Anno
 
 @router.get(
     "",
-    response_model=schemas.DailyOverview,
+    response_model=list[schemas.DailyOverview],
     status_code=status.HTTP_200_OK,
 )
 async def get_all_daily(*, profile: Annotated_Profile, n_days:int=50, db: Session = Depends(deps.get_db)):
