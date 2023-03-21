@@ -51,10 +51,6 @@ async def update_profile(
     status_code=status.HTTP_200_OK,
 )
 async def delete_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-
-    print("234")
     data = await get_profile_id(profile=profile, db=db)
-    print('567')
     data = await crud.delete(_id=profile.id, db=db, db_obj=data)
-    print('987')
     return

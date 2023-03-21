@@ -28,8 +28,6 @@ async def test_food_log_read_day(client:TestClient, db:Session, food_log:models.
 
     assert response.status_code == 200
     content = response.json()
-    print('content', content["log"])
-    print('fix', food_log)
     
     assert content['profile'] == food_log['profile']
     food_log.pop('profile')
@@ -52,8 +50,7 @@ async def test_food_update(client:TestClient, db:Session, food_log:models.Food_L
     content = response.json()
 
     assert "serving_size" in content
-    print('content', content)
-    print('\nfood_log',food_log)
+
     for key in food_log.keys():
         assert content[key] == food_log[key]
 

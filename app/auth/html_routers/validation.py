@@ -16,9 +16,7 @@ templates = Jinja2Templates("app/templates")
 )
 async def validate_password(email:str, password:str, manager = Depends(get_user_manager)):
     user = UserCreate(email=email, password=password)
-    print('testing')
-    print(await manager.validate_password(user.password, user))
-    print('NOt testing')
+    await manager.validate_password(user.password, user)
     return f'''
         <div class='form-group valid' hx-target="this" hx-swap="outerHTML">
             <label for="password">Password:</label>

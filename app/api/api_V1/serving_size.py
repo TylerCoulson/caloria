@@ -64,7 +64,5 @@ async def update_serving_size(
 )
 async def delete_serving_size(*, serving_id: int, db: Session = Depends(deps.get_db)):
     data = await get_serving_size_id(serving_id=serving_id, db=db)
-
     data = await crud.delete(_id=serving_id, db=db, db_obj=data)
-    # print(data)
     return

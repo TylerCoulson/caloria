@@ -20,7 +20,6 @@ async def test_current_average_weekly_loss(client:TestClient, db:Session, profil
     params = {'height':profile['height'], 'start_weight':profile['start_weight'], 'start_date':profile['start_date'], 'lbs_per_week':profile['lbs_per_week'], 'birthdate':profile['birthdate'], 'sex':profile['sex'], 'activity_level':profile['activity_level'], 'goal_weight':profile['goal_weight'], 'log':profile['log']}
 
     response= await client.get(f"/api/v1/predictions/update_lbs_to_lose?current_date=2022-12-06", params=params)
-    print(response.json())
     assert response.status_code == 200
     assert response.json() is not None
 

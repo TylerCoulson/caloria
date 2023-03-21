@@ -25,7 +25,6 @@ CommonsDep = Annotated[dict, Depends(weight_params)]
     status_code=status.HTTP_200_OK,
 )
 async def get_predictions_never_fault(*, params:CommonsDep, db: Session = Depends(deps.get_db)):
-    print("tests")
     log_data = PersonsDay(height=params['height'], start_weight=params['start_weight'], start_date=params['start_date'], lbs_per_day=params['lbs_per_week']/7, birthdate=params['birthdate'], sex=params['sex'], activity_level=params['activity_level'], goal_weight=params['goal_weight'], profile_logs=params['log']) 
     pred = log_data.prediction()    
     return pred
