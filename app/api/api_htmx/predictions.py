@@ -17,7 +17,7 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_never_faulter(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_predictions_page(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page that allows foods searching for food"""
 
     context = {
@@ -34,9 +34,8 @@ def get_predictions_never_faulter(*, request: Request,hx_request: str | None = H
 )
 async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page for predictions that never faultered on calories lost """
-    print('\n\ntesting 1\n')
     pred = await predictions.get_predictions_never_fault(params=params, db=db)
-    print('\n\ntesting 2\n')
+
     context = {
             "request": request,
             "hx_request": hx_request,
