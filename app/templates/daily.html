@@ -1,43 +1,45 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-<div hx-trigger="click" hx-get="/daily/create" hx-target="#create_actual_weight">Create Actual Weight</div>
-<div id="create_actual_weight"></div>
 
-<table name="profile" class="table table-bordered table-sm table-hover table-striped">
+<table name="profile" role="grid">
     <thead>
         <tr>
-            <th id="profile_id" scope="col">profile_id</th>
-            <th id="day" scope="col">day</th>
-            <th id="week" scope="col">week</th>
-            <th id="date" scope="col">date</th>
-            <th id="actual_weight" scope="col">actual_weight</th>
-            <th id="est_weight" scope="col">est_weight</th>
-            <th id="bmi" scope="c">BMI</th>
-            <th id="resting_rate" scope="col">resting_rate</th>
-            <th id="eaten_calories" scope="col">eaten_calories</th>
-            <th id="calories_left" scope="col">calories_left</th>
-            <th id="calorie_goal" scope="col">calorie_goal</th>
-            <th id="total_lbs_lost" scope="col">total_lbs_lost</th>
-            <th id="calorie_surplus" scope="col">calorie_surplus</th>
+            <th hidden id="week" scope="col">Week</th>
+            <th id="day" scope="col">Day</th>
+            <th id="date" scope="col">Date</th>
+            <th id="actual_weight" scope="col">Acutal Weight</th>
+            <th id="est_weight" scope="col">Estimated Weight</th>
+            <th hidden id="bmi" scope="c">BMI</th>
+            <th hidden id="resting_rate" scope="col">Resting Calories</th>
+            <th id="eaten_calories" scope="col">Eaten Calories</th>
+            <th id="calorie_goal" scope="col">Calorie Goal</th>
+            <th id="calories_left" scope="col">Calories Left</th>
+            <th hidden id="total_lbs_lost" scope="col">Lbs Lost</th>
+            <th id="calorie_surplus" scope="col">Calorie Surplus</th>
         </tr>
     </thead>
     <tbody>
         {% for daily in dailies %}    
-        <tr class= id={{daily.date}}>
-            <td headers="profile_id">{{daily.profile_id}}</td>
-            <td headers="day">{{daily.day}}</td>
-            <td headers="week">{{daily.week}}</td>
-            <td headers="date">{{daily.date}}</td>
-            <td headers="actual_weight">{{daily.actual_weight}}</td>
-            <td headers="est_weight">{{daily.est_weight}}</td>
-            <td headers="bmi">{{daily.bmi}}</td>
-            <td headers="resting_rate">{{daily.resting_rate}}</td>
-            <td headers="eaten_calories">{{daily.eaten_calories}}</td>
-            <td headers="calories_left">{{daily.calories_left}}</td>
-            <td headers="calorie_goal">{{daily.calorie_goal}}</td>
-            <td headers="total_lbs_lost">{{daily.total_lbs_lost}}</td>
-            <td headers="calorie_surplus">{{daily.calorie_surplus}}</td>
+        <tr id="{{ daily.date }}">
+            <td hidden headers="week">{{ daily.week }}</td>
+            <td headers="day">{{ daily.day }}</td>
+            <td headers="date">{{ daily.date }}</td>
+            
+            
+            
+            <td headers="actual_weight" hx-get="/daily/create/{{ daily.date }}" hx-target="this" hx-swap="outerHTML">{{ daily.actual_weight }}</td>
+            
+            
+            
+            <td headers="est_weight">{{ daily.est_weight }}</td>
+            <td hidden headers="bmi">{{ daily.bmi }}</td>
+            <td hidden headers="resting_rate">{{ daily.resting_rate }}</td>
+            <td headers="eaten_calories">{{ daily.eaten_calories }}</td>
+            <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal) }}</td>
+            <td headers="calories_left">{{ "{:,}".format(daily.calories_left)  }}</td>
+            <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
+            <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus) }}</td>
         </tr>
         {% endfor %}
     </tbody>

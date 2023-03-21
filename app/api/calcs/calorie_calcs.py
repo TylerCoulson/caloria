@@ -98,7 +98,7 @@ class PersonsDay():
 
         total_calories_eaten = total_calorie_goal - self.total_calories_eaten(current_date=current_date) 
         
-        return round(total_calories_eaten,0)
+        return int(round(total_calories_eaten,0))
 
     def age(self, current_date:date):
 

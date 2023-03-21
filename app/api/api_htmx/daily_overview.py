@@ -17,15 +17,16 @@ templates = Jinja2Templates("app/templates")
 from app import crud
 
 @router.get(
-    "/create",
+    "/create/{date}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_create_daily(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_create_daily(*, date:date, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     context = {
             "request": request,
             "hx_request": hx_request,
-            "trigger": 'click'
+            "trigger": 'click',
+            "date": date
         }
 
     return templates.TemplateResponse("create_actual_weight.html", context)
@@ -36,15 +37,17 @@ def get_create_daily(*, request: Request, hx_request: str | None = Header(defaul
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_daily(*, request: Request,hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def post_daily(*, request: Request, hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    # weight_input=schemas.DailyOverviewInput(date=date, actual_weight=actual_weight, profile_id=profile.id) 
+    print(f'\n{actual_weight}\n')
     output_data = await api_daily.post_daily(actual_weight=actual_weight, profile=profile, db=db)
     context = {
                 "request": request,
                 "hx_request": hx_request,
                 "dailies": [output_data],
             }
-
-    return templates.TemplateResponse("daily.html", context)
+    
+    return templates.TemplateResponse("daily_weight.html", context)
 
 @router.get(
     "",
