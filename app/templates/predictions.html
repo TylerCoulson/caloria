@@ -1,6 +1,6 @@
-{% if not hx_request %}{% include "create_prediction.html" %}{% endif %}
+{% if not hx_request %}{% extends "create_prediction.html" %}{% endif %}
 
-{% block content %}
+{% block prediction %}
 
 <details>
     <summary role="button">Prediction</summary>
