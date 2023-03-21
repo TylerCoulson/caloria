@@ -6,25 +6,21 @@
 <table name="food_log">
     <thead>
         <tr>
-            <th id="log_date">date</th>
-            <th id="log_food_id">food_id</th>
-            <th id="log_serving_size_id">serving_size_id</th>
-            <th id="log_serving_amount">serving_amount</th>
-            <th id="log_profile_id">profile_id</th>
-            <th id="log_id">id</th>
-
+            <th id="log_date">Date</th>
+            <th id="log_food">Food</th>
+            <th id="log_serving_size_description">Serving Size</th>
+            <th id="log_serving_amount">Amount</th>
+            <th id="log_serving_calories">Total Calories</th>
         </tr>
     </thead>
     <tbody>
         {% for log in logs %}
         <tr name="food_log_id" hx-push-url="true" hx-trigger="{{trigger}}" hx-get="/food_log/{{log.id}}" hx-target="#content">
             <td headers="log_date">{{log.date}}</td>
-            <td headers="log_food_id">{{log.food_id}}</td>
-            <td headers="log_serving_size_id">{{log.serving_size_id}}</td>
+            <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
+            <td headers="log_serving_size_description">{{log.serving_size.description}}</td>
             <td headers="log_serving_amount">{{log.serving_amount}}</td>
-            <td headers="log_profile_id">{{log.profile_id}}</td>
-            <td headers="log_id">{{log.id}}</td>
-
+            <td headers="log_calories">{{log.serving_amount * log.serving_size.calories}}</td>
         </tr>
         {% endfor %}
     </tbody>
