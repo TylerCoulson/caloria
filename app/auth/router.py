@@ -2,7 +2,7 @@ from fastapi import Depends, APIRouter
 
 from .db import User
 from .schemas import UserCreate, UserRead, UserUpdate
-from .users import cookie_auth_backend, jwt_auth_backend, current_active_user, fastapi_users, get_current_profile, Annotated_Profile
+from .users import cookie_auth_backend, jwt_auth_backend, current_active_user, fastapi_users, get_current_profile, Annotated_Profile, Annotated_User
 from app.models import Profile
 
 auth_router = APIRouter()
