@@ -1,3 +1,2 @@
-{% for daily in dailies %}
+
 <td headers="actual_weight" hx-get="/daily/create/{{ daily.date }}" hx-target="this" hx-swap="outerHTML">{{ daily.actual_weight }}</td>
-{% endfor %}

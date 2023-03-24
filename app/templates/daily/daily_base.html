@@ -25,13 +25,9 @@
             <td hidden headers="week">{{ daily.week }}</td>
             <td headers="day">{{ daily.day }}</td>
             <td headers="date">{{ daily.date }}</td>
-            
-            
-            
-            <td headers="actual_weight" hx-get="/daily/create/{{ daily.date }}" hx-target="this" hx-swap="outerHTML">{{ daily.actual_weight }}</td>
-            
-            
-            
+
+            {% include "daily/daily_weight.html"%}
+
             <td headers="est_weight">{{ daily.est_weight }}</td>
             <td hidden headers="bmi">{{ daily.bmi }}</td>
             <td hidden headers="resting_rate">{{ daily.resting_rate }}</td>

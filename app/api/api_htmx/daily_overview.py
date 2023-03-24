@@ -29,7 +29,7 @@ def get_create_daily(*, date:date, request: Request, hx_request: str | None = He
             "date": date
         }
 
-    return templates.TemplateResponse("create_actual_weight.html", context)
+    return templates.TemplateResponse("daily/create_actual_weight.html", context)
 
 
 @router.post(
@@ -38,16 +38,15 @@ def get_create_daily(*, date:date, request: Request, hx_request: str | None = He
     status_code=status.HTTP_201_CREATED,
 )
 async def post_daily(*, request: Request, hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    # weight_input=schemas.DailyOverviewInput(date=date, actual_weight=actual_weight, profile_id=profile.id) 
-    print(f'\n{actual_weight}\n')
+
     output_data = await api_daily.post_daily(actual_weight=actual_weight, profile=profile, db=db)
     context = {
                 "request": request,
                 "hx_request": hx_request,
-                "dailies": [output_data],
+                "daily": output_data,
             }
     
-    return templates.TemplateResponse("daily_weight.html", context)
+    return templates.TemplateResponse("daily/daily_weight.html", context)
 
 @router.get(
     "",
@@ -63,7 +62,7 @@ async def get_all_daily(*, request: Request,hx_request: str | None = Header(defa
                 "dailies": output_data,
             }
     
-    return templates.TemplateResponse("daily.html", context)
+    return templates.TemplateResponse("daily/daily_base.html", context)
 
 @router.get(
     "/{date}",
@@ -78,6 +77,6 @@ async def get_daily(*, request: Request, hx_request: str | None = Header(default
                 "hx_request": hx_request,
                 "dailies": [output_data],
             }
-    return templates.TemplateResponse("daily.html", context)
+    return templates.TemplateResponse("daily/daily_base.html", context)
     
 
