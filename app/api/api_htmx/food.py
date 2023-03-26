@@ -83,10 +83,10 @@ async def get_food(*, request: Request,hx_request: str | None = Header(default=N
 response_class=HTMLResponse,
 status_code=status.HTTP_200_OK,
 )
-async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_for:str, search_word:str, db: Session = Depends(deps.get_db)):
+async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_word:str, db: Session = Depends(deps.get_db)):
     """Returns the results of searching for food"""
     try:
-        data = await api_food.get_food_search(search_for=search_for, search_word=search_word, n=n, db=db)
+        data = await api_food.get_food_search(search_word=search_word, n=n, db=db)
 
         context = {
             "request": request,
@@ -101,7 +101,7 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
         context = {
             "request": request,
             "hx_request": hx_request,
-            "message": f"No food with {search_for.capitalize()} - {search_word}"
+            "message": f"No food with {search_word}"
         }
         return templates.TemplateResponse("404.html", context)
 
