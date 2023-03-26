@@ -26,8 +26,11 @@ async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_
     response_model=List[schemas.Food],
     status_code=status.HTTP_200_OK,
 )
-async def get_food_search(*, search_for:str, search_word:str, n:int=25, db: Session = Depends(deps.get_db)):
-    statement = select(models.Food).where(getattr(models.Food, search_for).contains(search_word)).limit(n)
+async def get_food_search(*, search_word:str, n:int=25, db: Session = Depends(deps.get_db)):
+    statement = select(models.Food).where(
+        models.Food.brand.contains(search_word) | models.Food.name.contains(search_word) 
+    ).limit(n)
+    
     data = await db.execute(statement)
     all_data = data.unique().all()
 
@@ -44,7 +47,7 @@ async def get_food_search(*, search_for:str, search_word:str, n:int=25, db: Sess
 async def get_all_foods(*, n:int=25, db: Session = Depends(deps.get_db)):
     statement = select(models.Food).limit(n)
     data = await db.execute(statement)
-    return [value for value, in data.all()]
+    return [value for value, in data.unique().all()]
 
 @router.get(
     "/{food_id}",
