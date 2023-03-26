@@ -1,0 +1,12 @@
+<tbody>
+    {% for log in logs %}
+    <tr name="food_log_id" id="food_log_{{log.id}}">
+        <td headers="log_date">{{log.date}}</td>
+        <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
+        <td headers="log_serving_size_description">{{log.serving_size.description}}</td>
+        <td headers="log_serving_amount">{{log.serving_amount}}</td>
+        <td headers="log_calories">{{log.serving_amount * log.serving_size.calories}}</td>
+        <td headers="log_edit" hx-disinherit="*" hx-get='/food_log/edit/{{log.id}}' hx-target="#food_log_{{log.id}}" role="button" hx-swap="outerHTML">Edit</td>
+    </tr>
+    {% endfor %}
+</tbody>

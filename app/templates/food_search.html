@@ -1,7 +1,7 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-<input name="search_word" type="text" hx-trigger="change delay:500ms" hx-get="/food/search" hx-target="#food_list">
+<input name="search_word" type="text" hx-trigger="keyup changed delay:500ms" hx-get="/food/search" hx-target="#food_list">
 
 <div id="food_list"></div>
 {% endblock %}

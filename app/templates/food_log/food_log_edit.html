@@ -1,0 +1,23 @@
+<tr name="food_log_id" id="food_log_{{log.id}}">
+    <td headers="log_date"><input type="date"></td>
+    <td headers="log_food">
+        <label for="foods-search">
+            <input type="text" list="food-list" id="foods-search" name="search_word"
+            hx-trigger="keyup changed delay:500ms" hx-get="/food/search_options" hx-target="#food-list"
+            >
+        </label>
+        
+        <datalist id="food-list" hx-trigger="load" hx-get="food/all_options">
+            
+        </datalist>
+    </td>
+    <td headers="log_serving_size_description">
+        
+    </td>
+    <td headers="log_serving_amount"><input type="number"></td>
+    <td headers="log_calories">{{log.serving_amount * log.serving_size.calories}}</td>
+    <td headers="log_edit" hx-disinherit="*" 
+        hx-put='/food_log/{{log.id}}' hx-target="#food_log_{{log.id}}" 
+        role="button">Save
+    </td>
+</tr>

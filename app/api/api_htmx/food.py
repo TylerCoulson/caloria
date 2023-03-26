@@ -91,7 +91,7 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
         context = {
             "request": request,
             "hx_request": hx_request,
-            "foods": jsonable_encoder(data),
+            "foods": data,
             "trigger": "click",
             }
 
@@ -110,12 +110,45 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
+async def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
     """ returns page that all foods"""
-    data = api_food.get_all_foods(n=n, db=db)
+    data = await api_food.get_all_foods(n=n, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
             "foods": data,
         }
     return templates.TemplateResponse("food.html", context)
+
+@router.get(
+    "/all_options",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
+    """ returns page that all foods"""
+    data = await api_food.get_all_foods(n=n, db=db)
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "foods": data,
+        }
+    return templates.TemplateResponse("food_log/food_option.html", context)
+
+
+@router.get(
+"/search_options",
+response_class=HTMLResponse,
+status_code=status.HTTP_200_OK,
+)
+async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_word:str, db: Session = Depends(deps.get_db)):
+    """Returns the results of searching for food"""
+    data = await api_food.get_food_search(search_word=search_word, n=n, db=db)
+
+    context = {
+        "request": request,
+        "hx_request": hx_request,
+        "foods": data,
+        }
+
+    return templates.TemplateResponse("food_log/food_option.html", context)

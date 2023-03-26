@@ -1,0 +1,9 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<table name="food_log">
+    {% include "food_log/food_log_headings.html"%}
+    {% include "food_log/food_log_body.html"%}
+</table>
+{% endblock %}
+

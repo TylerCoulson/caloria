@@ -27,9 +27,39 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
             "trigger": 'click'
         }
 
-    return templates.TemplateResponse("create_food_log.html", context)
+    return templates.TemplateResponse("food_log/create_food_log.html", context)
 
+@router.get(
+    "/edit/{log_id}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, log_id:int,  db: Session = Depends(deps.get_db)):
+    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
+    
+    context = {
+        "request": request,
+        "hx_request": hx_request,
+        "trigger": 'click',
+        "log":log
+    }
 
+    return templates.TemplateResponse("food_log/food_log_edit.html", context)     
+
+@router.put(
+    "/{food_log_id}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
+    
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "logs": [log],
+        }
+    return templates.TemplateResponse("food_log/food_log.html", context)
 
 @router.post(
     "",
@@ -44,7 +74,7 @@ async def post_food_log(*, request: Request, hx_request: str | None = Header(def
             "hx_request": hx_request,
             "logs": [log],
         }
-    return templates.TemplateResponse("food_log.html", context)
+    return templates.TemplateResponse("food_log/food_log.html", context)
 
 @router.get(
     "",
@@ -53,41 +83,40 @@ async def post_food_log(*, request: Request, hx_request: str | None = Header(def
 )
 async def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), profile:Annotated_Profile, db: Session = Depends(deps.get_db)):
     
-    try:
-        logs = await api_food_log.get_food_logs(profile=profile, db=db)
-        context = {
-                "request": request,
-                "hx_request": hx_request,
-                "logs": logs,
-                "trigger": 'click'
-            }
-
-        return templates.TemplateResponse("food_log.html", context)
-    
-    except HTTPException:
-        context = {
+    logs = await api_food_log.get_food_logs(profile=profile, db=db)
+    context = {
             "request": request,
             "hx_request": hx_request,
-            "message": f"No logs"
+            "logs": logs,
+            "trigger": 'click'
         }
-        return templates.TemplateResponse("404.html", context)
-                
+
+    return templates.TemplateResponse("food_log/food_log.html", context)             
 @router.get(
     "/{food_log_id:int}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_food_log_id(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, food_log_id: int, db: Session = Depends(deps.get_db)):
-    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
     
-    context = {
+    
+    try:
+        log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
+        context = {
+                "request": request,
+                "hx_request": hx_request,
+                "logs": [log],
+                "trigger": None
+            }
+        return templates.TemplateResponse("food_log/food_log.html", context)
+
+    except HTTPException:
+        context = {
             "request": request,
             "hx_request": hx_request,
-            "logs": [log],
-            "trigger": None
+            "message": f"No log with id of {food_log_id} for {profile.user_id}"
         }
-    return templates.TemplateResponse("food_log.html", context)
-
+        return templates.TemplateResponse("404.html", context)
 @router.get(
     "/{date}",
     response_class=HTMLResponse,
@@ -95,7 +124,7 @@ async def get_food_log_id(*, request: Request, hx_request: str | None = Header(d
 )
 async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | None = Header(default=None), date: date, profile:Annotated_Profile, db: Session = Depends(deps.get_db)):
 
-    try:
+    
         logs = await api_food_log.get_food_log_date(date=date, profile=profile, db=db)
         logs = logs['log']
         context = {
@@ -104,16 +133,10 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
                 "logs": logs,
                 "trigger": 'click'
             }
-
-        return templates.TemplateResponse("food_log.html", context)
+        
+        return templates.TemplateResponse("food_log/food_log.html", context)
     
-    except HTTPException:
-        context = {
-            "request": request,
-            "hx_request": hx_request,
-            "message": f"No logs for {date} by {profile}"
-        }
-        return templates.TemplateResponse("404.html", context)
+
 
     
 
