@@ -1,0 +1,25 @@
+<tr name="food_log_id" id="food_log_{{log.id}}">
+  <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
+  <td headers="log_food">
+    {% include "food_log/edit/food_select.html"%}
+  </td>
+  <td headers="log_serving_size_description">
+    {% include "food_log/edit/serving_select.html"%}
+    
+  </td>
+  <td headers="log_serving_amount">
+    <input name="serving_amount" id="serving_amount" type="number" min="0" value="{{log.serving_amount}}"/>
+  </td>
+  <td headers="log_calories" _="on mouseover or change from #serving_amount set my.innerHTML to #serving_cals.value * #serving_amount.value">
+    {{log.serving_size.calories * log.serving_amount}}
+  </td>
+
+  
+  <td headers="log_edit" hx-disinherit="*" hx-put="/food_log/{{log.id}}" hx-target="#food_log_{{log.id}}" hx-swap='outerHTML' name="food_log_in"
+  hx-include="closest tr" hx-ext='json-enc'
+  >
+    <div role="button" hx-trigger="click">
+        Save
+    </div>
+  </td>
+</tr>

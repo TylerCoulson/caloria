@@ -44,7 +44,7 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         "log":log
     }
 
-    return templates.TemplateResponse("food_log/food_log_edit.html", context)     
+    return templates.TemplateResponse("food_log/edit/row_base.html", context)     
 
 @router.put(
     "/{food_log_id}",
