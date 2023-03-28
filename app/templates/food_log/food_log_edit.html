@@ -9,11 +9,14 @@
         value="{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}"
       />
     </label>
-    <div hx-trigger="load" hx-get="/food/all_options" hx-target="#food-list"></div>
+    <div hx-trigger="load" hx-get="/food/all_options" hx-target="#food-list" hx-swap="beforeend"></div>
 
     <input hidden type="number" id="food_id" name="food_id" value="{{log.food_id}}"/>
 
-    <select id="food-list" hx-trigger="input delay:10ms" hx-target="#serving-list" hx-get="/food/servings" hx-include="#food_id"></select>
+    <select id="food-list" hx-trigger="input delay:10ms" hx-target="#serving-list" hx-get="/food/servings" hx-include="#food_id">
+      <option hidden value="{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</option>
+    </select>
+
   </td>
   <td headers="log_serving_size_description">
     <div hx-trigger="load" hx-get="/food/servings?food_id={{log.food_id}}" hx-target="#serving-list"></div>
