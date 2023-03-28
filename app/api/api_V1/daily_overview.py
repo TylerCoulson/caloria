@@ -101,8 +101,7 @@ async def update_daily(
     profile_id = profile.id
     weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
 
-    data = await crud.update(db_obj=weight_data, data_in=daily_data, db=db)
-    
+    data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=db)
     output = await daily_log(profile_id, current_date, db)
 
     return output

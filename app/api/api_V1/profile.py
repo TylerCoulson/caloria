@@ -40,9 +40,7 @@ async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(de
 async def update_profile(
     *, profile: Annotated_Profile, profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
 ):
-    data = await get_profile_id(profile=profile, db=db)
-    data = await crud.update(db_obj=data, data_in=profile_in, db=db)
-    
+    data = await crud.update(_id=profile.id, model=models.Profile, update_data=profile_in, db=db)
     return data
 
 

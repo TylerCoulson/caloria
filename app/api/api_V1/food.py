@@ -68,10 +68,8 @@ async def get_food_id(*, food_id: int, db: Session = Depends(deps.get_db)):
 async def update_food(
     *, food_id: int, food_in: schemas.FoodBase, db: Session = Depends(deps.get_db)
 ):
-    data = await get_food_id(food_id=food_id, db=db)
 
-    data = await crud.update(db_obj=data, data_in=food_in, db=db)
-
+    data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=db)
     return data
 
 

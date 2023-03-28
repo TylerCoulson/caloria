@@ -52,9 +52,8 @@ async def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.g
 async def update_serving_size(
     *, serving_id: int, serving_size_in: schemas.ServingSizeBase, db: Session = Depends(deps.get_db)
 ):
-    data = await get_serving_size_id(serving_id=serving_id, db=db)
 
-    data = await crud.update(db_obj=data, data_in=serving_size_in, db=db)
+    data = await crud.update(_id=serving_id, model=models.ServingSize, update_data=serving_size_in, db=db)
     return data
 
 

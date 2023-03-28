@@ -1,5 +1,5 @@
 from typing import Any
-from sqlalchemy import select
+from sqlalchemy import select, update as sql_update
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
 
@@ -18,21 +18,14 @@ async def read(*, _id: int, db, model):
     return  data.unique().scalar_one_or_none()
 
 
-async def update(*, db_obj, data_in, db):
-    obj_data = jsonable_encoder(db_obj)
-
-    if isinstance(data_in, dict):
-        update_data = data_in
-    else:
-        update_data = data_in.dict(exclude_unset=True)
-    for field in obj_data:
-        if field in update_data:
-            setattr(db_obj, field, update_data[field])
-
-    db.add(db_obj)
+async def update(*, _id, model, update_data, db):
+    statement = sql_update(model).where(model.id == _id).values(update_data.dict())
+    await db.execute(statement)
+    
     await db.commit()
-    await db.refresh(db_obj)
-    return db_obj
+    
+    data = await read(_id=_id, db=db, model=model)
+    return data
 
 
 async def delete(*, _id: int, db, db_obj):
