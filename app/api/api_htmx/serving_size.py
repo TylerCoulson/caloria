@@ -77,4 +77,23 @@ async def get_all_servings_for_a_food(*, request: Request, hx_request: str | Non
     return templates.TemplateResponse("servings.html", context)
 
 
+@router.get(
+    "/servings",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_servings_for_a_food(*, request: Request, hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLog]:
+    servings_out = await api_servings.get_serving_size_by_food(food_id=food_id, db=db)
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "trigger": "click",
+            "servings": servings_out['servings']
+        }
+    return templates.TemplateResponse("food_log/serving_option.html", context)
+
+
+food_router.include_router(router, tags=['htmx-servings'])
+
+
 food_router.include_router(router, tags=['htmx-servings'])

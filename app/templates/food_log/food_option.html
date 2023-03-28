@@ -1,3 +1,5 @@
 {% for food in foods %}
-    <option value="{{food.brand}}, {{food.name}}"></option>
+    <option value="{{food.brand}}, {{food.name}}" _="on click set #food_id.value to {{food.id}} then set #foods-search.value to my.value">
+        {{food.brand}}, {{food.name}}
+    </option>
 {% endfor %}

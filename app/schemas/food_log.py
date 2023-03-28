@@ -8,7 +8,7 @@ class FoodLogBase(BaseModel):
     food_id: int
     serving_size_id: int
     serving_amount: int
-    profile_id: int
+    profile_id: int = 0
 
 class FoodLogCreate(FoodLogBase):
     pass

@@ -36,7 +36,7 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
 )
 async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, log_id:int,  db: Session = Depends(deps.get_db)):
     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
-    
+
     context = {
         "request": request,
         "hx_request": hx_request,
@@ -51,15 +51,15 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def update_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
-    
+
     context = {
             "request": request,
             "hx_request": hx_request,
             "logs": [log],
         }
-    return templates.TemplateResponse("food_log/food_log.html", context)
+    return templates.TemplateResponse("food_log/food_log_body.html", context)
 
 @router.post(
     "",
@@ -92,6 +92,7 @@ async def get_food_logs(*, request: Request, hx_request: str | None = Header(def
         }
 
     return templates.TemplateResponse("food_log/food_log.html", context)             
+
 @router.get(
     "/{food_log_id:int}",
     response_class=HTMLResponse,

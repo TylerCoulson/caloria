@@ -42,7 +42,6 @@ async def test_food_log_read_id(client:TestClient, db:Session, food_log:models.F
 
 async def test_food_update(client:TestClient, db:Session, food_log:models.Food_Log):
     food_log['serving_amount'] += 2
-
     response = await client.put(f"/api/v1/food_log/{food_log['id']}", json=food_log)
 
     assert response.status_code == 200

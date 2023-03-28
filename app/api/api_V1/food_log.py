@@ -20,7 +20,6 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food_log(*, profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
-    print(f'\n\n{profile}\n\n')
     food_log.profile_id = profile.id
     food_log_out = await crud.create(obj_in=food_log, db=db, model=models.Food_Log)
     return food_log_out
@@ -74,8 +73,6 @@ async def update_food_log(
     food_log_in.profile_id = profile.id
     
     data = await crud.update(_id=food_log_id, model=models.Food_Log, update_data=food_log_in, db=db)
-    print('test data', data)
-    
     
     return data
 
