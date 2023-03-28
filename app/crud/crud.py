@@ -23,8 +23,8 @@ async def update(*, _id, model, update_data, db):
     await db.execute(statement)
     
     await db.commit()
-    
     data = await read(_id=_id, db=db, model=model)
+    await db.refresh(data)
     return data
 
 
