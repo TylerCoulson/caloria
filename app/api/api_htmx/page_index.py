@@ -18,7 +18,7 @@ def get_index(request: Request, profile: Annotated_User, hx_request: str | None 
         "user": profile
     }
 
-    return templates.TemplateResponse("index.html", context, headers={'HX-Refresh': 'true'})
+    return templates.TemplateResponse("index.html", context, headers={'HX-Redirect': '/'})
 
 @router.get(
     "/navbar",
