@@ -18,7 +18,7 @@ def get_index(request: Request, profile: Annotated_User, hx_request: str | None 
         "user": profile
     }
 
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("index.html", context, headers={'HX-Refresh': 'true'})
 
 @router.get(
     "/navbar",
@@ -26,6 +26,7 @@ def get_index(request: Request, profile: Annotated_User, hx_request: str | None 
     status_code=status.HTTP_200_OK,
 )
 def get_navbar(request: Request, hx_request: str | None = Header(default=None)):
+    
     context = {
         "request": request,
         "hx_request":hx_request,
