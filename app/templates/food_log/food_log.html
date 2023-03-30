@@ -4,7 +4,7 @@
 {% block content %}
 <table name="food_log">
     {% include "food_log/food_log_headings.html"%}
-    <tbody>
+    <tbody id="food_log_table">
         {{ food_log_row(logs) }}
     </tbody>
 </table>
