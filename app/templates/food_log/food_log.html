@@ -1,10 +1,11 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
+{% from "macros.html" import food_log_row %}
 
 {% block content %}
 <table name="food_log">
     {% include "food_log/food_log_headings.html"%}
     <tbody>
-        {% include "food_log/food_log_body.html"%}
+        {{ food_log_row(logs) }}
     </tbody>
 </table>
 {% endblock %}

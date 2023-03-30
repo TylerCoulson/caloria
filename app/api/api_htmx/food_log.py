@@ -109,7 +109,7 @@ async def get_food_log_id(*, request: Request, hx_request: str | None = Header(d
                 "logs": [log],
                 "trigger": None
             }
-        return templates.TemplateResponse("food_log/food_log.html", context)
+        return templates.TemplateResponse("food_log/food_log_body.html", context)
 
     except HTTPException:
         context = {
