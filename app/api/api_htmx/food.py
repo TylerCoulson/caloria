@@ -30,7 +30,7 @@ def get_create_serving_page(*, request: Request, hx_request: str | None = Header
             "trigger": 'click'
         }
 
-    return templates.TemplateResponse("create_food.html", context)
+    return templates.TemplateResponse("food/create_food.html", context)
 
 @router.get(
     "",
@@ -43,7 +43,7 @@ def get_search_page(*, request: Request,hx_request: str | None = Header(default=
             "request": request,
             "hx_request": hx_request,
         }
-    return templates.TemplateResponse("food_search.html", context)
+    return templates.TemplateResponse("food/food_search.html", context)
 
 @router.post(
     "",
@@ -58,7 +58,7 @@ async def post_food(*, request: Request,hx_request: str | None = Header(default=
             "hx_request": hx_request,
             "foods": [food_out]
         }
-    return templates.TemplateResponse("food.html", context)
+    return templates.TemplateResponse("food/food.html", context)
 
 
 @router.get(
@@ -76,7 +76,7 @@ async def get_food(*, request: Request,hx_request: str | None = Header(default=N
             "include_servings": True,
             "foods": [food_out],
         }
-    return templates.TemplateResponse("food.html", context)
+    return templates.TemplateResponse("food/food.html", context)
 
 @router.get(
 "/search",
@@ -95,7 +95,7 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
             "trigger": "click",
             }
 
-        return templates.TemplateResponse("food.html", context)
+        return templates.TemplateResponse("food/food.html", context)
     
     except HTTPException:
         context = {
@@ -118,7 +118,7 @@ async def get_all_foods(*, request: Request, hx_request: str | None = Header(def
             "hx_request": hx_request,
             "foods": data,
         }
-    return templates.TemplateResponse("food.html", context)
+    return templates.TemplateResponse("food/food.html", context)
 
 @router.get(
     "/all_options",
