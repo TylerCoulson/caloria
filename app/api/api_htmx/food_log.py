@@ -19,15 +19,19 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    
+async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db), profile: Annotated_Profile,):
+    food = schemas.FoodNoIngredients(brand="", name="", id=0)
+    serving_size = schemas.ServingSize(food_id=0, description="", calories=0, fats=0, carbs=0, protein=0, id=0, food=food)
+    log = schemas.FoodLog(date=date.today(), food_id=0, serving_size_id=0, serving_amount=0, profile_id=profile.id, id=0, serving_size=serving_size)
+
     context = {
             "request": request,
             "hx_request": hx_request,
-            "trigger": 'click'
+            "trigger": 'click',
+            "log": log
         }
 
-    return templates.TemplateResponse("food_log/create_food_log.html", context)
+    return templates.TemplateResponse("food_log/edit/row_base.html", context)
 
 @router.get(
     "/edit/{log_id}",
@@ -41,7 +45,8 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         "request": request,
         "hx_request": hx_request,
         "trigger": 'click',
-        "log":log
+        "log":log,
+        "editable": True
     }
 
     return templates.TemplateResponse("food_log/edit/row_base.html", context)     
@@ -67,12 +72,12 @@ async def update_food_log(*, request: Request, hx_request: str | None = Header(d
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
-    log = await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
-    
+    await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
+    logs = await api_food_log.get_food_logs(profile=profile, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
-            "logs": [log],
+            "logs": logs,
         }
     return templates.TemplateResponse("food_log/food_log.html", context)
 
@@ -88,6 +93,7 @@ async def get_food_logs(*, request: Request, hx_request: str | None = Header(def
             "request": request,
             "hx_request": hx_request,
             "logs": logs,
+            "log": {"date":date.today(), "food_id":0, "serving_size_id":0, "serving_amount":0},
             "trigger": 'click'
         }
 

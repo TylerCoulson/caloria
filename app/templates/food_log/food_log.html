@@ -5,6 +5,10 @@
 <table name="food_log">
     {% include "food_log/food_log_headings.html"%}
     <tbody id="food_log_table">
+        <tr  hx-get='/food_log/create' hx-push-url="false" hx-trigger='click consume' hx-target="this" hx-swap="outerHTML">
+            <td style='display: table-cell;' role="button" colspan="6">Add Row</td>
+        </tr>
+
         {{ food_log_row(logs) }}
     </tbody>
 </table>

@@ -18,9 +18,9 @@
     {{log.serving_size.calories * log.serving_amount}}
   </td>
 
-  
-  <td headers="log_edit" name="food_log_in" hx-target="#food_log_{{log.id}}" hx-swap='outerHTML'>
-    <div role="button" hx-put="/food_log/{{log.id}}"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
-    <div role="button" hx-get="/food_log/{{log.id}}"> Cancel </div>
-  </td>
+  {% if editable %}
+    {% include "food_log/edit/edit_save.html"%}
+  {% else %}
+    {% include "food_log/add_log.html"%}
+  {% endif %}
 </tr>
