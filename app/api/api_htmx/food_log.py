@@ -38,7 +38,8 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, log_id:int,  db: Session = Depends(deps.get_db)):
+async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, log_id:int, copy:bool = False, db: Session = Depends(deps.get_db)):
+
     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
 
     context = {
@@ -49,6 +50,11 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         "editable": True
     }
 
+    if copy:
+        context["log"].date = date.today()
+        context["log"].id = 0
+        context['editable'] = False
+
     return templates.TemplateResponse("food_log/edit/row_base.html", context)     
 
 @router.put(
@@ -57,6 +63,11 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
     status_code=status.HTTP_201_CREATED,
 )
 async def update_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    
+    if food_log_id == 0:
+        return post_food_log(request=request, hx_request=hx_request, profile=profile, food_log=food_log_in, db=db)
+
+    
     log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
 
     context = {
