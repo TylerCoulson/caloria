@@ -35,7 +35,7 @@ class PersonsDay():
                 total_calories_eaten += calories
             else:
                 pass
-        return round(total_calories_eaten,0)
+        return int(round(total_calories_eaten,0))
 
     def estimated_weight(self, current_date:date, total_calories_eaten:int=None):
         if total_calories_eaten is None:
@@ -68,7 +68,7 @@ class PersonsDay():
                 calories_eaten_on_current_date += calories
             else:
                 continue
-        return round(calories_eaten_on_current_date,0)
+        return int(round(calories_eaten_on_current_date,0))
 
     def calorie_goal(self, weight:float, age:float):
         lowest_allowed = 1200 if self.sex == 'female' else 1500
@@ -80,7 +80,7 @@ class PersonsDay():
         else:
             calorie_goal = rmr
 
-        return round(calorie_goal,0)
+        return int(round(calorie_goal,0))
 
     def total_lbs_lost(self, current_date:date):
         return round(self.start_weight - self.estimated_weight(current_date=current_date), 1)
@@ -118,7 +118,7 @@ class PersonsDay():
         gender_calc = -161 if self.sex == 'female' else 5
 
         resting_rate = ( (weight_calc+height_calc-age_calc) + gender_calc) * self.activity_level
-        return round(resting_rate)
+        return int(round(resting_rate))
 
     def prediction(self):
         """
