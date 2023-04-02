@@ -1,4 +1,5 @@
 <td headers="log_edit" name="food_log_in" hx-target="#food_log_{{log.id}}" hx-swap='outerHTML'>
     <div role="button" hx-put="/food_log/{{log.id}}"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
     <div role="button" hx-get="/food_log/{{log.id}}"> Cancel </div>
+    <div role="button" hx-delete="/food_log/{{log.id}}" hx-target="#content" hx-swap="innerHTML"> Delete </div>
   </td>

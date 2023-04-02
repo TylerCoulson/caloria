@@ -142,32 +142,21 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
             }
         
         return templates.TemplateResponse("food_log/food_log.html", context)
+
+@router.delete(
+    "/{food_log_id}",
+    status_code=status.HTTP_200_OK,
+)
+async def delete_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, profile:Annotated_Profile, db: Session = Depends(deps.get_db)):
+    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
     
-
-
+    await crud.delete(_id=food_log_id, db=db, db_obj=log)
     
-
-'''CREATE A ROUTE TO GET ALL PROFILE FOOD LOGS. Be able to copy/add prior logs to the different days'''
-# @router.put(
-#     "/{food_log_id}",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_200_OK,
-# )
-# async def update_food_log(
-#     *, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)
-# ):
-#     data = get_food_log(food_log_id=food_log_id, db=db)
-
-#     data = crud.update(db_obj=data, data_in=food_log_in, db=db)
-#     return data
-
-
-# @router.delete(
-#     "/{food_log_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# async def delete_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
-#     data = get_food_log(food_log_id=food_log_id, db=db)
-
-#     data = crud.delete(_id=food_log_id, db=db, db_obj=data)
-#     return data
+    logs = await api_food_log.get_food_logs(profile=profile, db=db)
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "logs": logs,
+            "trigger": 'click'
+        }
+    return templates.TemplateResponse("food_log/food_log.html", context)
