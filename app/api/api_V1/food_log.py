@@ -56,7 +56,7 @@ async def get_food_log_id(*, profile: Annotated_Profile, food_log_id: int, db: S
 )
 async def get_food_logs(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     profile_id = profile.id
-    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id)
+    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id).order_by(models.Food_Log.date.desc())
     data = await db.execute(statement)
     test = data.unique().all()
 
