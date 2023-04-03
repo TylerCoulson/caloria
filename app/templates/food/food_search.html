@@ -3,5 +3,7 @@
 {% block content %}
 <input name="search_word" type="text" hx-trigger="keyup changed delay:500ms" hx-get="/food/search" hx-target="#food_list">
 
-<div id="food_list"></div>
+<div id="food_list" hx-trigger="load" hx-target="this" hx-get="/food/all">
+
+</div>
 {% endblock %}
