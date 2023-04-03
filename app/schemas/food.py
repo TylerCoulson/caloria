@@ -6,6 +6,7 @@ class FoodBase(BaseModel):
     name: str
 
 class FoodCreate(FoodBase):
+    fdc_id: int | None = 0
     class Config:
         orm_mode = True
 
