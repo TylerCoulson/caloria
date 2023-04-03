@@ -15,12 +15,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def create_db_and_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        
 
-@app.on_event("startup")
-async def on_startup():
-    await create_db_and_tables()
 
+# @app.on_event("startup")
+# async def on_startup():
+#     await create_db_and_tables()
 
 app.include_router(api_router)
 app.include_router(htmx_router)
