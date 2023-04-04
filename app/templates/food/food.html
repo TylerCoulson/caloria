@@ -22,7 +22,8 @@
 {% if include_servings %}
 <!-- <div hx-trigger="click" hx-get="/create/serving_size" hx-target="#create_serving_size">Create Serving</div>
 <div id="create_serving_size"></div> -->
-<div name="servings" id="servings" hx-trigger="load" hx-get="/servings/food_id/{{foods[0].id}}" hx-target="#servings"></div>
+<h6>Servings</h6>
+<div name="servings" id="servings" hx-trigger="load" hx-get="/food/{{foods[0].id}}/servings" hx-target="#servings"></div>
     
 {% endif %}
 {% endblock %}
