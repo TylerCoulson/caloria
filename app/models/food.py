@@ -15,8 +15,7 @@ class Food(Base):
     id = Column(Integer, primary_key=True, index=True)
     brand = Column(String)
     name = Column(String)
-    fdc_id = Column(Integer)
-    
+
     servings = relationship(
         "ServingSize", back_populates="food",lazy="joined"
     )
