@@ -53,9 +53,9 @@ async def post_daily(*, request: Request, hx_request: str | None = Header(defaul
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, n_days:int=50, db: Session = Depends(deps.get_db)):
+async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
 
-    output_data = await api_daily.get_all_daily(profile=profile, n_days=n_days, db=db)
+    output_data = await api_daily.get_all_daily(profile=profile, db=db)
     context = {
                 "request": request,
                 "hx_request": hx_request,

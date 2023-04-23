@@ -42,20 +42,21 @@ async def test_daily_overview_get(client:TestClient, db:Session, food_log:models
 
     assert content.keys() == output.keys()
 
-async def test_daily_overview_post(client:TestClient, db:Session, profile: models.Profile):
-    start_date = datetime.strptime(profile['start_date'],'%Y-%m-%d')
+async def test_daily_overview_post(client:TestClient, db:Session, profile: models.Profile, food_log:models.Food_Log):
+    start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
+
     data = {
         "profile_id": profile['id'],
-        "date": (start_date + timedelta(32)).strftime('%Y-%m-%d'),
+        "date": (start_date).strftime('%Y-%m-%d'),
         "actual_weight": 308.8
     }
-    response= await client.post(f"/api/v1/daily", json=data)
+    response = await client.post(f"/api/v1/daily", json=data)
     content = response.json()    
     assert response.status_code == 201
 
     assert content['actual_weight'] == 308.8
 
-async def test_daily_overview_update(client:TestClient, db:Session,  food_log:models.Food_Log):    
+async def test_daily_overview_update(client:TestClient, db:Session, food_log:models.Food_Log):    
     start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
     end_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
 
