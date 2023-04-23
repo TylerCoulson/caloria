@@ -59,10 +59,7 @@ async def daily_log(profile_id:models.Profile, current_date:date, db):
 async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     actual_weight.profile_id = profile.id
     log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
-    print('testing')
-    print(log.date)
     output_data = await get_daily(profile=profile, current_date=log.date, db=db)
-    print('testing2')
     return output_data
 
 @router.get(
@@ -133,9 +130,6 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
 
         previous_total_eaten = total_calories_eaten
         test.append(output_data)
-
-        # print(output_data)
-        # print(i[0], total_rmr, total_calories_eaten, (total_rmr - total_calories_eaten)/3500, output_data['total_lbs_lost'])
         est_weight = profile.start_weight-((total_rmr - total_calories_eaten)/3500)
     test.reverse()
 
@@ -150,10 +144,8 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
 )
 async def get_daily(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
     output_data = await get_all_daily(profile=profile, db=db)
-    print(output_data)
     for i in output_data:
         if i['date'] == current_date:
-            print
             return i
         else:
             continue
