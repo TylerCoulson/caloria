@@ -13,3 +13,16 @@
 {% endfor %}
 
 {% endmacro %}
+
+{% macro daily_value_styling(value) %}
+    {% set text_shadow = "text-shadow: 0.03em 0 black, 0 0.03em black, -0.03em 0 black, 0 -0.03em black;"  %}
+    {% if value < -1000 %} 
+        style="background-color: #960202; {{text_shadow}}"
+    {% elif value < -200 %} 
+        style="background-color: #b34602; {{text_shadow}}"
+    {% elif value < 200 %} 
+        style="background-color: #02700a; {{text_shadow}}" 
+    {% else %}
+        style="{{text_shadow}}"
+    {%endif%}
+{% endmacro%}

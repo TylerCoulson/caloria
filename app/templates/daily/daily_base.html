@@ -1,5 +1,5 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
-
+{% from "macros.html" import daily_value_styling %}
 {% block content %}
 
 <table name="profile" role="grid">
@@ -20,7 +20,8 @@
         </tr>
     </thead>
     <tbody>
-        {% for daily in dailies %}    
+        {% for daily in dailies %}
+
         <tr id="{{ daily.date }}">
             <td hidden headers="week">{{ daily.week }}</td>
             <td headers="day">{{ daily.day }}</td>
@@ -33,7 +34,7 @@
             <td hidden headers="resting_rate">{{ daily.resting_rate }}</td>
             <td headers="eaten_calories">{{ daily.eaten_calories }}</td>
             <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal) }}</td>
-            <td headers="calories_left">{{ "{:,}".format(daily.calories_left)  }}</td>
+            <td headers="calories_left" {{daily_value_styling(daily.calories_left)}}>{{ "{:,}".format(daily.calories_left)  }}</td>
             <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
             <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus) }}</td>
         </tr>
