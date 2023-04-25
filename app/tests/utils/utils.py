@@ -143,6 +143,26 @@ async def food_log(
     log = await crud.create(obj_in=data, db=db, model=models.Food_Log)
     return jsonable_encoder(log)
 
+@pytest.fixture()
+async def food_log_2(
+    module_profile, food, serving, db
+):
+    profile_id = module_profile['id']
+    food_id = food['id']
+    serving_size_id = serving['id']
+    serving_amount = 1
+    
+    data = {
+        "date": datetime.strptime(module_profile['start_date'], "%Y-%m-%d") + timedelta(1),
+        "food_id": food_id,
+        "serving_size_id": serving_size_id,
+        "serving_amount": serving_amount,
+        "profile_id": profile_id,
+    }
+
+    data = schemas.FoodLogCreate(**data)
+    log = await crud.create(obj_in=data, db=db, model=models.Food_Log)
+    return jsonable_encoder(log)
 
 @pytest.fixture()
 async def daily_output(food_log:models.Food_Log): 
