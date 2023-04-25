@@ -13,62 +13,14 @@ from app.auth.router import Annotated_Profile
 router = APIRouter()
 
 
-async def get_weight(profile_id, current_date, db):
+async def get_weight(profile_id, current_date, db: Session):
     statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
     data = await db.execute(statement)
     return data.unique().scalar_one_or_none()
 
-async def daily_log(profile_id:models.Profile, current_date:date, db):
-    profile_data = await crud.read(_id=profile_id, db=db, model=models.Profile)
-
-    log_data = PersonsDay(height=profile_data.height, start_weight=profile_data.start_weight, start_date=profile_data.start_date, lbs_per_day=(profile_data.lbs_per_week/7), birthdate=profile_data.birthdate, sex=profile_data.sex, activity_level=profile_data.activity_level, goal_weight=profile_data.goal_weight, profile_logs=profile_data.log) 
-
-    profile_age = log_data.age(current_date)
-    day = (current_date - profile_data.start_date).days
-    est_weight = log_data.estimated_weight(current_date=current_date)
-    current_rmr  = log_data.resting_rate(weight=est_weight, age=profile_age)
-    calories_eaten_on_current_date = log_data.calories_eaten_on_date(current_date=current_date)
-    calorie_goal = log_data.calorie_goal(weight=est_weight, age=log_data.age(current_date))
-    total_lbs_lost = log_data.total_lbs_lost(current_date=current_date)
-    total_calorie_surplus = log_data.calorie_surplus(current_date=current_date)
-    weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=db)
-    
-    output_data = {
-        "date": current_date,
-        "profile_id":profile_id,
-        'day':day,
-        'week':(day//7)+1,
-        'est_weight':est_weight,
-        'resting_rate':current_rmr,
-        'eaten_calories':calories_eaten_on_current_date,
-        'calorie_goal':calorie_goal,
-        'total_lbs_lost':total_lbs_lost,
-        'calorie_surplus':total_calorie_surplus,
-        'calories_left':calorie_goal - calories_eaten_on_current_date,
-        'bmi':log_data.bmi(current_date=current_date),
-        'actual_weight':weight_data.actual_weight if weight_data else 0
-    }
-
-    return output_data
-
-@router.post(
-    "",
-    response_model=schemas.DailyOverview,
-    status_code=status.HTTP_201_CREATED,
-)
-async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    actual_weight.profile_id = profile.id
-    log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
-    output_data = await get_daily(profile=profile, current_date=log.date, db=db)
-    return output_data
-
-@router.get(
-    "",
-    response_model=list[schemas.DailyOverview],
-    status_code=status.HTTP_200_OK,
-)
-async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def daily_log(profile:models.Profile, db: Session):
     profile_id = profile.id
+
     statement = select(
         models.Food_Log.date,
         func.sum(func.round(models.ServingSize.calories * models.Food_Log.serving_amount,0)).over(order_by=models.Food_Log.date), # total_calories_eaten
@@ -88,7 +40,7 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
     )
     
     data = await db.execute(statement)
-    test = []
+    logs = []
     
     total_rmr = 0
     est_weight = profile.start_weight
@@ -111,7 +63,7 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
         calorie_goal = max(resting_rate - i[7], i[8])
         total_calorie_goal += calorie_goal
 
-        output_data = {
+        log = {
             "date": i[0],
             "profile_id":profile_id,
             'day':day,
@@ -129,11 +81,30 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
         
 
         previous_total_eaten = total_calories_eaten
-        test.append(output_data)
+        logs.append(log)
         est_weight = profile.start_weight-((total_rmr - total_calories_eaten)/3500)
-    test.reverse()
+    logs.reverse()
 
-    return test
+    return logs
+
+@router.post(
+    "",
+    response_model=schemas.DailyOverview,
+    status_code=status.HTTP_201_CREATED,
+)
+async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    actual_weight.profile_id = profile.id
+    log = await crud.create(obj_in=actual_weight, db=db, model=models.DailyLog)
+    output_data = await get_daily(profile=profile, current_date=log.date, db=db)
+    return output_data
+
+@router.get(
+    "",
+    response_model=list[schemas.DailyOverview],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    return await daily_log(profile=profile, db=db)
     
 
     
@@ -143,7 +114,7 @@ async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(dep
     status_code=status.HTTP_200_OK,
 )
 async def get_daily(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
-    output_data = await get_all_daily(profile=profile, db=db)
+    output_data = await daily_log(profile=profile, db=db)
     for i in output_data:
         if i['date'] == current_date:
             return i
