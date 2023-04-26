@@ -29,6 +29,7 @@ httpcore==0.16.3
 httpx==0.23.3
 httpx-oauth==0.11.0
 idna==3.4
+ijson==3.2.0.post0
 iniconfig==2.0.0
 ipykernel==6.21.2
 ipython==8.10.0
@@ -42,8 +43,10 @@ MarkupSafe==2.1.2
 matplotlib-inline==0.1.6
 mypy-extensions==1.0.0
 nest-asyncio==1.5.6
+numpy==1.24.2
 outcome==1.2.0
 packaging==23.0
+pandas==2.0.0
 parso==0.8.3
 passlib==1.7.4
 pathspec==0.11.0
@@ -62,6 +65,7 @@ pytest-asyncio==0.20.3
 pytest-trio==0.8.0
 python-dateutil==2.8.2
 python-multipart==0.0.5
+pytz==2023.3
 pywin32==305
 pyzmq==25.0.0
 requests==2.28.2
@@ -77,6 +81,7 @@ tornado==6.2
 traitlets==5.9.0
 trio==0.22.0
 typing_extensions==4.4.0
+tzdata==2023.3
 urllib3==1.26.14
 uvicorn==0.20.0
 wcwidth==0.2.6
