@@ -3,6 +3,6 @@
 {% block content %}
 <td headers="actual_weight" hx-target='this' name="actual_weight" hx-swap="outerHTML">
     <input hidden type="date" id="id_{{date}}" value="{{date}}" name="date"></input>
-    <input name='actual_weight' hx-put="/daily" hx-ext='json-enc' hx-include='#id_{{date}}' type="number">
+    <input name='actual_weight' hx-put="/daily/{{date}}" hx-ext='json-enc' hx-include='#id_{{date}}' type="number">
 </td>
 {% endblock %}

@@ -48,6 +48,24 @@ async def post_daily(*, request: Request, hx_request: str | None = Header(defaul
     
     return templates.TemplateResponse("daily/daily_weight.html", context)
 
+
+@router.put(
+    "/{current_date}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def udpate_daily(*, request: Request, hx_request: str | None = Header(default=None), current_date:date, actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+
+    output_data = await api_daily.update_daily(profile=profile, current_date=current_date, daily_data=actual_weight, db=db)
+    context = {
+                "request": request,
+                "hx_request": hx_request,
+                "daily": output_data,
+            }
+    
+    return templates.TemplateResponse("daily/daily_weight.html", context)
+
+
 @router.get(
     "",
     response_class=HTMLResponse,
