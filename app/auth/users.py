@@ -5,8 +5,8 @@ from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, CookieTransport, JWTStrategy
 from fastapi_users.db import SQLAlchemyUserDatabase
 
-import crud
-from app import models
+
+from app import models, crud
 from app.deps import get_db
 from .db import User, get_user_db
 from .secrets import secrets

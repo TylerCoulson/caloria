@@ -28,5 +28,5 @@ class AllServings(BaseModel):
     class Config:
         orm_mode = True
 
-from schemas import FoodNoIngredients
+from .food import FoodNoIngredients
 ServingSize.update_forward_refs()
