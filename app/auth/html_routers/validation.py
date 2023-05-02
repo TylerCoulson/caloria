@@ -70,3 +70,13 @@ async def validate_email(*, email:str, db = Depends(get_user_db)):
             </div>
         '''
     
+@router.get(
+    "/username_password",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def username_password_error():
+
+    return f'''
+       <div id="login-error" class='invalid-feedback'>Incorrect Username or Password</div>
+    '''

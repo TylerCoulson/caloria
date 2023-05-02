@@ -1,14 +1,17 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-<form hx-post="/api/v1/auth/cookie/login" hx-target="#login_div">
+<div hx-trigger="htmx:responseError from:#login-form" hx-get="/validate/username_password" hx-target="#login-error"></div> 
+<form id='login-form' hx-post="/api/v1/auth/cookie/login" hx-target="#login_div">
     <label for="username">Email:</label>
     <input type="text" id="username" name="username">
     
     <label for="password">Password:</label>
     <input type="password" id="password" name="password">
     
+    <div id="login-error"></div>
+    
     <input type="submit" value="Login">
 </form>
-<div hidden id="login_div" hx-push-url="true" hx-get="/" hx-target="#content" hx-trigger="htmx:beforeSwap"></div>
+<div hidden id="login_div" hx-push-url="true" hx-get="/" hx-target="#content" hx-trigger="htmx:afterSwap"></div>
 {% endblock %}
