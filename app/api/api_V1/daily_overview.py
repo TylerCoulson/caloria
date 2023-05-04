@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy import select, func, extract, cast, Integer, distinct
+from fastapi import APIRouter, Depends, status
+from sqlalchemy import select, func, extract, cast, Integer, Numeric
 from sqlalchemy.orm import Session  # type: ignore
-from datetime import date, timedelta
+from datetime import date
 from app import deps
 from app import schemas
 from app import models
 from app import crud
-import time
 
 from app.api.calcs.calorie_calcs import PersonsDay 
 from app.auth.router import Annotated_Profile
@@ -23,7 +22,7 @@ async def daily_log(profile:models.Profile, db: Session):
 
     statement = select(
         models.Food_Log.date,
-        func.sum(func.round(models.ServingSize.calories * models.Food_Log.serving_amount,0)).over(order_by=models.Food_Log.date), # total_calories_eaten
+        func.sum(func.round(cast(models.ServingSize.calories * models.Food_Log.serving_amount, Numeric),0)).over(order_by=models.Food_Log.date), # total_calories_eaten
         (models.Profile.height*2.54) * 6.25, #height
         cast((extract('epoch', models.Food_Log.date) - extract('epoch', models.Profile.birthdate))/60/60/24/365.25, Integer) * 5, #age
         -161 if models.Profile.sex == 'female' else 5, #sex
@@ -49,7 +48,7 @@ async def daily_log(profile:models.Profile, db: Session):
     
     for i in data.unique().all():
         weight_calc = 10 * (est_weight/2.2)
-        total_calories_eaten = i[1]
+        total_calories_eaten = float(i[1])
         height_calc = i[2]
         age_calc = i[3]
         sex_calc = i[4]
