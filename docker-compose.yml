@@ -13,17 +13,21 @@ services:
       - 8000:8000
     environment:
       - DATABASE_URL=postgresql+asyncpg://user:password@appdb:5432/trackfood
+      
     depends_on:
       - appdb
   appdb:
     image: postgres:15-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
     expose:
-      - 5423
+      - 5432
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=trackfood
+      - POSTGRES_HOST_AUTH_METHOD=trust
 volumes:
   postgres_data:
