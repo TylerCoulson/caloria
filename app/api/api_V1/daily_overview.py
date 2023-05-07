@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from sqlalchemy import select, func, extract, cast, Integer, Numeric
+from sqlalchemy import select, func, extract, cast, Integer, Numeric, or_, column, Date, Interval, Text
 from sqlalchemy.orm import Session  # type: ignore
 from datetime import date
 from app import deps
@@ -18,29 +18,30 @@ async def get_weight(profile_id, current_date, db: Session):
     return data.unique().scalar_one_or_none()
 
 async def daily_log(profile:models.Profile, db: Session):
-    profile_id = profile.id
+    date_range = func.generate_series(cast(profile.start_date, Date), cast(date.today(), Date), cast(cast('1 day', Text), Interval)).alias('dates')
+    dates = column("dates")
 
     statement = select(
-        models.Food_Log.date,
-        func.sum(func.round(cast(models.ServingSize.calories * models.Food_Log.serving_amount, Numeric),0)).over(order_by=models.Food_Log.date), # total_calories_eaten
-        (models.Profile.height*2.54) * 6.25, #height
-        cast((extract('epoch', models.Food_Log.date) - extract('epoch', models.Profile.birthdate))/60/60/24/365.25, Integer) * 5, #age
-        -161 if models.Profile.sex == 'female' else 5, #sex
-        models.Profile.activity_level, #activity level
-        cast((extract('epoch', models.Food_Log.date) - extract('epoch', models.Profile.start_date))/60/60/24, Integer)+1,
-        models.Profile.lbs_per_week * 500,
-        12000 if models.Profile.sex == 'female' else 1500,
-        models.Profile.height * models.Profile.height,
-        models.DailyLog.actual_weight
-    ).where(models.Food_Log.profile_id == profile_id
-    ).join(models.ServingSize
-    ).join(models.Profile
-    ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, full=True,
+        cast(dates, Date),
+        func.sum(models.ServingSize.calories * models.Food_Log.serving_amount).over(order_by=dates), # total_calories_eaten
+        (profile.height*2.54) * 6.25, #height
+        cast((extract('epoch', dates) - extract('epoch', profile.birthdate))/60/60/24/365.25, Integer) * 5, #age
+        -161 if profile.sex == 'female' else 5, #sex
+        profile.activity_level, #activity level
+        cast((extract('epoch', dates) - extract('epoch', profile.start_date))/60/60/24, Integer)+1, # days since start
+        profile.lbs_per_week * 500, # calories need to lose per week
+        1200 if profile.sex == 'female' else 1500, # lowest calories allowed
+        profile.height * profile.height, # heigh squared (used for bmi calc)
+        models.DailyLog.actual_weight # user inputed weight
+    ).select_from(date_range).join(models.Food_Log, models.Food_Log.date == dates, isouter=True                                           
+    ).where(or_(models.Food_Log.profile_id == 1, models.Food_Log.profile_id == None)
+    ).join(models.ServingSize, isouter=True
+    ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, isouter=True
     )
     
     data = await db.execute(statement)
     logs = []
-    
+
     total_rmr = 0
     est_weight = profile.start_weight
     total_calorie_goal = 0
@@ -49,22 +50,22 @@ async def daily_log(profile:models.Profile, db: Session):
     for i in data.unique().all():
         weight_calc = 10 * (est_weight/2.2)
         total_calories_eaten = float(i[1])
-        height_calc = i[2]
-        age_calc = i[3]
-        sex_calc = i[4]
-        act_level = i[5]
+        height_calc = float(i[2])
+        age_calc = float(i[3])
+        sex_calc = float(i[4])
+        act_level = float(i[5])
         resting_rate = ( (weight_calc+height_calc-age_calc) + sex_calc) * act_level
         day = i[6]
 
 
         total_rmr += resting_rate
 
-        calorie_goal = max(resting_rate - i[7], i[8])
+        calorie_goal = max(resting_rate - float(i[7]), float(i[8]))
         total_calorie_goal += calorie_goal
 
         log = {
             "date": i[0],
-            "profile_id":profile_id,
+            "profile_id":profile.id,
             'day':day,
             'week':(day//7)+1,
             'est_weight':round(est_weight,1),
@@ -74,7 +75,7 @@ async def daily_log(profile:models.Profile, db: Session):
             'total_lbs_lost':round((total_rmr - total_calories_eaten)/3500,2),
             'calorie_surplus': round(total_calorie_goal - total_calories_eaten,0),
             'calories_left':round(calorie_goal - (total_calories_eaten-previous_total_eaten),0),
-            'bmi':round((est_weight/i[9])*703,2),
+            'bmi':round((est_weight/float(i[9]))*703,2),
             'actual_weight': i[10] or 0
         }
         
