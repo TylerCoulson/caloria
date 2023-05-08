@@ -5,8 +5,8 @@
     <td headers="log_date">{{log.date}}</td>
     <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
     <td headers="log_serving_size_description">{{log.serving_size.description}}</td>
-    <td headers="log_serving_amount">{{log.serving_amount}}</td>
-    <td headers="log_calories">{{log.serving_amount * log.serving_size.calories}}</td>
+    <td headers="log_serving_amount">{{log.serving_amount|round(2, "common")}}</td>
+    <td headers="log_calories">{{(log.serving_amount * log.serving_size.calories)|round|int}}</td>
     <td headers="log_edit" hx-disinherit="*" hx-get='/food_log/edit/{{log.id}}' hx-push-url="false" hx-trigger='click consume' hx-target="#food_log_{{log.id}}" role="button" hx-swap="outerHTML">Edit</td>
     <td headers="log_edit" hx-disinherit="*" hx-get='/food_log/edit/{{log.id}}?copy=True' hx-push-url="false" hx-trigger='click consume' hx-target="closest tr" role="button" hx-swap="afterend">Copy</td>
 </tr>
@@ -25,4 +25,8 @@
     {% else %}
         style="{{text_shadow}}"
     {%endif%}
+{% endmacro%}
+
+
+{% macro nav_bar(tab, logged_in) %}
 {% endmacro%}
