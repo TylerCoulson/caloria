@@ -1,0 +1,16 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<h1>{{food.brand}} {{food.name}}</h1>
+<div role="button">Add New Serving</div>
+    <table>
+        <thead>
+            {% include "food/servings/headings.html" %}
+        </thead>
+        <tbody>
+            {% for serving in servings %}
+            {% include "food/servings/row.html"%}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

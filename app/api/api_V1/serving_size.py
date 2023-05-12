@@ -40,9 +40,10 @@ async def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.g
     statement = select(models.ServingSize).where(models.ServingSize.food_id == food_id)
 
     data = await db.execute(statement)
-    test = data.unique().all()
+    servings = data.unique().all()
 
-    return {"servings":[value for value, in test]}
+    print(servings)
+    return {"servings":[value for value, in servings]}
 
 @router.put(
     "/{food_id}/serving/{serving_id}",

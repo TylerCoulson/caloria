@@ -1,0 +1,15 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<div role="button">Add New Food</div>
+<table name="food">
+    <thead>
+        {% include "food/headings.html" %}
+    </thead>
+    <tbody>
+        {% for food in foods %}
+        {% include "food/row.html"%}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

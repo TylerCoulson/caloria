@@ -1,0 +1,15 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<h1>Add Serving</h1>        
+<h2>{{food.brand}}, {{food.name}}</h2>
+<form hx-post="/food/servings" hx-target="#servings" hx-ext='json-enc' >
+    <input hidden type="number" min="1" step="1" name="food_id" value={{food.id}}></input>
+    Description<input type="str" name="description"></input> 
+    Calories<input type="number" min="0" step="1" name="calories"></input> 
+    Fats<input type="number" min="0" step="1" name="fats"></input> 
+    Carbs<input type="number" min="0" step="1" name="carbs"></input> 
+    Protein<input type="number" min="0" step="1" name="protein"></input> 
+    <input type="submit" value="Add Serving">
+</form>
+{% endblock %}

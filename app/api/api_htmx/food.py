@@ -8,7 +8,7 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import food as api_food
-
+from app.api.api_V1 import serving_size as api_servings
 
 router = APIRouter(prefix="/food")
 templates = Jinja2Templates("app/templates")
@@ -17,93 +17,51 @@ templates = Jinja2Templates("app/templates")
 hx_request - Checks if request was made through an hx_request
 tabs - which tab should be active in the navigation tab
 '''
+
 @router.get(
     "/create",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_create_serving_page(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    
+def get_create_food(*, request: Request, hx_request: str | None = Header(default=None)):    
     context = {
             "request": request,
             "hx_request": hx_request,
-            "trigger": 'click'
         }
 
-    return templates.TemplateResponse("food/create_food.html", context)
+    return templates.TemplateResponse("food/create.html", context)
+
 
 @router.get(
     "",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_search_page(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    """ returns page that allows foods searching for food"""
+async def get_create_food(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):    
+    food = await api_food.get_food_id(food_id=1, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
+            "food": food
         }
-    return templates.TemplateResponse("food/food_search.html", context)
-
-@router.post(
-    "",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-async def post_food(*, request: Request,hx_request: str | None = Header(default=None), food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
-    food_out = await api_food.post_food(food=food, db=db)
-
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "foods": [food_out]
-        }
-    return templates.TemplateResponse("food/food.html", context)
-
+    return templates.TemplateResponse("food/servings/create.html", context)
 
 @router.get(
     "/{food_id:int}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food(*, request: Request,hx_request: str | None = Header(default=None), food_id: int, db: Session = Depends(deps.get_db)):
-    food_out = await api_food.get_food_id(food_id=food_id, db=db)
-    
+async def get_create_food(*, request: Request, hx_request: str | None = Header(default=None), food_id:int, db: Session = Depends(deps.get_db)):    
+    food = await api_food.get_food_id(food_id=2, db=db)
+    servings = await api_servings.get_serving_size_by_food(food_id=2, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
-            "trigger": None,
-            "include_servings": True,
-            "foods": [food_out],
+            "food": food,
+            "servings": servings['servings']
         }
-    return templates.TemplateResponse("food/food.html", context)
+    return templates.TemplateResponse("food/item.html", context)
 
-@router.get(
-"/search",
-response_class=HTMLResponse,
-status_code=status.HTTP_200_OK,
-)
-async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_word:str, db: Session = Depends(deps.get_db)):
-    """Returns the results of searching for food"""
-    try:
-        data = await api_food.get_food_search(search_word=search_word, n=n, db=db)
-
-        context = {
-            "request": request,
-            "hx_request": hx_request,
-            "foods": data,
-            "trigger": "click",
-            }
-
-        return templates.TemplateResponse("food/food.html", context)
-    
-    except HTTPException:
-        context = {
-            "request": request,
-            "hx_request": hx_request,
-            "message": f"No food with {search_word}"
-        }
-        return templates.TemplateResponse("404.html", context)
 
 @router.get(
     "/all",
@@ -118,37 +76,4 @@ async def get_all_foods(*, request: Request, hx_request: str | None = Header(def
             "hx_request": hx_request,
             "foods": data,
         }
-    return templates.TemplateResponse("food/food.html", context)
-
-@router.get(
-    "/all_options",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-async def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
-    """ returns page that all foods"""
-    data = await api_food.get_all_foods(n=n, db=db)
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "foods": data,
-        }
-    return templates.TemplateResponse("food_log/food_option.html", context)
-
-
-@router.get(
-"/search_options",
-response_class=HTMLResponse,
-status_code=status.HTTP_200_OK,
-)
-async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, search_word:str, db: Session = Depends(deps.get_db)):
-    """Returns the results of searching for food"""
-    data = await api_food.get_food_search(search_word=search_word, n=n, db=db)
-
-    context = {
-        "request": request,
-        "hx_request": hx_request,
-        "foods": data,
-        }
-
-    return templates.TemplateResponse("food_log/food_option.html", context)
+    return templates.TemplateResponse("food/list.html", context)

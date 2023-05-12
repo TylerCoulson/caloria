@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException, Header
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session  # type: ignore
 from app import deps
 from app import schemas
