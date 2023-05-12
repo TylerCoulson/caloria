@@ -26,12 +26,16 @@ async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_
     response_model=List[schemas.Food],
     status_code=status.HTTP_200_OK,
 )
-async def get_food_search(*, search_word:str, n:int=25, db: Session = Depends(deps.get_db)):
+async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+    offset = max((page-1) * n, 0)
+
     statement = select(models.Food).where(
         models.Food.brand.contains(search_word) | models.Food.name.contains(search_word) 
-    ).limit(n)
+    ).limit(n
+    ).offset(offset)
     
     data = await db.execute(statement)
+    
     all_data = data.unique().all()
 
     if not all_data:
@@ -44,8 +48,10 @@ async def get_food_search(*, search_word:str, n:int=25, db: Session = Depends(de
     response_model=List[schemas.Food],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_foods(*, n:int=25, db: Session = Depends(deps.get_db)):
-    statement = select(models.Food).limit(n)
+async def get_all_foods(*, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+    offset = max((page-1) * n, 0)
+
+    statement = select(models.Food).limit(n).offset(offset)
     data = await db.execute(statement)
     return [value for value, in data.unique().all()]
 

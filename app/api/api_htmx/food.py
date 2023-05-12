@@ -53,9 +53,9 @@ async def get_create_food(*, request: Request, hx_request: str | None = Header(d
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, db: Session = Depends(deps.get_db)):
+async def get_all_foods(*, request: Request, hx_request: str | None = Header(default=None), n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
     """ returns page that all foods"""
-    data = await api_food.get_all_foods(n=n, db=db)
+    data = await api_food.get_all_foods(n=n, page=page, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
