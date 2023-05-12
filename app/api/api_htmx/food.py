@@ -31,29 +31,14 @@ def get_create_food(*, request: Request, hx_request: str | None = Header(default
 
     return templates.TemplateResponse("food/create.html", context)
 
-
-@router.get(
-    "",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-async def get_create_food(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):    
-    food = await api_food.get_food_id(food_id=1, db=db)
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "food": food
-        }
-    return templates.TemplateResponse("food/servings/create.html", context)
-
 @router.get(
     "/{food_id:int}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_create_food(*, request: Request, hx_request: str | None = Header(default=None), food_id:int, db: Session = Depends(deps.get_db)):    
-    food = await api_food.get_food_id(food_id=2, db=db)
-    servings = await api_servings.get_serving_size_by_food(food_id=2, db=db)
+    food = await api_food.get_food_id(food_id=food_id, db=db)
+    servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=db)
     context = {
             "request": request,
             "hx_request": hx_request,
