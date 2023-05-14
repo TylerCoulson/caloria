@@ -1,0 +1,22 @@
+<section>
+<nav id="nav-bar" hx-push-url="true" hx-target="#content" _="on htmx:afterOnLoad take .secondary for event.target">
+    <ul>
+        <li><a class="secondary" hx-get="/">Home</a></li>
+        <li><a hx-get="/food/all">Foods</a></li>
+        <li><a hx-get="/prediction">Prediction</a></li>
+        {% if user is not none %}
+            <li><a hx-get="/food_log">Food Log</a></li>
+            <li><a hx-get="/daily">Daily</a></li>
+        {% endif %}
+    </ul>
+    <ul>
+        {% if user is none %}
+            <li><a hx-get="/register">Register</a></li>
+            <li><a hx-push-url="false" hx-get="/login">Login</a></li>
+        {% else %}
+            <li><a hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none">Logout</a></li>
+            <div hidden id="logout_div" hx-get="/" hx-target="#content" hx-trigger="click from:#logout"></div>
+        {% endif %}
+    </ul>
+</nav>
+</section>
