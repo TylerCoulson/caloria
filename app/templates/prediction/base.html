@@ -1,0 +1,10 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<div class="grid">
+    {% include "prediction/inputs.html"%}
+    <div id="forecast">
+        {% include "prediction/list.html"%}
+    </div>
+</div>
+{% endblock %}

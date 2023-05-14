@@ -1,0 +1,15 @@
+<table name="prediction">
+    <thead>
+        {% include "prediction/headings.html" %}
+    </thead>
+    <tbody id="forecast-body">
+        {% if preds %}
+            {% for pred in preds.values() %}
+            
+            {% include "prediction/row.html"%}
+            {% endfor %}
+        {% else %}
+
+        {% endif %}
+    </tbody>
+</table>

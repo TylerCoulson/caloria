@@ -24,7 +24,7 @@ def get_predictions_page(*, request: Request, hx_request: str | None = Header(de
             "request": request,
             "hx_request": hx_request
         }
-    return templates.TemplateResponse("create_prediction.html", context)
+    return templates.TemplateResponse("prediction/base.html", context)
 
 
 @router.get(
@@ -41,20 +41,20 @@ async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), 
             "hx_request": hx_request,
             "preds": pred
         }
-    return templates.TemplateResponse("predictions.html", context)
+    return templates.TemplateResponse("prediction/list.html", context)
 
-@router.get(
-    "/get_predictions_updates_lbs_to_lose",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-def get_predictions_updates(*, params: dict=Depends(weight_params), current_date:date=None, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    """ returns page for predictions that your activity level is updated based on what you actually ate"""
-    pred = predictions.get_predictions_updates_lbs_to_lose(params=params, current_date=current_date, db=db)
+# @router.get(
+#     "/get_predictions_updates_lbs_to_lose",
+#     response_class=HTMLResponse,
+#     status_code=status.HTTP_200_OK,
+# )
+# def get_predictions_updates(*, params: dict=Depends(weight_params), current_date:date=None, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+#     """ returns page for predictions that your activity level is updated based on what you actually ate"""
+#     pred = predictions.get_predictions_updates_lbs_to_lose(params=params, current_date=current_date, db=db)
 
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "preds": pred
-        }
-    return templates.TemplateResponse("predictions.html", context)
+#     context = {
+#             "request": request,
+#             "hx_request": hx_request,
+#             "preds": pred
+#         }
+#     return templates.TemplateResponse("predictions.html", context)
