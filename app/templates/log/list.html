@@ -1,0 +1,15 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<div role="button">Add New Log</div>
+<table name="food">
+    <thead>
+        {% include "log/headings.html" %}
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        {% include "log/row.html"%}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
