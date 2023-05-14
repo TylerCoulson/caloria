@@ -9,6 +9,7 @@ from app import schemas
 from app import models
 
 from app.api.api_V1 import daily_overview as api_daily
+from app.api.api_V1 import food_log as api_food_log
 from app.auth.router import Annotated_Profile
 
 router = APIRouter(prefix="/daily")
@@ -17,62 +18,12 @@ templates = Jinja2Templates("app/templates")
 from app import crud
 
 @router.get(
-    "/create/{date}",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-def get_create_daily(*, date:date, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-    context = {
-            "request": request,
-            "hx_request": hx_request,
-            "trigger": 'click',
-            "date": date
-        }
-
-    return templates.TemplateResponse("daily/create_actual_weight.html", context)
-
-
-@router.post(
-    "",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-async def post_daily(*, request: Request, hx_request: str | None = Header(default=None), actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-
-    output_data = await api_daily.post_daily(actual_weight=actual_weight, profile=profile, db=db)
-    context = {
-                "request": request,
-                "hx_request": hx_request,
-                "daily": output_data,
-            }
-    
-    return templates.TemplateResponse("daily/daily_weight.html", context)
-
-
-@router.put(
-    "/{current_date}",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-async def udpate_daily(*, request: Request, hx_request: str | None = Header(default=None), current_date:date, actual_weight:schemas.DailyOverviewInput, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-
-    output_data = await api_daily.update_daily(profile=profile, current_date=current_date, daily_data=actual_weight, db=db)
-    context = {
-                "request": request,
-                "hx_request": hx_request,
-                "daily": output_data,
-            }
-    
-    return templates.TemplateResponse("daily/daily_weight.html", context)
-
-
-@router.get(
     "",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-
+async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
     output_data = await api_daily.get_all_daily(profile=profile, db=db)
     context = {
                 "request": request,
@@ -80,21 +31,24 @@ async def get_all_daily(*, request: Request,hx_request: str | None = Header(defa
                 "dailies": output_data,
             }
     
-    return templates.TemplateResponse("daily/daily_base.html", context)
+    return templates.TemplateResponse("daily/base.html", context)
 
 @router.get(
     "/{date}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile,  date:date = date.today(), db: Session = Depends(deps.get_db)):
+async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), date:date = date.today(), db: Session = Depends(deps.get_db)):
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
     output_data = await api_daily.get_daily(profile=profile,current_date=date, db=db)
-    
+    logs = await api_food_log.get_food_log_date(n=25, page=1, date=date, profile=profile, db=db)
+    logs = logs['log']
     context = {
                 "request": request,
                 "hx_request": hx_request,
-                "dailies": [output_data],
+                "daily": output_data,
+                "logs": logs
             }
-    return templates.TemplateResponse("daily/daily_base.html", context)
+    return templates.TemplateResponse("daily/day.html", context)
     
 

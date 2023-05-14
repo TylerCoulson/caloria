@@ -1,4 +1,4 @@
-{% if not hx_request %}{% extends "base.html" %}{% endif %}
+{% if not hx_request and not daily %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
 <div role="button">Add New Log</div>

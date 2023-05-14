@@ -1,0 +1,10 @@
+<table name="prediction">
+    <thead>
+        {% include "daily/headings.html" %}
+    </thead>
+    <tbody id="forecast-body">
+            {% for daily in dailies %}
+            {% include "daily/row.html"%}
+            {% endfor %}
+    </tbody>
+</table>

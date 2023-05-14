@@ -1,0 +1,17 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+<table name="daily">
+    <thead>
+        {% include "daily/headings.html" %}
+    </thead>
+    <tbody id="forecast-body">
+        {% include "daily/row.html"%}
+    </tbody>
+</table>
+
+<h1>Food Log</h1>
+<table>
+    {% include "log/day.html"%}
+</table>
+{% endblock %}

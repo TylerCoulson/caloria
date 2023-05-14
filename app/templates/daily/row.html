@@ -1,0 +1,16 @@
+<tr id="{{ daily.date }}">
+    <td hidden headers="week">{{ daily.week }}</td>
+    <td headers="day">{{ daily.day }}</td>
+    <td headers="date">{{ daily.date }}</td>
+
+    {% include "daily/weight-column.html"%}
+
+    <td headers="est_weight">{{ daily.est_weight }}</td>
+    <td hidden headers="bmi">{{ daily.bmi }}</td>
+    <td hidden headers="resting_rate">{{ daily.resting_rate }}</td>
+    <td headers="eaten_calories">{{ daily.eaten_calories }}</td>
+    <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal) }}</td>
+    <td headers="calories_left">{{ "{:,}".format(daily.calories_left)  }}</td>
+    <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
+    <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus) }}</td>
+</tr>
