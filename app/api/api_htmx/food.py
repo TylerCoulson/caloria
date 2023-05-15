@@ -62,3 +62,20 @@ async def get_all_foods(*, request: Request, hx_request: str | None = Header(def
             "foods": data,
         }
     return templates.TemplateResponse("food/list.html", context)
+
+@router.get(
+"/search",
+response_class=HTMLResponse,
+status_code=status.HTTP_200_OK,
+)
+async def get_search_food_results(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, page:int=1, search_word:str, db: Session = Depends(deps.get_db)):
+    """Returns the results of searching for food"""
+    data = await api_food.get_food_search(search_word=search_word, n=n, page=page, db=db)
+
+    context = {
+        "request": request,
+        "hx_request": hx_request,
+        "foods": data,
+        }
+
+    return templates.TemplateResponse("food/body.html", context)

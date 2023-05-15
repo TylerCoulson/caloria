@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session  # type: ignore
 from typing import List, Tuple
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy import select
+from sqlalchemy import select, func
 from app import deps
 from app import schemas
 from app import models
@@ -30,16 +30,13 @@ async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session 
     offset = max((page-1) * n, 0)
 
     statement = select(models.Food).where(
-        models.Food.brand.contains(search_word) | models.Food.name.contains(search_word) 
+        func.lower(models.Food.brand).contains(search_word) | func.lower(models.Food.name).contains(search_word) 
     ).limit(n
     ).offset(offset)
     
     data = await db.execute(statement)
     
     all_data = data.unique().all()
-
-    if not all_data:
-        raise HTTPException(status_code=404, detail="Food not found")
 
     return [value for value, in all_data]
 

@@ -2,14 +2,13 @@
 
 {% block content %}
 <div role="button">Add New Food</div>
+{% include "food/search.html" %}
 <table name="food">
     <thead>
         {% include "food/headings.html" %}
     </thead>
-    <tbody>
-        {% for food in foods %}
-        {% include "food/row.html"%}
-        {% endfor %}
+    <tbody id="food-body">
+        {% include "food/body.html" %}
     </tbody>
 </table>
 {% endblock %}
