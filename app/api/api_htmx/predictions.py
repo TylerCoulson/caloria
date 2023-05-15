@@ -35,11 +35,11 @@ def get_predictions_page(*, request: Request, hx_request: str | None = Header(de
 async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
     """ returns page for predictions that never faultered on calories lost """
     pred = await predictions.get_predictions_never_fault(params=params, db=db)
-
     context = {
             "request": request,
             "hx_request": hx_request,
-            "preds": pred
+            "preds": pred,
+            "final_day": pred[str(len(pred)-1)]
         }
     return templates.TemplateResponse("prediction/list.html", context)
 
