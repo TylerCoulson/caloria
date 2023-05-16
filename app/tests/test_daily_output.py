@@ -66,7 +66,6 @@ async def test_daily_overview_post(client:TestClient, db:Session, profile: model
     statement = select(models.DailyLog.profile_id)
     weight_data = await db.execute(statement)
     weight_id = weight_data.unique().first()
-    print(weight_id)
     # await crud.delete(_id=weight_id, db=db, db_obj=weight_data)
 
 async def test_daily_overview_update(client:TestClient, db:Session, food_log_2:models.Food_Log):    

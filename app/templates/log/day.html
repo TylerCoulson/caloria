@@ -1,7 +1,7 @@
 {% if not hx_request and not daily %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<div role="button">Add New Log</div>
+{% include "log/inputs/add_log.html" %}
 <table name="food">
     <thead>
         {% include "log/headings.html" %}

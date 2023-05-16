@@ -32,6 +32,20 @@ async def get_food_logs(*, request: Request, hx_request: str | None = Header(def
     return templates.TemplateResponse("log/list.html", context)             
 
 @router.get(
+    "/create",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+
+    context = {
+            "request": request,
+            "hx_request": hx_request
+        }
+
+    return templates.TemplateResponse("log/inputs/create.html", context)
+
+@router.get(
     "/{date}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
@@ -49,25 +63,6 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
             }
         
         return templates.TemplateResponse("log/day.html", context)
-
-# @router.get(
-#     "/create",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_200_OK,
-# )
-# async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db), profile: Annotated_Profile,):
-#     food = schemas.FoodNoIngredients(brand="", name="", id=0)
-#     serving_size = schemas.ServingSize(food_id=0, description="", calories=0, fats=0, carbs=0, protein=0, id=0, food=food)
-#     log = schemas.FoodLog(date=date.today(), food_id=0, serving_size_id=0, serving_amount=0, profile_id=profile.id, id=0, serving_size=serving_size)
-
-#     context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "trigger": 'click',
-#             "log": log
-#         }
-
-#     return templates.TemplateResponse("food_log/edit/row_base.html", context)
 
 # @router.get(
 #     "/edit/{log_id}",

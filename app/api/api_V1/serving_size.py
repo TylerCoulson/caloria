@@ -42,7 +42,6 @@ async def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.g
     data = await db.execute(statement)
     servings = data.unique().all()
 
-    print(servings)
     return {"servings":[value for value, in servings]}
 
 @router.put(
