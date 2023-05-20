@@ -2,5 +2,5 @@
     <td headers="brand">{{food.brand}}</td>
     <td headers="name">{{food.name}}</td>
     <td headers="servings"  hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content" >S</td>
-    <td headers="add_log" hx-get="/food_log/create" hx-target="#content">ADD</td>
+    <td headers="add_log" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">ADD</td>
 </tr>

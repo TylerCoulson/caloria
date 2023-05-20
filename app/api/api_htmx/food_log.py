@@ -7,6 +7,8 @@ from app import schemas
 from app import models
 from datetime import date
 from app.api.api_V1 import food_log as api_food_log
+from app.api.api_V1 import food as api_food
+from app.api.api_V1 import serving_size as api_servings
 from app import crud
 from app.auth.router import Annotated_Profile
 
@@ -36,12 +38,18 @@ async def get_food_logs(*, request: Request, hx_request: str | None = Header(def
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), food_id:int=None, serving_id:int=None, db: Session = Depends(deps.get_db)):
 
     context = {
             "request": request,
-            "hx_request": hx_request
+            "hx_request": hx_request,
         }
+
+    if food_id:
+        servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=db)
+        context['serving_id'] = serving_id
+        context['food'] = await api_food.get_food_id(food_id=food_id, db=db)
+        context['servings'] = servings['servings']
 
     return templates.TemplateResponse("log/inputs/create.html", context)
 
@@ -108,20 +116,22 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
 #         }
 #     return templates.TemplateResponse("food_log/food_log_body.html", context)
 
-# @router.post(
-#     "",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_201_CREATED,
-# )
-# async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
-#     await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
-#     logs = await api_food_log.get_food_logs(profile=profile, db=db)
-#     context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "logs": logs,
-#         }
-#     return templates.TemplateResponse("food_log/food_log.html", context)
+@router.post(
+    "",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
+    await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
+    logs = await api_food_log.get_food_logs(profile=profile, db=db)
+    
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "logs": logs,
+        }
+    return templates.TemplateResponse("log/list.html", context)             
 
 
 
