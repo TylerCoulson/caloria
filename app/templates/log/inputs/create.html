@@ -1,6 +1,6 @@
-<div _="on load set #serving_amount.value to 1 then set $serving_amount to 1 then set $calories to 100 then set #total-calories.innerHTML to $serving_amount * $calories">
+<div _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
     <h1> Add Log: {{food.brand}} - {{food.name}}</h1> 
-    Total Calories: <div id="total-calories" _="on change from .total-calc set my.innerHTML to $serving_amount * $calories"></div>
+    Total Calories: <div id="total-calories"></div>
 
     <form hx-post="/food_log" hx-target="#content" hx-ext='json-enc' name="food_log">
         <label for="date">
@@ -16,14 +16,14 @@
             </select>
         </label>
         <label for="serving_id">
-            <input type="number" id="serving_id" name="serving_size_id" value={{serving_id}}>
-            <input type="number" class="total-calc" id="serving_cals" value="100" _="on change set $calories to my.value"/>
+            <input hidden type="number" id="serving_id" name="serving_size_id" value={{serving_id}}>
+            Calories: <div type="number" class="total-calc" id="serving_cals" _="on change set $calories to my.innerHTML then set #total-calories.innerHTML to $serving_amount * $calories">{{calories}}</div>
         </label>
         <label for="serving_amount">
-            Serving Amount: <input type="number" class="total-calc" min="0" id="serving_amount" name="serving_amount" _="on change set $serving_amount to my.value">
+            Serving Amount: <input type="number" class="total-calc" min="0" id="serving_amount" name="serving_amount" value={{serving_amount}} _="on change set $serving_amount to my.value then set #total-calories.innerHTML to $serving_amount * $calories">
         </label>
 
-        <button >Add Log</button>
+        <button>Add Log</button>
         
     </form>
 </div>

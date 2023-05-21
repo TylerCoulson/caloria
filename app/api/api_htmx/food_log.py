@@ -43,6 +43,8 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
     context = {
             "request": request,
             "hx_request": hx_request,
+            "serving_amount": 1,
+            "calories": 0
         }
 
     if food_id:

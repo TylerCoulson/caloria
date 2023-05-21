@@ -1,6 +1,6 @@
 <option {% if serving_id == none %} selected {% else %} {% endif %} value='none'>Select Serving Size</option>
 {% for serving in servings %}
-    <option value={{serving.id}} class="total-calc" _="on click set #serving_cals.value to {{serving.calories}} then 
+    <option value={{serving.id}} class="total-calc" _="on click set #serving_cals.innerHTML to {{serving.calories}} then 
                                                             set #serving_id.value to {{serving.id}} then 
                                                             set $calories to {{serving.calories}} then
                                                             set #total-calories.innerHTML to $serving_amount * $calories
