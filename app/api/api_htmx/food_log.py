@@ -52,6 +52,16 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
         context['serving_id'] = serving_id
         context['food'] = await api_food.get_food_id(food_id=food_id, db=db)
         context['servings'] = servings['servings']
+    
+    if serving_id:
+        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, db=db)
+        food = current_serving.food
+        servings = await api_servings.get_serving_size_by_food(food_id=food.id, db=db)
+        context['serving_id'] = serving_id
+        context['food'] = food
+        context['servings'] = servings['servings']
+        context['calories'] = current_serving.calories
+
 
     return templates.TemplateResponse("log/inputs/create.html", context)
 
