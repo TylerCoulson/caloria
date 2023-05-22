@@ -29,4 +29,7 @@
   <td headers="add_log" name="food_log_in">
       <div role="button" hx-get="/food_log/{{log.id}}" hx-target="closest tr" hx-swap="outerHTML"> Cancel </div>
   </td>
+  <td headers="add_log" name="delete">
+    <div role="button" hx-delete="/food_log/{{log.id}}" _="on click remove closest <tr/>" hx-swap="none"> Delete </div>
+</td>
 </tr>

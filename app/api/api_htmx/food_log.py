@@ -175,25 +175,12 @@ async def post_food_log(*, request: Request, hx_request: str | None = Header(def
         }
     return templates.TemplateResponse("log/list.html", context)             
 
+@router.delete(
+    "/{food_log_id}",
+    status_code=status.HTTP_200_OK,
+)
+async def delete_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
+    await api_food_log.delete_food_log(food_log_id=food_log_id, profile=profile, db=db)
 
-
-
-
-
-# @router.delete(
-#     "/{food_log_id}",
-#     status_code=status.HTTP_200_OK,
-# )
-# async def delete_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, profile:Annotated_Profile, db: Session = Depends(deps.get_db)):
-#     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
-    
-#     await crud.delete(_id=food_log_id, db=db, db_obj=log)
-    
-#     logs = await api_food_log.get_food_logs(profile=profile, db=db)
-#     context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "logs": logs,
-#             "trigger": 'click'
-#         }
-#     return templates.TemplateResponse("food_log/food_log.html", context)
+    return None
