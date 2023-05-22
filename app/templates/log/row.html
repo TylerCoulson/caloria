@@ -4,5 +4,5 @@
     <td headers="log_serving">{{log.serving_size.description}}</td>
     <td headers="log_serving_amount">{{log.serving_amount|round(2, "common")}}</td>
     <td headers="log_calories">{{(log.serving_amount * log.serving_size.calories)|round|int}}</td>
-    <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-target="closest tr" hx-swap="afterend" >ADD</td>
+    <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-target="closest tr" hx-swap="afterend" >COPY</td>
 </tr>
