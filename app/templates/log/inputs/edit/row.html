@@ -1,0 +1,26 @@
+<tr name="food_log_id" id="food_log_{{log.id}}">
+    <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
+    
+    <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
+    
+    <td headers="log_serving_size_description">
+        <select type="date" id="serving" name="serving">
+            {% include "log/inputs/serving_option.html"%}    
+        </select>
+        <div id="serving_cals"></div>
+        <div id="serving_id"></div>
+    </td>
+    <td headers="log_serving_amount">
+      <input name="serving_amount" id="serving_amount" type="number" min="0" value="{{log.serving_amount}}" _="on change set $serving_amount to my.value then set #total-calories.innerHTML to $serving_amount * $calories"/>
+    </td>
+  
+    <td headers="log_calories" id="total-calories">
+      {{log.serving_size.calories * log.serving_amount}}
+    </td>
+  
+    <td headers="log_edit" name="food_log_in" hx-target="#content">
+        <div role="button" hx-post="/food_log"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
+        <div role="button" hx-get="/food_log"> Cancel </div>
+    </td>
+  </tr>
+  

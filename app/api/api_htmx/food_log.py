@@ -66,6 +66,34 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
     return templates.TemplateResponse("log/inputs/create.html", context)
 
 @router.get(
+    "/edit",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), log_id:int, copy:bool = False, db: Session = Depends(deps.get_db)):
+    
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
+    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
+
+    servings = await api_servings.get_serving_size_by_food(food_id=log.food_id, db=db)
+    context = {
+        "request": request,
+        "hx_request": hx_request,
+        "trigger": 'click',
+        "log":log,
+        "editable": True,
+        'servings': servings['servings'],
+        'serving_id': log.serving_size_id
+    }
+
+    if copy:
+        context["log"].date = date.today()
+        context["log"].id = 0
+        context['editable'] = False
+
+    return templates.TemplateResponse("log/inputs/edit/row.html", context)
+
+@router.get(
     "/{date}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
@@ -84,29 +112,7 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
         
         return templates.TemplateResponse("log/day.html", context)
 
-# @router.get(
-#     "/edit/{log_id}",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_200_OK,
-# )
-# async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, log_id:int, copy:bool = False, db: Session = Depends(deps.get_db)):
 
-#     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
-
-#     context = {
-#         "request": request,
-#         "hx_request": hx_request,
-#         "trigger": 'click',
-#         "log":log,
-#         "editable": True
-#     }
-
-#     if copy:
-#         context["log"].date = date.today()
-#         context["log"].id = 0
-#         context['editable'] = False
-
-#     return templates.TemplateResponse("food_log/edit/row_base.html", context)     
 
 # @router.put(
 #     "/{food_log_id}",
