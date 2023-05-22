@@ -1,0 +1,32 @@
+<tr name="food_log_id" id="food_log_{{log.id}}" _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
+  <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
+  
+  <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
+  
+  <td headers="log_serving_size_description">
+      <select type="date" id="serving" name="serving">
+          {% include "log/inputs/serving_option.html"%}    
+      </select>
+      <div hidden id="serving_cals"></div>
+  </td>
+  <td headers="log_serving_amount">
+    <input name="serving_amount" id="serving_amount" type="number" min="0" value="{{log.serving_amount}}" _="on change set $serving_amount to my.value then set #total-calories.innerHTML to $serving_amount * $calories"/>
+  </td>
+
+  <td headers="log_calories" id="total-calories">
+    {{log.serving_size.calories * log.serving_amount|round|int}}
+  </td>
+
+  <td hidden>
+    <input hidden type="number"  id="food_id" name="food_id" value="{{log.serving_size.food.id}}" />
+    <input hidden type="number" id="serving_id" name="serving_size_id" value={{serving_id}} /> 
+  </td>
+
+  <td headers="log_edit" name="food_log_in"> 
+      <div role="button" hx-put="/food_log/{{log.id}}"  hx-include="closest tr" hx-target="closest tr" hx-swap="outerHTML" hx-ext='json-enc'> Save </div>
+  </td>
+  
+  <td headers="add_log" name="food_log_in">
+      <div role="button" hx-get="/food_log/{{log.id}}" hx-target="closest tr" hx-swap="outerHTML"> Cancel </div>
+  </td>
+</tr>

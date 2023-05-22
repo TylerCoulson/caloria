@@ -1,4 +1,4 @@
-<tr name="food_log_id">
+<tr name="food_log_id" _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
     <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
     
     <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
@@ -14,7 +14,7 @@
     </td>
 
     <td headers="log_calories" id="total-calories">
-      {{log.serving_size.calories * log.serving_amount}}
+      {{log.serving_size.calories * log.serving_amount|round|int}}
     </td>
   
     <td headers="log_edit" name="food_log_in" hx-target="#content">
@@ -22,7 +22,7 @@
         <input hidden type="number" id="serving_id" name="serving_size_id" value={{serving_id}} />
         <div role="button" hx-post="/food_log"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
     </td>
-    <td headers="add_log" name="food_log_in" hx-target="#content">
+    <td headers="add_log" name="food_log_in">
         <div role="button" _="on click remove closest <tr/>"> Cancel </div>
     </td>
   </tr>

@@ -83,7 +83,9 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         "log":log,
         "editable": True,
         'servings': servings['servings'],
-        'serving_id': log.serving_size_id
+        'serving_id': log.serving_size_id,
+        "serving_amount":log.serving_amount,
+        "calories": log.serving_size.calories
     }
 
     if copy:
@@ -94,6 +96,25 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         return templates.TemplateResponse("log/inputs/edit/copy.html", context)
     
     return templates.TemplateResponse("log/inputs/edit/edit.html", context)
+
+
+@router.get(
+    "/{food_log_id:int}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_food_log_id(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
+    
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
+    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
+    
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "log": log,
+        }
+    return templates.TemplateResponse("log/row.html", context)
+    
 
 @router.get(
     "/{date}",
@@ -116,25 +137,26 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
 
 
 
-# @router.put(
-#     "/{food_log_id}",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_201_CREATED,
-# )
-# async def update_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    
-#     if food_log_id == 0:
-#         return post_food_log(request=request, hx_request=hx_request, profile=profile, food_log=food_log_in, db=db)
+@router.put(
+    "/{food_log_id}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def update_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)):
+    profile = await crud.read(_id=1, db=db, model=models.Profile)
+
+    if food_log_id == 0:
+        return post_food_log(request=request, hx_request=hx_request, profile=profile, food_log=food_log_in, db=db)
 
     
-#     log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
+    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
 
-#     context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "logs": [log],
-#         }
-#     return templates.TemplateResponse("food_log/food_log_body.html", context)
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "log": log,
+        }
+    return templates.TemplateResponse("log/row.html", context)
 
 @router.post(
     "",
@@ -155,31 +177,7 @@ async def post_food_log(*, request: Request, hx_request: str | None = Header(def
 
 
 
-# @router.get(
-#     "/{food_log_id:int}",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_200_OK,
-# )
-# async def get_food_log_id(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, food_log_id: int, db: Session = Depends(deps.get_db)):
-    
-    
-#     try:
-#         log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
-#         context = {
-#                 "request": request,
-#                 "hx_request": hx_request,
-#                 "logs": [log],
-#                 "trigger": None
-#             }
-#         return templates.TemplateResponse("food_log/food_log_body.html", context)
 
-#     except HTTPException:
-#         context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "message": f"No log with id of {food_log_id} for {profile.user_id}"
-#         }
-#         return templates.TemplateResponse("404.html", context)
 
 
 # @router.delete(
