@@ -1,4 +1,4 @@
-<tr name="food_log_id" id="food_log_{{log.id}}">
+<tr name="food_log_id">
     <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
     
     <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
@@ -21,7 +21,9 @@
         <input hidden type="number"  id="food_id" name="food_id" value="{{log.serving_size.food.id}}" />
         <input hidden type="number" id="serving_id" name="serving_size_id" value={{serving_id}} />
         <div role="button" hx-post="/food_log"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
-        <div role="button" _="on click remove #food_log_{{log.id}}"> Cancel </div>
+    </td>
+    <td headers="add_log" name="food_log_in" hx-target="#content">
+        <div role="button" _="on click remove closest <tr/>"> Cancel </div>
     </td>
   </tr>
   

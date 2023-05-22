@@ -91,7 +91,9 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
         context["log"].id = 0
         context['editable'] = False
 
-    return templates.TemplateResponse("log/inputs/edit/row.html", context)
+        return templates.TemplateResponse("log/inputs/edit/copy.html", context)
+    
+    return templates.TemplateResponse("log/inputs/edit/edit.html", context)
 
 @router.get(
     "/{date}",
