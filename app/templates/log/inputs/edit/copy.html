@@ -1,4 +1,4 @@
-<tr name="food_log_id" _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
+<tr name="food_log_id" class="editing" _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
     <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
     
     <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>

@@ -4,6 +4,13 @@
     <td headers="log_serving">{{log.serving_size.description}}</td>
     <td headers="log_serving_amount">{{log.serving_amount|round(2, "common")}}</td>
     <td headers="log_calories">{{(log.serving_amount * log.serving_size.calories)|round|int}}</td>
-    <td headers="edit" hx-get="/food_log/edit?log_id={{log.id}}" hx-target="closest tr" hx-swap="outerHTML">e</td>
-    <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-target="closest tr" hx-swap="afterend" >c</td>
+    <td headers="edit" hx-get="/food_log/edit?log_id={{log.id}}" hx-target="closest tr" hx-trigger="edit" hx-swap="outerHTML" 
+    _="on click
+    if .editing is not empty
+    end
+    trigger edit">e</td>
+    <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-target="closest tr" hx-trigger="edit" hx-swap="afterend" _="on click
+    if .editing is not empty
+    end
+    trigger edit">c</td>
 </tr>
