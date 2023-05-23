@@ -22,9 +22,9 @@ from app import crud
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
     profile = await crud.read(_id=1, db=db, model=models.Profile)
-    output_data = await api_daily.get_all_daily(profile=profile, db=db)
+    output_data = await api_daily.get_all_daily(profile=profile, n=n, page=page, db=db)
     context = {
                 "request": request,
                 "hx_request": hx_request,

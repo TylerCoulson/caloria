@@ -103,8 +103,10 @@ async def post_daily(*, actual_weight: schemas.DailyOverviewInput, profile: Anno
     response_model=list[schemas.DailyOverview],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    return await daily_log(profile=profile, db=db)
+async def get_all_daily(*, profile: Annotated_Profile, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+    offset = max((page-1) * n, 0)
+    logs = await daily_log(profile=profile, db=db)
+    return logs[offset:offset+n]
     
 
     
