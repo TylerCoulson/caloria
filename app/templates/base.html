@@ -14,7 +14,7 @@
 
     </head>
     <body id="container" class="container">
-        {% include "nav.html"%}
+        <section hx-trigger="load" hx-get="/navbar" hx-target="this"></section>
         <div id="content">
         {% block content%}
         {% endblock%}
