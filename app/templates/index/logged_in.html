@@ -1,8 +1,4 @@
-{% if not hx_request %}{% extends "base.html" %}{% endif %}
-{% block content %}
 <div>
     Food Log: <div hx-trigger="load" hx-get="/food_log/all?n=5"></div>
     Daily: <div hx-trigger="load" hx-get="/daily?n=5"></div>
 </div>
-
-{% endblock %}

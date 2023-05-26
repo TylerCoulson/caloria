@@ -11,13 +11,14 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_index(request: Request, hx_request: str | None = Header(default=None)):
+def get_index(request: Request, profile: Annotated_User = False, hx_request: str | None = Header(default=None)):
     context = {
         "request": request,
         "hx_request":hx_request,
+        "user": profile
     }
 
-    return templates.TemplateResponse("index.html", context, headers={'HX-Redirect': '/'})
+    return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
 
 @router.get(
     "/navbar",

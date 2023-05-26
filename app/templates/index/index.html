@@ -1,0 +1,8 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+{% block content %}
+{% if user %}
+    {% include "index/logged_in.html" %}
+{% else %}
+    {% include "index/unlogged_in.html" %}
+{% endif %}
+{% endblock %}
