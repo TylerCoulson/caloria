@@ -22,8 +22,8 @@ from app import crud
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
-    profile = await crud.read(_id=1, db=db, model=models.Profile)
+async def get_all_daily(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+    
     output_data = await api_daily.get_all_daily(profile=profile, n=n, page=page, db=db)
     context = {
                 "request": request,
@@ -38,8 +38,8 @@ async def get_all_daily(*, request: Request,hx_request: str | None = Header(defa
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), date:date = date.today(), db: Session = Depends(deps.get_db)):
-    profile = await crud.read(_id=1, db=db, model=models.Profile)
+async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, date:date = date.today(), db: Session = Depends(deps.get_db)):
+    
     output_data = await api_daily.get_daily(profile=profile,current_date=date, db=db)
     logs = await api_food_log.get_food_log_date(n=25, page=1, date=date, profile=profile, db=db)
     logs = logs['log']
