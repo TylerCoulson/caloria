@@ -21,7 +21,7 @@ def register(*, request: Request, hx_request: str | None = Header(default=None))
             "hx_request": hx_request,
         }
 
-    return templates.TemplateResponse("register.html", context)
+    return templates.TemplateResponse("auth/register.html", context)
 
 @router.get(
     "/login",
@@ -34,7 +34,7 @@ def login(*, request: Request, hx_request: str | None = Header(default=None)):
             "hx_request": hx_request,
         }
 
-    return templates.TemplateResponse("login.html", context)
+    return templates.TemplateResponse("auth/login.html", context)
 
 
 @router.get(
