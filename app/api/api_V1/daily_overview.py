@@ -18,6 +18,10 @@ async def get_weight(profile_id, current_date, db: Session):
     return data.unique().scalar_one_or_none()
 
 async def daily_log(profile:models.Profile, db: Session):
+
+    if profile is None:
+        raise ValueError("profile cannot be None")
+
     date_range = func.generate_series(cast(profile.start_date, Date), cast(date.today(), Date), cast(cast('1 day', Text), Interval)).alias('dates')
     dates = column("dates")
 
