@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for food-track on 2023-05-01T22:04:47-04:00
+# fly.toml app configuration file generated for food-track on 2023-05-30T17:43:07-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -8,9 +8,10 @@ primary_region = "ewr"
 
 [deploy]
   release_command = "alembic upgrade head"
-
+  
 [http_service]
   internal_port = 8000
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
+  min_machines_running = 0
