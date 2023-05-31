@@ -48,4 +48,4 @@ def create_profile(*, request: Request, hx_request: str | None = Header(default=
             "hx_request": hx_request
         }
 
-    return templates.TemplateResponse("create_profile.html", context)
+    return templates.TemplateResponse("auth/create_profile.html", context)
