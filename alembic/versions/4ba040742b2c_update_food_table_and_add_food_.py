@@ -22,7 +22,7 @@ def upgrade() -> None:
         sa.Column('description', sa.String)
     )
 
-    op.add_column('food', sa.Column('category', sa.Integer))
+    op.add_column('food', sa.Column('category', sa.Integer, sa.ForeignKey('food_categories.id')))
     op.add_column('food', sa.Column('type', sa.String))
     op.add_column('food', sa.Column('subtype', sa.String))
 
