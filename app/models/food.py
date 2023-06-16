@@ -13,12 +13,14 @@ class Food(Base):
     __tablename__ = "food"
 
     id = Column(Integer, primary_key=True, index=True)
-    brand = Column(String)
-    name = Column(String)
+    category = Column(Integer, ForeignKey("food_categories.id"))
+    type = Column(String)
+    subtype = Column(String)
 
     servings = relationship(
         "ServingSize", back_populates="food",lazy="joined"
     )
+    
     # ingredients = relationship(
     #     "Food",
     #     secondary=recipe_table,
