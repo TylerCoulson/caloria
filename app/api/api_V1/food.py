@@ -30,7 +30,7 @@ async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session 
     offset = max((page-1) * n, 0)
 
     statement = select(models.Food).where(
-        func.lower(models.Food.brand).contains(search_word) | func.lower(models.Food.name).contains(search_word) 
+        func.lower(models.Food.type).contains(search_word) | func.lower(models.Food.subtype).contains(search_word) 
     ).limit(n
     ).offset(offset)
     
@@ -46,11 +46,7 @@ async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session 
     status_code=status.HTTP_200_OK,
 )
 async def get_all_foods(*, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
-    offset = max((page-1) * n, 0)
-
-    statement = select(models.Food).limit(n).offset(offset)
-    data = await db.execute(statement)
-    return [value for value, in data.unique().all()]
+    return await crud.read_all(n=n, page=page, db=db, model=models.Food)
 
 @router.get(
     "/{food_id}",

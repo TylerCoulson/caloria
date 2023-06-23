@@ -5,3 +5,4 @@ from app.models.serving_size import ServingSize
 from app.models.profile import Profile
 from app.models.daily_overview import DailyLog
 from app.auth.db import User
+from app.models.food_categories import FoodCategories

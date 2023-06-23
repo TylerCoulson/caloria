@@ -17,6 +17,12 @@ async def read(*, _id: int, db, model):
     data = await db.execute(statement)
     return  data.unique().scalar_one_or_none()
 
+async def read_all(*, n:int=25, page:int=1, db, model):
+    offset = max((page-1) * n, 0)
+
+    statement = select(model).limit(n).offset(offset)
+    data = await db.execute(statement)
+    return [value for value, in data.unique().all()]
 
 async def update(*, _id, model, update_data, db):
     statement = sql_update(model).where(model.id == _id).values(update_data.dict())

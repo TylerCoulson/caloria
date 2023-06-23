@@ -10,4 +10,5 @@ venv
 scripts_tests
 secrets.py
 app/add_food_to_db
-*/test_db_stuff.py
+*/db_exploration.py
+*.sql

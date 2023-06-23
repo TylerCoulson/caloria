@@ -24,26 +24,3 @@ async def test_current_average_weekly_loss(client:TestClient, db:Session, profil
     assert response.json() is not None
 
 
-# async def test_mistep_then_back_on_track_prediction(client:TestClient, db:Session, profile:models.Profile):
-#     output = {
-#         "day": 2,
-#         "week": 1,
-#         "date": profile.start_date + timedelta(1),
-#         "est_weight": 322.1,
-#         "resting_rate": 2916,
-#         "eaten_calories": 1916,
-#         "calories_left": 0,
-#         "calorie_goal": 1860,
-#         "total_lbs_lost": 10.7,
-#         "calorie_surplus": -19540,
-#         "profile_id": profile.id,
-#         "bmi": 44.71
-#     }
-
-#     response= client.get(f"/api/v1/predictions/2/{profile.id}")
-    
-#     assert response.status_code == 200
-#     content = response.json()
-#     assert content[0].keys() == output.keys()
-
-

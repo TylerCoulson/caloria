@@ -5,6 +5,7 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy import create_engine  # type:ignore
 from sqlalchemy.orm import sessionmaker  # type:ignore
+from sqlalchemy.sql import text
 from app.db import Base  # type:ignore
 from app.config import settings
 from app.main import app
@@ -19,6 +20,9 @@ engine = create_async_engine(
 )
 async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+with open("app/tests/test_data/food_data.sql", "r") as f:
+    food_data = f.read()
+
 @pytest.mark.anyio
 @pytest.fixture(scope="session")
 async def db(anyio_backend) -> Generator:
@@ -26,6 +30,7 @@ async def db(anyio_backend) -> Generator:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with async_session_maker() as session:
+        await session.execute(text(food_data))
         yield session
     # teardown
     async with engine.begin() as conn:

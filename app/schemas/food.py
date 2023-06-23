@@ -2,8 +2,9 @@ from pydantic import BaseModel
 from typing import List
 
 class FoodBase(BaseModel):
-    brand: str
-    name: str
+    category: int
+    type: str
+    subtype: str | None
 
 class FoodCreate(FoodBase):
     class Config:
@@ -11,7 +12,7 @@ class FoodCreate(FoodBase):
 
 class Food(FoodBase):
     id: int
-    ingredients: List["Food"] | None = []
+    # ingredients: List["Food"] | None = []
     # servings: List["Food"] | None = []
     class Config:
         orm_mode = True
