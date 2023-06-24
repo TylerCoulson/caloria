@@ -7,60 +7,35 @@ from app import crud
 from . import utils
 from datetime import date
 
+create_profile = {"id":1001, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1001}
+read_profile = {"id":1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
+
+
 async def test_profile_create(client:TestClient, db:Session, module_user):
-    start_date = date(2022,12,6)
-    start_weight = 322.4
-    goal_weight = 150
-    sex = 'male'
-    birthdate = date(1992,12,5)
-    height = 70
-    lbs_per_week = 1.2
-    activity_level = 1.2
-
-    data = schemas.ProfileBase(
-        start_date=start_date,
-        start_weight=start_weight,
-        goal_weight=goal_weight,
-        sex=sex,
-        birthdate=birthdate,
-        height=height,
-        lbs_per_week=lbs_per_week,
-        activity_level=activity_level,
-    )
-
-    data = jsonable_encoder(data)
-    response= await client.post(f"/api/v1/profile", json=data)
+    response= await client.post(f"/api/v1/profile", json=create_profile)
     
     assert response.status_code == 201
-    content = response.json()
-    assert "id" in content
-
-    for key in data.keys():
-        assert content[key] == data[key]
+    assert response.json() == create_profile
 
 
-async def test_profile_read(client:TestClient, db:Session, module_profile):
-    response= await client.get(f"/api/v1/profile/me")
-    content = response.json()
-    assert response.status_code == 200
-    
-    assert content == jsonable_encoder(module_profile)
-
-async def test_profiles_food_logs(client:TestClient, db:Session, food_log:models.Food_Log):
-
+async def test_profile_read(client:TestClient, db:Session):
     response= await client.get(f"/api/v1/profile/me")
     assert response.status_code == 200
+    assert response.json() == read_profile
 
-    content = response.json()
- 
-    for k, v in food_log['profile'].items():
-        assert content[k] == v
-    food_log.pop('profile')
-    assert content['log'] == [food_log]
 
-async def test_update_profile(client:TestClient, db:Session, module_profile:models.Profile):
+async def test_profile_food_logs(client:TestClient, db:Session):
+
+    response= await client.get(f"/api/v1/profile/me/logs")
+    assert response.status_code == 200
+
+    content = response.json() 
+
+    assert "logs" in content
+
+async def test_profile_update(client:TestClient, db:Session, module_profile:models.Profile):
     module_profile['goal_weight'] += 52
-    data = jsonable_encoder(schemas.ProfileCreate(**jsonable_encoder(module_profile)))
+    data = jsonable_encoder(module_profile)
 
     response= await client.put(f"/api/v1/profile/me", json=data)
 
@@ -68,7 +43,6 @@ async def test_update_profile(client:TestClient, db:Session, module_profile:mode
 
     content = response.json()
     fix_data = jsonable_encoder(module_profile)
-    fix_data.pop('log')
     assert content == fix_data
 
 

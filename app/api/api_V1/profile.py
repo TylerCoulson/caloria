@@ -24,13 +24,21 @@ async  def create_profile(*, profile: schemas.ProfileBase, user:dict=Depends(cur
 
 @router.get(
     "/me",
-    response_model=schemas.ProfileLogs,
+    response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
 async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=profile.id, db=db, model=models.Profile)
     return data
 
+@router.get(
+    "/me/logs",
+    response_model=schemas.ProfileLogs,
+    status_code=status.HTTP_200_OK,
+)
+async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    data = await crud.read(_id=profile.id, db=db, model=models.Profile)
+    return data
 
 @router.put(
     "/me",

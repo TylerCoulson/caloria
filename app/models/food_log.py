@@ -14,4 +14,4 @@ class Food_Log(Base):
     profile_id = Column(Integer, ForeignKey("profile.id", ondelete="CASCADE"), nullable=False)
 
     serving_size = relationship("ServingSize", lazy='selectin')
-    profile = relationship('Profile', back_populates="log", lazy='joined')
+    profile = relationship('Profile', back_populates="logs", lazy='joined')

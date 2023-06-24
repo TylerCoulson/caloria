@@ -29,7 +29,7 @@ class Profile(ProfileCreate):
         orm_mode = True
 
 class ProfileLogs(Profile):
-    log: "List[FoodLog]"
+    logs: "List[FoodLog]"
     class Config:
         orm_mode = True
 
