@@ -20,20 +20,30 @@ engine = create_async_engine(
 )
 async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+with open("app/tests/test_data/user_data.sql", "r") as f:
+    user_data = f.read()
+with open("app/tests/test_data/profile_data.sql", "r") as f:
+    profiles_data = f.read()
+
 with open("app/tests/test_data/food_data.sql", "r") as f:
     food_data = f.read()
 with open("app/tests/test_data/servings_data.sql", "r") as f:
     serving_data = f.read()
+with open("app/tests/test_data/food_log_data.sql", "r") as f:
+    food_log_data = f.read()
 
 @pytest.mark.anyio
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 async def db(anyio_backend) -> Generator:
     # setup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with async_session_maker() as session:
+        await session.execute(text(user_data))
+        await session.execute(text(profiles_data))
         await session.execute(text(food_data))
         await session.execute(text(serving_data))
+        await session.execute(text(food_log_data))
         yield session
     # teardown
     async with engine.begin() as conn:

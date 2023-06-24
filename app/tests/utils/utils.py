@@ -201,17 +201,7 @@ async def module_user(db):
 
 @pytest.fixture(scope="module")
 async def module_profile(db, module_user) -> models.Profile:
-    data = schemas.ProfileCreate(
-        start_date=date(2022,12,6),
-        start_weight=322.4,
-        goal_weight=150,
-        sex='male',
-        birthdate=date(1992,12,5),
-        height=70,
-        lbs_per_week=2,
-        activity_level=1.2,
-        user_id=module_user['id']
-    )
-    profile = await crud.create(obj_in=data, db=db, model=models.Profile)
+    profile = {"id": 1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
+    # data = schemas.ProfileCreate(**profile)
     
-    return jsonable_encoder(profile)
+    return profile

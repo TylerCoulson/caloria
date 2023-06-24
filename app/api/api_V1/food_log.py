@@ -20,6 +20,7 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food_log(*, profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
+    print("TESTING")
     food_log.profile_id = profile.id
     food_log_out = await crud.create(obj_in=food_log, db=db, model=models.Food_Log)
     return food_log_out
@@ -33,11 +34,9 @@ async def get_food_log_date(*, date: date, n:int=25, page:int=1, profile: Annota
     offset = max((page-1) * n, 0)
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile.id).where(models.Food_Log.date == date).limit(n).offset(offset)
     data = await db.execute(statement)
-    test = data.unique().all()
 
     profile = await crud.read(_id=profile.id, db=db, model=models.Profile)
-
-    return {"profile":profile, "log":[value for value, in test]}
+    return {"profile":profile, "log":[value for value, in data.unique().all()]}
 
 @router.get(
     "/{food_log_id}",

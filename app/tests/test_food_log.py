@@ -7,57 +7,64 @@ from app import schemas
 from datetime import date
 from . import utils
 
-async def test_food_log_create(client:TestClient, module_profile:models.Profile, serving, db:Session):
-    data = {
-        "date": date(2023,1,23).isoformat(), 
-        "food_id": serving['food_id'],
-        "serving_size_id": serving['id'],
-        "serving_amount": 1,
-        "profile_id": module_profile['id']
-    }
-    response= await client.post(f"/api/v1/food_log", json=data)
+create_data = {"id":1001, "date":'2022-12-09', "food_id":123, "serving_size_id":123, "serving_amount":3, "profile_id":1}
+profile = {"id":1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
+get_log = [{ "id":12, "date":'2022-10-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1,}, { "id":97, "date":'2022-10-09', "food_id":813, "serving_size_id":813, "serving_amount":9.0, "profile_id":1,}, { "id":429, "date":'2022-10-09', "food_id":426, "serving_size_id":426, "serving_amount":85.0, "profile_id":1,}, { "id":713, "date":'2022-10-09', "food_id":571, "serving_size_id":571, "serving_amount":25.0, "profile_id":1, }]
+get_log_date = "2022-10-09"
+update_data = {"id":17, "date":'2023-04-27', "food_id":123, "serving_size_id":123, "serving_amount":4.0, "profile_id":1}
+delete_id = 18
+keys = ["id", "date", "food_id", "serving_size_id", "serving_amount", "profile_id"]
+async def test_food_log_create(client:TestClient):
+    data = {**create_data, "profile_id":1}
+    response = await client.post(f"/api/v1/food_log", json=data)
     assert response.status_code == 201
     content = response.json()
-    assert "id" in content
+    assert content['profile'] == profile
     assert "serving_size" in content
-    for key in data.keys():
-        assert content[key] == data[key]
+    for key in keys:
+        assert content[key] == create_data[key]
 
-async def test_food_log_read_day(client:TestClient, db:Session, food_log:models.Food_Log):
-    response= await client.get(f"/api/v1/food_log/date/{food_log['date']}")
-
-    assert response.status_code == 200
-    content = response.json()
-    
-    assert content['profile'] == food_log['profile']
-    food_log.pop('profile')
-    assert content['log'] == [food_log]
-
-async def test_food_log_read_id(client:TestClient, db:Session, food_log:models.Food_Log):
-    response= await client.get(f"/api/v1/food_log/{food_log['id']}")
+async def test_food_log_read_day(client:TestClient, db:Session):
+    response= await client.get(f"/api/v1/food_log/date/{get_log_date}")
 
     assert response.status_code == 200
     content = response.json()
-    assert content == jsonable_encoder(food_log)
 
-async def test_food_update(client:TestClient, db:Session, food_log:models.Food_Log):
-    food_log['serving_amount'] += 2
-    response = await client.put(f"/api/v1/food_log/{food_log['id']}", json=food_log)
+    assert content['profile'] == profile
+    for log in content['log']:
+        assert "serving_size" in log
+        log.pop('serving_size')
+        print(log, log in get_log)
+        assert log in get_log
+
+async def test_food_log_read_id(client:TestClient, db:Session):
+    response= await client.get(f"/api/v1/food_log/{get_log[0]['id']}")
 
     assert response.status_code == 200
-    
     content = response.json()
 
+    assert content['profile'] == profile
     assert "serving_size" in content
+    for key in keys:
+        assert content[key] == get_log[0][key]
 
-    for key in food_log.keys():
-        assert content[key] == food_log[key]
+async def test_food_log_update(client:TestClient, db:Session):
+    response = await client.put(f"/api/v1/food_log/{update_data['id']}", json=update_data)
 
-async def test_food_delete(client:TestClient, db:Session, food_log:models.Food_Log):
-    response = await client.delete(f"/api/v1/food_log/{food_log['id']}")
+    assert response.status_code == 200
+    
+    content = response.json()
+
+    assert content['profile'] == profile
+    assert "serving_size" in content
+    for key in keys:
+        assert content[key] == update_data[key]
+
+async def test_food_delete(client:TestClient, db:Session):
+    response = await client.delete(f"/api/v1/food_log/{delete_id}")
 
     assert response.status_code == 200
 
     assert response.json() is None
 
-    assert await crud.read(_id=food_log['id'], db=db, model=models.Food_Log) is None
+    assert await crud.read(_id=delete_id, db=db, model=models.Food_Log) is None
