@@ -18,7 +18,7 @@ class Food(Base):
     subtype = Column(String)
 
     servings = relationship(
-        "ServingSize", back_populates="food",lazy="joined"
+        "ServingSize", back_populates="food",lazy="joined", cascade="all, delete-orphan"
     )
     
     # ingredients = relationship(
