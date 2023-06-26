@@ -9,11 +9,11 @@ import pytest
 
 create_data = {"id": 1001, "food_id": 1, "description": 'nisi volutpat', "calories": 6121, "fats": 302, "carbs": 750, "protein": 372,}
 update_data = {"id": 1, "food_id": 17, "description": 'amet', "calories": 9602, "fats": 332, "carbs": 571, "protein": 856}
-update_food = {"id": 17, "category": 3, "type": 'nec sem', "subtype": 'magna'}
+update_food = {"id": 17, "category_id": 3, "type": 'nec sem', "subtype": 'magna'}
 get_servings = {"id": 13, "food_id": 13, "description": 'lacus', "calories": 186, "fats": 369, "carbs": 764, "protein": 994}
-get_servings_food = {"id": 13, "category": 6, "type": 'fermentum justo nec', "subtype": None}
+get_servings_food = {"id": 13, "category_id": 6, "type": 'fermentum justo nec', "subtype": None}
 get_data = {"id": 1, "food_id": 1, "description": 'nisi volutpat', "calories": 6121, "fats": 302, "carbs": 750, "protein": 372,}
-food = {"id": 1, "category": 2, "type": 'posuere', "subtype": 'viverra dapibus'}
+food = {"id": 1, "category_id": 2, "type": 'posuere', "subtype": 'viverra dapibus'}
 delete_id = 22
 
 
