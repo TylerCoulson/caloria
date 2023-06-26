@@ -1,4 +1,4 @@
-insert into food (id, category, type, subtype) values 
+insert into food (id, category_id, type, subtype) values 
 (1, 2, 'posuere', 'viverra dapibus'),
 (2, 4, 'orci luctus et', null),
 (3, 3, 'lectus vestibulum quam', null),

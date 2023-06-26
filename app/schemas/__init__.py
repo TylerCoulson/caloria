@@ -5,4 +5,5 @@ from app.schemas.food_log import FoodLog, FoodLogBase, FoodLogCreate, DayLog, Fo
 from app.schemas.serving_size import ServingSize, ServingSizeBase, ServingSizeCreate, AllServings, ServingSizeNoFood
 from app.schemas.daily_overview import DailyOverview, DailyOverviewInput
 from app.schemas.predictions import Prediction
+from app.schemas.food_categories import FoodCategory
 from app.auth.schemas import UserCreate, UserRead, UserUpdate

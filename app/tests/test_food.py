@@ -6,12 +6,12 @@ from app import models
 from app import schemas
 from datetime import date
 
-get_data = {"id": 1, "category": 2, "type": 'posuere', "subtype": 'viverra dapibus'}
-create_data = {"id": 1001, "category": 2, "type": 'odio porttitor', "subtype": 'nec'}
-update_data = {"id": 1, "category": 2, "type": 'odio porttitor', "subtype": 'nec'}
+get_data = {"id": 1, "category_id": 2, "type": 'posuere', "subtype": 'viverra dapibus'}
+create_data = {"id": 1001, "category_id": 2, "type": 'odio porttitor', "subtype": 'nec'}
+update_data = {"id": 1, "category_id": 2, "type": 'odio porttitor', "subtype": 'nec'}
 delete_id = 10
-all_check = {"id":6, "category": 6, "type": 'primis', "subtype": 'sit amet lobortis'}
-search_result = {"id":42, "category": 6, "type": 'justo nec condimentum', "subtype": None}
+all_check = {"id":6, "category_id": 6, "type": 'primis', "subtype": 'sit amet lobortis'}
+search_result = {"id":42, "category_id": 6, "type": 'justo nec condimentum', "subtype": None}
 async def test_food_create(client:AsyncClient, db:Session):
 
     response = await client.post(f"/api/v1/food", json=create_data)

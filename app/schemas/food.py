@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from typing import List
+from .food_categories import FoodCategory
 
 class FoodBase(BaseModel):
-    category: int
+    category_id: int
     type: str
     subtype: str | None
 
@@ -12,6 +13,7 @@ class FoodCreate(FoodBase):
 
 class Food(FoodBase):
     id: int
+    # category: FoodCategory
     # ingredients: List["Food"] | None = []
     # servings: List["Food"] | None = []
     class Config:
