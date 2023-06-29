@@ -15,18 +15,24 @@ async def get_weight(profile_id, current_date, db):
     data = await db.execute(statement)
     return data.unique().scalar_one_or_none()
 
-async def test_daily_overview_get(client:TestClient, db:Session, food_log:models.Food_Log):    
-    start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
+async def test_daily_overview_get_before_start_date(client:TestClient, db:Session):    
+    food_log = { "id":12, "date":'2023-04-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
+
+    response= await client.get(f"/api/v1/daily/{(start_date - timedelta(days=1)).date()}")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Date is before profile start date"}
+
+
+async def test_daily_overview_get_on_start_date(client:TestClient, db:Session):    
+    food_log = { "id":12, "date":'2023-04-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
     end_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
 
     days = (end_date - start_date).days 
 
-    data = {
-        "current_date": food_log['date'],
-        "actual_weight": 308.8
-    }
-
-    response= await client.get(f"/api/v1/daily/{data['current_date']}")
+    response= await client.get(f"/api/v1/daily/{start_date.date()}")
 
     assert response.status_code == 200
     content = response.json()
@@ -48,6 +54,33 @@ async def test_daily_overview_get(client:TestClient, db:Session, food_log:models
     }
 
     assert content.keys() == output.keys()
+
+async def test_get_daily_after_start_date(client:TestClient, db:Session):
+    food_log = { "id":12, "date":'2023-04-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
+    end_date = (start_date + timedelta(days=1)).date()
+    days = 1 
+    
+    response= await client.get(f"/api/v1/daily/{end_date}")
+    content = response.json()
+    assert response.status_code == 200
+    output = {
+        "day": days,
+        "actual_weight": 0,
+        "week": days//7 + 1,
+        "date": end_date,
+        "est_weight": 311.7,
+        "resting_rate": 2860,
+        "eaten_calories": 1900,
+        "calories_left": -40,
+        "calorie_goal": 1860,
+        "total_lbs_lost": 10.7,
+        "calorie_surplus": -19540,
+        "profile_id": food_log['profile_id'],
+        "bmi": 44.71
+    }
+    assert content.keys() == output.keys() 
+
 
 async def test_daily_overview_post(client:TestClient, db:Session, profile: models.Profile, food_log:models.Food_Log):
     start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
