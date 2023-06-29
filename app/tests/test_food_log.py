@@ -8,12 +8,13 @@ from datetime import date
 from . import utils
 
 create_data = {"id":1001, "date":'2022-12-09', "food_id":123, "serving_size_id":123, "serving_amount":3, "profile_id":1}
-profile = {"id":1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
+profile = {"id":1, "start_date": '2022-12-06', "start_weight": 322.4, "goal_weight": 150.0, "sex": 'Male', "birthdate": '1992-12-05', "height": 70, "lbs_per_week": 2.0, "activity_level": 2.0, "user_id": 1}
 get_log = [{ "id":12, "date":'2022-10-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1,}, { "id":97, "date":'2022-10-09', "food_id":813, "serving_size_id":813, "serving_amount":9.0, "profile_id":1,}, { "id":429, "date":'2022-10-09', "food_id":426, "serving_size_id":426, "serving_amount":85.0, "profile_id":1,}, { "id":713, "date":'2022-10-09', "food_id":571, "serving_size_id":571, "serving_amount":25.0, "profile_id":1, }]
 get_log_date = "2022-10-09"
 update_data = {"id":17, "date":'2023-04-27', "food_id":123, "serving_size_id":123, "serving_amount":4.0, "profile_id":1}
 delete_id = 18
 keys = ["id", "date", "food_id", "serving_size_id", "serving_amount", "profile_id"]
+
 async def test_food_log_create(client:TestClient):
     data = {**create_data, "profile_id":1}
     response = await client.post(f"/api/v1/food_log", json=data)
