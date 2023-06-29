@@ -151,3 +151,18 @@ async def test_daily_overview_delete(client:TestClient, db:Session, profile, foo
     assert response.json() is None
 
     assert await crud.read(_id=data.id, db=db, model=models.DailyLog)  is None
+
+async def test_get_all_daily_valid_profile_n25_page1(client:TestClient, db:Session):
+    response = await client.get("/api/v1/daily", params={"n": 25, "page": 1})
+    assert response.status_code == 200
+    assert len(response.json()) == 25
+
+async def test_get_all_daily_valid_profile_n10_page2(client:TestClient, db:Session):
+    response = await client.get("/api/v1/daily", params={"n": 10, "page": 2})
+    assert response.status_code == 200
+    assert len(response.json()) == 10
+
+async def test_get_all_daily_valid_profile_n50_page3(client:TestClient, db:Session):
+    response = await client.get("/api/v1/daily", params={"n": 50, "page": 3})
+    assert response.status_code == 200
+    assert response.json() == []
