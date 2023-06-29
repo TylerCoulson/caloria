@@ -82,11 +82,12 @@ async def test_get_daily_after_start_date(client:TestClient, db:Session):
     assert content.keys() == output.keys() 
 
 
-async def test_daily_overview_post(client:TestClient, db:Session, profile: models.Profile, food_log:models.Food_Log):
-    start_date = datetime.strptime(food_log['profile']['start_date'],'%Y-%m-%d')
+async def test_daily_overview_post(client:TestClient, db:Session):
+    food_log = { "id":12, "date":'2023-04-09', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
 
     data = {
-        "profile_id": profile['id'],
+        "profile_id": 1,
         "date": (start_date).strftime('%Y-%m-%d'),
         "actual_weight": 308.8
     }
@@ -96,15 +97,12 @@ async def test_daily_overview_post(client:TestClient, db:Session, profile: model
 
     assert content['actual_weight'] == 308.8
 
-    statement = select(models.DailyLog.profile_id)
-    weight_data = await db.execute(statement)
-    weight_id = weight_data.unique().first()
-    # await crud.delete(_id=weight_id, db=db, db_obj=weight_data)
-
-async def test_daily_overview_update(client:TestClient, db:Session, food_log_2:models.Food_Log):    
+async def test_daily_overview_update(client:TestClient, db:Session):    
+    food_log = { "id":12, "date":'2023-04-10', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
     daily = {
-        "profile_id": food_log_2['profile']['id'],
-        "date": food_log_2['date'],
+        "profile_id": 1,
+        "date": food_log['date'],
         "actual_weight": 308.8
     }
     
@@ -128,17 +126,17 @@ async def test_daily_overview_update(client:TestClient, db:Session, food_log_2:m
         "calorie_goal": 1860,
         "total_lbs_lost": 10.7,
         "calorie_surplus": -19540,
-        "profile_id": food_log_2['profile_id'],
+        "profile_id": 1,
         "bmi":44.71
     }
 
     assert content.keys() == output.keys() 
 
-async def test_daily_overview_delete(client:TestClient, db:Session, profile, food_log:models.Food_Log):    
+async def test_daily_overview_delete(client:TestClient, db:Session):    
     end_date = "2023-12-07"
 
     daily = {
-        "profile_id": food_log['profile']['id'],
+        "profile_id": 1,
         "date": end_date,
         "actual_weight": 308.8
     }
