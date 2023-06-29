@@ -13,6 +13,7 @@ from app.deps import get_db
 from app.auth.users import get_current_profile, current_active_user
 from app.tests.utils import *
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from app.tests.utils import read_data_from_file, add_data_to_db
 
 engine = create_async_engine(
     settings.SQLALCHEMY_TEST_DATABASE_URI,
@@ -20,18 +21,7 @@ engine = create_async_engine(
 )
 async_session_maker = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-with open("app/tests/test_data/user_data.sql", "r") as f:
-    user_data = f.read()
-with open("app/tests/test_data/profile_data.sql", "r") as f:
-    profiles_data = f.read()
-with open("app/tests/test_data/food_categories.sql", "r") as f:
-    food_categories = f.read()
-with open("app/tests/test_data/food_data.sql", "r") as f:
-    food_data = f.read()
-with open("app/tests/test_data/servings_data.sql", "r") as f:
-    serving_data = f.read()
-with open("app/tests/test_data/food_log_data.sql", "r") as f:
-    food_log_data = f.read()
+data = read_data_from_file()
 
 @pytest.mark.anyio
 @pytest.fixture(scope="module")
@@ -39,14 +29,11 @@ async def db(anyio_backend) -> Generator:
     # setup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
     async with async_session_maker() as session:
-        await session.execute(text(user_data))
-        await session.execute(text(profiles_data))
-        await session.execute(text(food_categories))
-        await session.execute(text(food_data))
-        await session.execute(text(serving_data))
-        await session.execute(text(food_log_data))
+        await add_data_to_db(data, session)
         yield session
+
     # teardown
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

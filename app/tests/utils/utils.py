@@ -1,12 +1,36 @@
 import random
 import string
 import pytest
+from sqlalchemy.sql import text
+from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 from app import models
 from app import schemas
 from app import crud
 from datetime import date, timedelta, datetime
 from app.api.calcs.calorie_calcs import PersonsDay
+
+
+def read_data_from_file() -> dict:
+    with open("app/tests/test_data/user_data.sql", "r") as f:
+        user_data = f.read()
+    with open("app/tests/test_data/profile_data.sql", "r") as f:
+        profiles_data = f.read()
+    with open("app/tests/test_data/food_categories.sql", "r") as f:
+        food_categories = f.read()
+    with open("app/tests/test_data/food_data.sql", "r") as f:
+        food_data = f.read()
+    with open("app/tests/test_data/servings_data.sql", "r") as f:
+        serving_data = f.read()
+    with open("app/tests/test_data/food_log_data.sql", "r") as f:
+        food_log_data = f.read()
+
+    return {"user_data": user_data, "profiles_data": profiles_data, "food_categories": food_categories, "food_data": food_data, "serving_data": serving_data, "food_log_data": food_log_data}
+
+async def add_data_to_db(data: dict, session: Session):
+    for sql in data.values():
+        await session.execute(text(sql))
+    return session
 
 def random_lower_string(k=32) -> str:
     return "".join(random.choices(string.ascii_lowercase, k=k))
