@@ -20,7 +20,6 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food_log(*, profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
-    print("TESTING")
     food_log.profile_id = profile.id
     food_log_out = await crud.create(obj_in=food_log, db=db, model=models.Food_Log)
     return food_log_out

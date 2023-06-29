@@ -35,7 +35,6 @@ async def test_food_log_read_day(client:TestClient, db:Session):
     for log in content['log']:
         assert "serving_size" in log
         log.pop('serving_size')
-        print(log, log in get_log)
         assert log in get_log
 
 async def test_food_log_read_id(client:TestClient, db:Session):

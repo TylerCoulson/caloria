@@ -40,7 +40,6 @@ async def test_serving_size_read_by_food(client:TestClient, db:Session):
 
 
     assert response.status_code == 200
-    print(response.json())
     assert response.json() == {"servings": [{**get_servings, "food":get_servings_food}]}
 
 
