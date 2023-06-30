@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import schemas
 from app import crud
+from app.auth.db import User
 from datetime import date, timedelta, datetime
 from app.api.calcs.calorie_calcs import PersonsDay
 
@@ -189,9 +190,10 @@ async def food_log_2(
     return jsonable_encoder(log)
 
 @pytest.fixture()
-async def daily_output(food_log:models.Food_Log): 
-    food_log['date'] = date(2022,12,7)
-    food_log = schemas.FoodLog(**food_log)
+async def daily_output(db):
+    food_log = await crud.read(_id=12, db=db, model=models.Food_Log)
+
+    food_log = schemas.FoodLog(**food_log.__dict__)
     return PersonsDay(
         height = 70,
         start_weight = 322.4,
@@ -203,9 +205,6 @@ async def daily_output(food_log:models.Food_Log):
         goal_weight = 150,
         profile_logs = [food_log],
     )
-
-from app.auth.db import User
-from .utils import random_lower_string
 
 @pytest.fixture()
 async def user(db):

@@ -4,7 +4,10 @@ from fastapi.testclient import TestClient
 from app.crud import crud
 from app import models
 from app import schemas
+from app.api.calcs.calorie_calcs import PersonsDay
 from datetime import date, timedelta
+import json
+import pytest
 
 profile = {"id":1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1, "log": []}
 
@@ -24,3 +27,23 @@ async def test_current_average_weekly_loss(client:TestClient, db:Session):
     assert response.json() is not None
 
 
+async def test_prediction_never_faulter(daily_output:PersonsDay):
+    with open('app/tests/test_data/prediction.json') as prediction_file:
+        prediction_output = json.load(prediction_file)
+    # daily = await daily_output
+    assert daily_output.prediction() == prediction_output
+
+def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay):
+    current_date = date(2022,12,7)
+    total_days = (current_date - daily_output.start_date).days
+    
+    if total_days:
+        daily_output.lbs_per_day = daily_output.total_lbs_lost(current_date=current_date) / total_days
+
+    pred = daily_output.prediction()  
+    
+    with open('app/tests/test_data/prediction_update_weekly_lbs_lost.json') as prediction_file:
+        prediction_output = json.load(prediction_file)
+
+
+    assert pred == prediction_output
