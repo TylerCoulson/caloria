@@ -11,6 +11,7 @@ def test_bmi(daily_output:PersonsDay):
 
 
 def test_total_calories_eaten(daily_output:PersonsDay):
+    print(daily_output.__dict__)
     current_date = daily_output.start_date + timedelta(1)
     assert daily_output.total_calories_eaten(current_date=current_date) == 500
 

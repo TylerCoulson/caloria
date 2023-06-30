@@ -674,7 +674,7 @@ insert into serving_size (id, food_id, description, calories, fats, carbs, prote
 (673, 673, 'velit eu', 7287, 732, 678, 335),
 (674, 674, 'accumsan tortor', 2165, 485, 442, 194),
 (675, 675, 'nisl duis', 8427, 53, 44, 646),
-(676, 676, 'convallis nulla', 7764, 137, 251, 43),
+(676, 676, 'convallis nulla', 500, 40, 10, 20),
 (677, 677, 'quis tortor', 2886, 980, 731, 18),
 (678, 678, 'nulla', 4816, 984, 117, 512),
 (679, 679, 'metus vitae', 6249, 736, 609, 118),

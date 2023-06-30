@@ -191,9 +191,10 @@ async def food_log_2(
 
 @pytest.fixture()
 async def daily_output(db):
-    food_log = await crud.read(_id=12, db=db, model=models.Food_Log)
-
+    food_log = await crud.read(_id=261, db=db, model=models.Food_Log)
+    
     food_log = schemas.FoodLog(**food_log.__dict__)
+
     return PersonsDay(
         height = 70,
         start_weight = 322.4,
