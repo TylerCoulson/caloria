@@ -18,6 +18,9 @@ async def read(*, _id: int, db, model):
     return  data.unique().scalar_one_or_none()
 
 async def read_all(*, n:int=25, page:int=1, db, model):
+    if n < 0:
+        n = 25
+
     offset = max((page-1) * n, 0)
 
     statement = select(model).limit(n).offset(offset)
