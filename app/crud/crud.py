@@ -2,7 +2,7 @@ from typing import Any
 from sqlalchemy import select, update as sql_update
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
-
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 async def create(*, obj_in, db, model) -> Any:
     created = model(**obj_in.dict())
@@ -28,13 +28,16 @@ async def read_all(*, n:int=25, page:int=1, db, model):
     return [value for value, in data.unique().all()]
 
 async def update(*, _id, model, update_data, db):
-    statement = sql_update(model).where(model.id == _id).values(update_data.dict())
-    await db.execute(statement)
-    
-    await db.commit()
-    data = await read(_id=_id, db=db, model=model)
-    await db.refresh(data)
-    return data
+    try:
+        statement = sql_update(model).where(model.id == _id).values(update_data.dict())
+        await db.execute(statement)
+        await db.commit()
+        data = await read(_id=_id, db=db, model=model)
+        await db.refresh(data)
+        return data
+    except UnmappedInstanceError:
+        return None
+
 
 
 async def delete(*, _id: int, db, db_obj):
