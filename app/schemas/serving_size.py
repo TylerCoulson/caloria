@@ -22,8 +22,11 @@ class ServingSize(ServingSizeBase):
 class ServingSizeNoFood(ServingSizeBase):
     id:int
 
+    class Config:
+        orm_mode = True
+
 class AllServings(BaseModel):
-    servings: List[ServingSize] = []
+    servings: List[ServingSizeNoFood] = []
 
     class Config:
         orm_mode = True

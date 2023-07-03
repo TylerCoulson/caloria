@@ -14,7 +14,7 @@ router.tags = ['servings']
     response_model=schemas.ServingSize,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_serving_size(*, serving_size: schemas.ServingSizeCreate, db: Session = Depends(deps.get_db)):
+async def post_serving_size(*, food_id:int, serving_size: schemas.ServingSizeCreate, db: Session = Depends(deps.get_db)):
     serving_size_out = await crud.create(obj_in=serving_size, db=db, model=models.ServingSize)
     return serving_size_out
 
@@ -23,12 +23,10 @@ async def post_serving_size(*, serving_size: schemas.ServingSizeCreate, db: Sess
     response_model=schemas.ServingSize,
     status_code=status.HTTP_200_OK,
 )
-async def get_serving_size_id(*, serving_id: int, db: Session = Depends(deps.get_db)):
-
+async def get_serving_size_id(*, food_id:int, serving_id: int, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=serving_id, db=db, model=models.ServingSize)
-
     if not data:
-        raise HTTPException(status_code=404, detail="serving size not found")
+        raise HTTPException(status_code=404, detail="Serving size not found")
     return data
 
 @router.get(
@@ -41,19 +39,18 @@ async def get_serving_size_by_food(*, food_id: int, db: Session = Depends(deps.g
 
     data = await db.execute(statement)
     servings = data.unique().all()
-
-    return {"servings":[value for value, in servings]}
+    return {"servings":[value.__dict__ for value, in servings]}
 
 @router.put(
     "/{food_id}/serving/{serving_id}",
     response_model=schemas.ServingSize,
     status_code=status.HTTP_200_OK,
 )
-async def update_serving_size(
-    *, serving_id: int, serving_size_in: schemas.ServingSizeBase, db: Session = Depends(deps.get_db)
-):
+async def update_serving_size(*, serving_id: int, serving_size_in: schemas.ServingSizeBase, db: Session = Depends(deps.get_db)):
 
     data = await crud.update(_id=serving_id, model=models.ServingSize, update_data=serving_size_in, db=db)
+    if not data:
+        raise HTTPException(status_code=404, detail="Serving size not found")
     return data
 
 
@@ -61,7 +58,8 @@ async def update_serving_size(
     "/{food_id}/serving/{serving_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_serving_size(*, serving_id: int, db: Session = Depends(deps.get_db)):
-    data = await get_serving_size_id(serving_id=serving_id, db=db)
+async def delete_serving_size(*, food_id:int, serving_id: int, db: Session = Depends(deps.get_db)):
+    data = await get_serving_size_id(food_id=food_id, serving_id=serving_id, db=db)
     data = await crud.delete(_id=serving_id, db=db, db_obj=data)
+    
     return
