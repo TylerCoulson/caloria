@@ -27,8 +27,17 @@ async  def create_profile(*, profile: schemas.ProfileBase, user:dict=Depends(cur
     response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def get_current_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=profile.id, db=db, model=models.Profile)
+    return data
+
+@router.get(
+    "/all",
+    # response_model=schemas.UserRead,
+    status_code=status.HTTP_200_OK,
+)
+async def get_user(*, db: Session = Depends(deps.get_db)):
+    data = await crud.read_all(db=db, model=models.User)
     return data
 
 @router.get(
@@ -36,7 +45,7 @@ async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(de
     response_model=schemas.ProfileLogs,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def get_current_profile_logs(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     data = await crud.read(_id=profile.id, db=db, model=models.Profile)
     return data
 
@@ -45,7 +54,7 @@ async def get_profile_id(*, profile: Annotated_Profile, db: Session = Depends(de
     response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
-async def update_profile(
+async def update_current_profile(
     *, profile: Annotated_Profile, profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
 ):
     data = await crud.update(_id=profile.id, model=models.Profile, update_data=profile_in, db=db)
@@ -56,7 +65,7 @@ async def update_profile(
     "/me",
     status_code=status.HTTP_200_OK,
 )
-async def delete_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    data = await get_profile_id(profile=profile, db=db)
+async def delete_current_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+    data = await get_current_profile(profile=profile, db=db)
     data = await crud.delete(_id=profile.id, db=db, db_obj=data)
     return

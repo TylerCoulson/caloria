@@ -34,7 +34,7 @@ async def create_profile(*, request: Request,hx_request: str | None = Header(def
 )
 async def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
     try:
-        profile_out = await api_profile.get_profile_id(profile=profile, db=db)
+        profile_out = await api_profile.get_current_profile(profile=profile, db=db)
 
         context = {
                 "request": request,

@@ -4,7 +4,6 @@ from fastapi.encoders import jsonable_encoder
 from app import models
 from app import schemas
 from app import crud
-from . import utils
 from datetime import date
 
 create_profile = {"id":1001, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1001}
