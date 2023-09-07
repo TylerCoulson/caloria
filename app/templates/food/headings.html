@@ -1,6 +1,9 @@
 <tr>
+    <th id="category">Category</th>
     <th id="brand">Brand</th>
     <th id="name">Name</th>
     <th id="servings">Servings</th>
-    <th id="add_log">Add Log</th>
+    {% if user is none %}
+        <th id="add_log">Add Log</th>
+    {% endif %}
 </tr>

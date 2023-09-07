@@ -4,5 +4,7 @@
     <th id="fats">{{serving.fats}}</th>
     <th id="carbs">{{serving.carbs}}</th>
     <th id="protein">{{serving.protein}}</th>
-    <th id="add_log" hx-get="/food_log/create?serving_id={{serving.id}}" hx-target="#content" role="button">ADD</th>
+    {% if user is none %}
+        <th id="add_log" hx-get="/food_log/create?serving_id={{serving.id}}" hx-target="#content" role="button">ADD Log</th>
+    {% endif %}
 </tr>
