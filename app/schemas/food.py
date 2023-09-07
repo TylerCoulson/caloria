@@ -13,7 +13,7 @@ class FoodCreate(FoodBase):
 
 class Food(FoodBase):
     id: int
-    # category: FoodCategory
+    category: FoodCategory
     # ingredients: List["Food"] | None = []
     # servings: List["Food"] | None = []
     class Config:

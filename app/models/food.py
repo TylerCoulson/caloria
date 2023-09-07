@@ -13,14 +13,14 @@ class Food(Base):
     __tablename__ = "food"
 
     id = Column(Integer, primary_key=True, index=True)
-    category_id = Column(Integer, ForeignKey("food_categories.id"))
+    category_id = Column(Integer, ForeignKey("food_categories.id", ondelete="CASCADE"), nullable=False)
     type = Column(String)
     subtype = Column(String)
 
     servings = relationship(
-        "ServingSize", back_populates="food",lazy="joined", cascade="all, delete-orphan"
+        "ServingSize", back_populates="food", lazy="joined", cascade="all, delete-orphan"
     )
-    category = relationship("FoodCategories")
+    category = relationship("FoodCategories", back_populates="food", lazy="joined")
     
     # ingredients = relationship(
     #     "Food",
