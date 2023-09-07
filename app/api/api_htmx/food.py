@@ -79,3 +79,20 @@ async def get_search_food_results(*, request: Request,hx_request: str | None = H
         }
 
     return templates.TemplateResponse("food/body.html", context)
+
+@router.post(
+    "",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def post_food(*, request: Request, hx_request: str | None = Header(default=None), food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
+    
+    await api_food.post_food(food=food, db=db)
+    foods = await api_food.get_all_foods(db=db)
+    
+    context = {
+            "request": request,
+            "hx_request": hx_request,
+            "foods": foods,
+        }
+    return templates.TemplateResponse("food/list.html", context)     
