@@ -1,7 +1,7 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<div role="button">Add New Food</div>
+<div role="button" hx-get="/food/create" hx-target="#content">Add New Food</div>
 {% include "food/search.html" %}
 <table name="food">
     <thead>
