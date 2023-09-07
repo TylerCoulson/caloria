@@ -80,11 +80,12 @@ cookie_auth_backend = AuthenticationBackend(
 fastapi_users = FastAPIUsers[User, int](get_user_manager, [jwt_auth_backend, cookie_auth_backend])
 
 current_active_user = fastapi_users.current_user(active=True, optional=True)
-
+current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
     profile = await crud.read(_id=user.id, db=db, model=models.Profile)
     return profile
 
 Annotated_User = Annotated[models.User, Depends(current_active_user)]
+Annotated_Superuser = Annotated[models.User, Depends(current_superuser)]
 Annotated_Profile = Annotated[models.Profile, Depends(get_current_profile)]
