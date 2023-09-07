@@ -2,17 +2,17 @@
 
 {% block content %}
 <h1>Add Food</h1>        
-<form hx-post="/food" hx-target="#content" hx-ext='json-enc'>
+<form hx-post="/food" hx-target="#content" hx-ext='json-enc' hx-include="[name='category_id']">
     Category 
-    <select id="food-categories">
+    <select id="food-categories" name="category_id">
         <option value="3" label="Generic">Generic></option>
         <option value="4" label="Restaurant">Restaurant></option>
         <option value="5" label="Fast Food">Fast Food></option>
         <option value="6" label="Premade/Prepared">Prepared (premade)</option>
         <option value="7" label="Home-Prepared">Make at home></option>
     </select>
-    Brand<input type="text" name="brand"></input>
-    Name<input type="text" name="name"></input>
+    Brand<input type="text" name="type"></input>
+    Name<input type="text" name="subtype"></input>
     <input type="submit" value="Add Food">
 </form>
 <div id="food"></div>
