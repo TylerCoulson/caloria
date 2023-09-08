@@ -3,7 +3,7 @@
     <td headers="brand">{{food.type}}</td>
     <td headers="name">{{food.subtype}}</td>
     <td headers="servings"  hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content" >Servings</td>
-    {% if user is none %}
+    {% if user is not none %}
         <td headers="add_log" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">ADD</td>
     {% endif %}
 </tr>
