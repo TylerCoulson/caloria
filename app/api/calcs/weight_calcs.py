@@ -17,7 +17,7 @@ async def get_db_data(profile:models.Profile, db: Session):
     
     statement = select(
         models.Food_Log.date,
-        func.sum(models.ServingSize.calories * models.Food_Log.serving_amount).label("calories_eaten"),
+        func.sum(models.ServingSize.calories * models.Food_Log.serving_amount).label("calories_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
     ).where(models.Food_Log.profile_id == profile.id
     ).join(models.ServingSize, isouter=True
@@ -26,55 +26,76 @@ async def get_db_data(profile:models.Profile, db: Session):
     ).order_by(models.Food_Log.date)
 
     result = await db.execute(statement)
-    return result.unique().all()
+
+    # covert from Row object to dictionary
+    all_rows = result.unique().all()
+    return {date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows}
 
 async def transform_daily(profile:models.Profile, data):
+    # set dates
     birthdate = profile.birthdate if type(profile.birthdate) is date else datetime.strptime(profile.birthdate, '%Y-%m-%d').date()
     start_date = profile.start_date if type(profile.start_date) is date else datetime.strptime(profile.start_date, '%Y-%m-%d').date()
-    logs = []
+    
+    # create dictionary with all dates
+    dates_dict = {}
+    for d in range((date.today() - start_date).days + 1):
+        key = date.strftime(start_date + timedelta(days=d), "%Y-%m-%d")
+        dates_dict[key] = {'date': start_date + timedelta(days=d), 'calories_eaten_today': 0.0, 'user_inputed_weight': None}
 
-    total_rmr = 0
+    for k, v in data.items():
+        dates_dict[k] = v
+    
+
+    # Health calcs that do not change
+    sex_calc = -161 if profile.sex == 'female' else 5
+    act_level = profile.activity_level
+    height_calc = (profile.height*2.54) * 6.25
+
+    # Calcs that are changed
     est_weight = profile.start_weight
     total_calorie_goal = 0
     previous_total_eaten = 0
-    
-    for i in data:
+    total_calories_eaten = 0
+    total_rmr = 0
+
+    # iteration to get all daily outpus
+    logs = []
+    for k, v in dates_dict.items():
         weight_calc = 10 * (est_weight/2.2)
-        total_calories_eaten = float(i.calories_eaten) if i.calories_eaten else 0
-        height_calc = (profile.height*2.54) * 6.25
-        age_calc = int((i.date - birthdate).days/365.25) * 5
-        sex_calc = -161 if profile.sex == 'female' else 5
-        act_level = profile.activity_level
+        calories_eaten_today = float(v["calories_eaten_today"])
+        age_calc = int((v["date"] - birthdate).days/365.25) * 5
         resting_rate = ( (weight_calc+height_calc-age_calc) + sex_calc) * act_level
-        day = (i.date - start_date).days +1
+        day = (v["date"] - start_date).days +1
 
 
         total_rmr += resting_rate
+        total_calories_eaten += calories_eaten_today
 
         calorie_goal = max(resting_rate - profile.lbs_per_week * 500, 1200 if profile.sex == 'female' else 1500)
         total_calorie_goal += calorie_goal
 
         log = {
-            "date": i.date,
+            "date": v["date"],
             "profile_id":profile.id,
             'day':day,
             'week':(day//7)+1,
             'est_weight':round(est_weight,1),
             'resting_rate':round(resting_rate,0),
-            'eaten_calories':round(total_calories_eaten - previous_total_eaten,0),
+            'eaten_calories':round(calories_eaten_today,0),
             'calorie_goal': round(calorie_goal,0),
             'total_lbs_lost':round((total_rmr - total_calories_eaten)/3500,2),
             'calorie_surplus': round(total_calorie_goal - total_calories_eaten,0),
             'calories_left':round(calorie_goal - (total_calories_eaten-previous_total_eaten),0),
             'bmi':round((est_weight/float(profile.height**2))*703,2),
-            'actual_weight': i.user_inputed_weight or 0
+            'actual_weight': v["user_inputed_weight"] or 0
         }
         
 
-        previous_total_eaten = total_calories_eaten
         logs.append(log)
         est_weight = profile.start_weight-((total_rmr - total_calories_eaten)/3500)
+    logs.reverse()
     return logs
+
 
 async def daily_log(profile:models.Profile, db: Session):
 
