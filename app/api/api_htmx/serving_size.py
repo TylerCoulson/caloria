@@ -10,6 +10,7 @@ from app import models
 from app.api.api_V1 import serving_size as api_servings
 from app.api.api_htmx.food import router as food_router
 from app.api.api_V1 import food as api_food
+from app.auth.router import Annotated_User
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -19,13 +20,14 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_serving(*, request: Request, food_id:int, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+async def get_create_serving(*, request: Request, profile: Annotated_User = False, food_id:int, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
 
     food = await api_food.get_food_id(food_id=food_id, db=db)
 
     context = {
             "request": request,
             "hx_request": hx_request,
+            "user": profile,
             "food": food
         }
     return templates.TemplateResponse("food/servings/create.html", context)

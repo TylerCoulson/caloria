@@ -21,7 +21,7 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile,n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+async def get_food_logs(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
     
     logs = await api_food_log.get_food_logs(n=n, page=page, profile=profile, db=db)
     
@@ -38,13 +38,13 @@ async def get_food_logs(*, request: Request, hx_request: str | None = Header(def
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_log(*, request: Request, hx_request: str | None = Header(default=None), food_id:int=None, serving_id:int=None, db: Session = Depends(deps.get_db)):
+async def get_create_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_id:int=None, serving_id:int=None, db: Session = Depends(deps.get_db)):
 
     context = {
             "request": request,
             "hx_request": hx_request,
             "serving_amount": 1,
-            "calories": 0
+            "calories": 0,
         }
 
     if food_id:
@@ -70,7 +70,7 @@ async def get_create_log(*, request: Request, hx_request: str | None = Header(de
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_log_edit(*, request: Request, hx_request: str | None = Header(default=None), log_id:int, profile: Annotated_Profile, copy:bool = False, db: Session = Depends(deps.get_db)):
+async def get_log_edit(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), log_id:int, copy:bool = False, db: Session = Depends(deps.get_db)):
     
     
     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
@@ -103,7 +103,7 @@ async def get_log_edit(*, request: Request, hx_request: str | None = Header(defa
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_id(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def get_food_log_id(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
     
     
     log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
@@ -121,7 +121,7 @@ async def get_food_log_id(*, request: Request, hx_request: str | None = Header(d
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, n:int=25, page:int=1, date: date, db: Session = Depends(deps.get_db)):
+async def get_food_logs_by_profile_date(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), n:int=25, page:int=1, date: date, db: Session = Depends(deps.get_db)):
 
         
         logs = await api_food_log.get_food_log_date(n=n, page=page, date=date, profile=profile, db=db)
@@ -142,7 +142,7 @@ async def get_food_logs_by_profile_date(*, request: Request, hx_request: str | N
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def update_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, profile: Annotated_Profile, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)):
+async def update_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)):
     
 
     if food_log_id == 0:
@@ -163,7 +163,7 @@ async def update_food_log(*, request: Request, hx_request: str | None = Header(d
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log: schemas.FoodLogCreate, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def post_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
     
     await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
     logs = await api_food_log.get_food_logs(profile=profile, db=db)
@@ -179,7 +179,7 @@ async def post_food_log(*, request: Request, hx_request: str | None = Header(def
     "/{food_log_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food_log(*, request: Request, hx_request: str | None = Header(default=None), food_log_id: int, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def delete_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
     
     await api_food_log.delete_food_log(food_log_id=food_log_id, profile=profile, db=db)
 
