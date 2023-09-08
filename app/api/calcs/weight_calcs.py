@@ -29,7 +29,6 @@ async def get_db_data(profile:models.Profile, db: Session):
 
     # covert from Row object to dictionary
     all_rows = result.unique().all()
-    print({date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows})
     return {date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows}
 
 async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.today()):
