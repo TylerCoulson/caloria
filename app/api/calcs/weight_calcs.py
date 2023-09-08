@@ -29,16 +29,17 @@ async def get_db_data(profile:models.Profile, db: Session):
 
     # covert from Row object to dictionary
     all_rows = result.unique().all()
+    print({date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows})
     return {date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows}
 
-async def transform_daily(profile:models.Profile, data):
+async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.today()):
     # set dates
     birthdate = profile.birthdate if type(profile.birthdate) is date else datetime.strptime(profile.birthdate, '%Y-%m-%d').date()
     start_date = profile.start_date if type(profile.start_date) is date else datetime.strptime(profile.start_date, '%Y-%m-%d').date()
     
     # create dictionary with all dates
     dates_dict = {}
-    for d in range((date.today() - start_date).days + 1):
+    for d in range((end_date - start_date).days + 1):
         key = date.strftime(start_date + timedelta(days=d), "%Y-%m-%d")
         dates_dict[key] = {'date': start_date + timedelta(days=d), 'calories_eaten_today': 0.0, 'user_inputed_weight': None}
 
@@ -62,16 +63,15 @@ async def transform_daily(profile:models.Profile, data):
     logs = []
     for k, v in dates_dict.items():
         weight_calc = 10 * (est_weight/2.2)
-        calories_eaten_today = float(v["calories_eaten_today"])
+        calories_eaten_today = round(v["calories_eaten_today"],0)
         age_calc = int((v["date"] - birthdate).days/365.25) * 5
-        resting_rate = ( (weight_calc+height_calc-age_calc) + sex_calc) * act_level
+        resting_rate = round(((weight_calc+height_calc-age_calc) + sex_calc) * act_level,0)
         day = (v["date"] - start_date).days +1
 
+        calorie_goal = max(resting_rate - profile.lbs_per_week * 500, 1200 if profile.sex == 'female' else 1500)
 
         total_rmr += resting_rate
         total_calories_eaten += calories_eaten_today
-
-        calorie_goal = max(resting_rate - profile.lbs_per_week * 500, 1200 if profile.sex == 'female' else 1500)
         total_calorie_goal += calorie_goal
 
         log = {
@@ -80,19 +80,20 @@ async def transform_daily(profile:models.Profile, data):
             'day':day,
             'week':(day//7)+1,
             'est_weight':round(est_weight,1),
-            'resting_rate':round(resting_rate,0),
+            'resting_rate':resting_rate,
             'eaten_calories':round(calories_eaten_today,0),
             'calorie_goal': round(calorie_goal,0),
             'total_lbs_lost':round((total_rmr - total_calories_eaten)/3500,2),
             'calorie_surplus': round(total_calorie_goal - total_calories_eaten,0),
-            'calories_left':round(calorie_goal - (total_calories_eaten-previous_total_eaten),0),
+            'calories_left':round(calorie_goal - calories_eaten_today,0),
             'bmi':round((est_weight/float(profile.height**2))*703,2),
             'actual_weight': v["user_inputed_weight"] or 0
         }
         
 
         logs.append(log)
-        est_weight = profile.start_weight-((total_rmr - total_calories_eaten)/3500)
+        est_weight -= (resting_rate-calories_eaten_today)/3500
+    
     logs.reverse()
     return logs
 
