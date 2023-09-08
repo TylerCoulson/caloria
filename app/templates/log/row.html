@@ -1,6 +1,6 @@
 <tr name="food_log_id">
     <td headers="log_date">{{log.date}}</td>
-    <td headers="log_food">{{log.serving_size.food.brand}}, {{log.serving_size.food.name}}</td>
+    <td headers="log_food">{{log.serving_size.food.type}}, {{log.serving_size.food.subtype}}</td>
     <td headers="log_serving">{{log.serving_size.description}}</td>
     <td headers="log_serving_amount">{{log.serving_amount|round(2, "common")}}</td>
     <td headers="log_calories">{{(log.serving_amount * log.serving_size.calories)|round|int}}</td>
