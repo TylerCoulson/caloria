@@ -49,7 +49,7 @@ async def get_all_daily(*, profile: Annotated_Profile, n:int=25, page:int=1, db:
     status_code=status.HTTP_200_OK,
 )
 async def get_daily(*, profile: Annotated_Profile, current_date:date, db: Session = Depends(deps.get_db)):
-    start_date = datetime.strptime(profile.start_date, '%Y-%m-%d').date()
+    start_date = profile.start_date if type(profile.start_date) is date else datetime.strptime(profile.start_date, '%Y-%m-%d').date()
     if current_date < start_date:
         raise HTTPException(status_code=404, detail="Date is before profile start date")
     

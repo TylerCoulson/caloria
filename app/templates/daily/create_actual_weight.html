@@ -1,0 +1,7 @@
+{% if not hx_request %}{% extends "index.html" %}{% endif %}
+
+{% block content %}
+<td headers="actual_weight" hx-target='this' hx-swap="outerHTML">
+    <input name='actual_weight'  value={{actual_weight}} hx-put="/daily/{{date}}" hx-ext="json-enc" type="number">
+</td>
+{% endblock %}

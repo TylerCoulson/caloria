@@ -18,6 +18,21 @@ templates = Jinja2Templates("app/templates")
 from app import crud
 
 @router.get(
+    "/create/{date}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_daily(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, date:date = date.today(), db: Session = Depends(deps.get_db)):
+    actual_weight = await api_daily.get_weight(profile_id=profile.id, current_date=date, db=db) 
+    context = {
+                "request": request,
+                "hx_request": hx_request,
+                "date": date,
+                "actual_weight": actual_weight.actual_weight if actual_weight else  0
+            }
+    return templates.TemplateResponse("daily/create_actual_weight.html", context)
+
+@router.get(
     "",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
@@ -51,4 +66,18 @@ async def get_daily(*, request: Request, hx_request: str | None = Header(default
             }
     return templates.TemplateResponse("daily/day.html", context)
     
+@router.put(
+    "/{date}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def update_actual_weight(*, request: Request, hx_request: str | None = Header(default=None), profile: Annotated_Profile, date:date, actual_weight:schemas.ActualWeight, db: Session = Depends(deps.get_db)):
+    daily_data = {"profile_id": profile.id, "date": date, "actual_weight":actual_weight.actual_weight} 
+    data = await api_daily.update_daily(profile=profile, current_date=date, daily_data=schemas.DailyOverviewInput(**daily_data), db=db)
+    context = {
+                "request": request,
+                "hx_request": hx_request,
+                "daily": data
+            }
+    return templates.TemplateResponse("daily/weight_column.html", context)
 
