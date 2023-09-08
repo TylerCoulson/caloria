@@ -29,6 +29,8 @@ async def get_db_data(profile:models.Profile, db: Session):
     return result.unique().all()
 
 async def transform_daily(profile:models.Profile, data):
+    birthdate = profile.birthdate if type(profile.birthdate) is date else datetime.strptime(profile.birthdate, '%Y-%m-%d').date()
+    start_date = profile.start_date if type(profile.start_date) is date else datetime.strptime(profile.start_date, '%Y-%m-%d').date()
     logs = []
 
     total_rmr = 0
@@ -40,11 +42,11 @@ async def transform_daily(profile:models.Profile, data):
         weight_calc = 10 * (est_weight/2.2)
         total_calories_eaten = float(i.calories_eaten) if i.calories_eaten else 0
         height_calc = (profile.height*2.54) * 6.25
-        age_calc = int((i.date - profile.birthdate).days/365.25) * 5
+        age_calc = int((i.date - birthdate).days/365.25) * 5
         sex_calc = -161 if profile.sex == 'female' else 5
         act_level = profile.activity_level
         resting_rate = ( (weight_calc+height_calc-age_calc) + sex_calc) * act_level
-        day = (i.date - profile.start_date).days +1
+        day = (i.date - start_date).days +1
 
 
         total_rmr += resting_rate

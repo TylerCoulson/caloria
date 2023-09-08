@@ -2,7 +2,7 @@ import pytest
 from app import models, schemas, crud
 
 @pytest.fixture()
-async def create_serving(get_food) -> models.ServingSize:
+async def create_serving() -> models.ServingSize:
     serving = {
         "id": 1001,
         "food_id": 1,
@@ -11,7 +11,7 @@ async def create_serving(get_food) -> models.ServingSize:
         "fats": 302,
         "carbs": 750,
         "protein": 372,
-        "food": get_food
+        "food": {"id": 1, "category_id": 2, "type": 'posuere', "subtype": 'viverra dapibus'}
     } 
     return serving
 
