@@ -181,4 +181,4 @@ async def test_get_all_daily_valid_profile_n10_page2(client:TestClient, db:Sessi
 async def test_get_all_daily_valid_profile_n50_page3(client:TestClient, db:Session):
     response = await client.get("/api/v1/daily", params={"n": 50, "page": 3})
     assert response.status_code == 200
-    assert response.json() == []
+    assert len(response.json()) == 50
