@@ -2,15 +2,14 @@ from fastapi import APIRouter, Depends, status, Request, HTTPException, Header
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session  # type: ignore
+from datetime import date
 from app import deps
 from app import schemas
-from app import models
-from datetime import date
+
 from app.api.api_V1 import food_log as api_food_log
 from app.api.api_V1 import food as api_food
 from app.api.api_V1 import serving_size as api_servings
-from app import crud
-from app.auth.router import Annotated_Profile
+from app.api.api_htmx.deps import LoggedInDeps
 
 router = APIRouter(prefix="/food_log")
 templates = Jinja2Templates("app/templates")
@@ -21,15 +20,16 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+async def get_food_logs(*, logged_in:LoggedInDeps, n:int=25, page:int=1):
     
-    logs = await api_food_log.get_food_logs(n=n, page=page, profile=profile, db=db)
+    logs = await api_food_log.get_food_logs(n=n, page=page, profile=logged_in['profile'], db=logged_in['db'])
     
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "logs": logs,
-        }
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "logs": logs,
+       }
 
     return templates.TemplateResponse("log/list.html", context)             
 
@@ -38,25 +38,26 @@ async def get_food_logs(*, request: Request, profile: Annotated_Profile, hx_requ
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_id:int=None, serving_id:int=None, db: Session = Depends(deps.get_db)):
+async def get_create_log(*, logged_in:LoggedInDeps, food_id:int=None, serving_id:int=None):
 
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "serving_amount": 1,
-            "calories": 0,
-        }
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "serving_amount": 1,
+        "calories": 0,
+    }
 
     if food_id:
-        servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=db)
+        servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=logged_in['db'])
         context['serving_id'] = serving_id
-        context['food'] = await api_food.get_food_id(food_id=food_id, db=db)
+        context['food'] = await api_food.get_food_id(food_id=food_id, db=logged_in['db'])
         context['servings'] = servings['servings']
     
     if serving_id:
-        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, db=db)
+        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, db=logged_in['db'])
         food = current_serving.food
-        servings = await api_servings.get_serving_size_by_food(food_id=food.id, db=db)
+        servings = await api_servings.get_serving_size_by_food(food_id=food.id, db=logged_in['db'])
         context['serving_id'] = serving_id
         context['food'] = food
         context['servings'] = servings['servings']
@@ -70,15 +71,16 @@ async def get_create_log(*, request: Request, profile: Annotated_Profile, hx_req
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_log_edit(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), log_id:int, copy:bool = False, db: Session = Depends(deps.get_db)):
+async def get_log_edit(*, logged_in:LoggedInDeps, log_id:int, copy:bool = False):
     
     
-    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=log_id, db=db)
+    log = await api_food_log.get_food_log_id(profile=logged_in['profile'], food_log_id=log_id, db=logged_in['db'])
 
-    servings = await api_servings.get_serving_size_by_food(food_id=log.food_id, db=db)
+    servings = await api_servings.get_serving_size_by_food(food_id=log.food_id, db=logged_in['db'])
     context = {
-        "request": request,
-        "hx_request": hx_request,
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
         "trigger": 'click',
         "log":log,
         "editable": True,
@@ -103,16 +105,17 @@ async def get_log_edit(*, request: Request, profile: Annotated_Profile, hx_reque
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_id(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
+async def get_food_log_id(*, logged_in:LoggedInDeps, food_log_id: int):
     
     
-    log = await api_food_log.get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
+    log = await api_food_log.get_food_log_id(profile=logged_in['profile'], food_log_id=food_log_id, db=logged_in['db'])
     
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "log": log,
-        }
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "log": log,
+    }
     return templates.TemplateResponse("log/row.html", context)
     
 
@@ -121,19 +124,20 @@ async def get_food_log_id(*, request: Request, profile: Annotated_Profile, hx_re
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs_by_profile_date(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), n:int=25, page:int=1, date: date, db: Session = Depends(deps.get_db)):
+async def get_food_logs_by_profile_date(*, logged_in:LoggedInDeps, n:int=25, page:int=1, date: date):
 
-        
-        logs = await api_food_log.get_food_log_date(n=n, page=page, date=date, profile=profile, db=db)
-        logs = logs['log']
-        context = {
-                "request": request,
-                "hx_request": hx_request,
-                "logs": logs,
-                "trigger": 'click'
-            }
-        
-        return templates.TemplateResponse("log/day.html", context)
+    
+    logs = await api_food_log.get_food_log_date(n=n, page=page, date=date, profile=logged_in['profile'], db=logged_in['db'])
+    logs = logs['log']
+    context = {
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "logs": logs,
+        "trigger": 'click'
+    }
+    
+    return templates.TemplateResponse("log/day.html", context)
 
 
 
@@ -142,20 +146,21 @@ async def get_food_logs_by_profile_date(*, request: Request, profile: Annotated_
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def update_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, food_log_in: schemas.FoodLogBase, db: Session = Depends(deps.get_db)):
+async def update_food_log(*, logged_in:LoggedInDeps, food_log_id: int, food_log_in: schemas.FoodLogBase):
     
 
     if food_log_id == 0:
-        return post_food_log(request=request, hx_request=hx_request, profile=profile, food_log=food_log_in, db=db)
+        return post_food_log(request=logged_in['request'], hx_request=logged_in['hx_request'], profile=logged_in['profile'], food_log=food_log_in, db=logged_in['db'])
 
     
-    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=profile, db=db)
+    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=logged_in['profile'], db=logged_in['db'])
 
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "log": log,
-        }
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "log": log,
+    }
     return templates.TemplateResponse("log/row.html", context)
 
 @router.post(
@@ -163,24 +168,25 @@ async def update_food_log(*, request: Request, profile: Annotated_Profile, hx_re
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
+async def post_food_log(*, logged_in:LoggedInDeps, food_log: schemas.FoodLogCreate):
     
-    await api_food_log.post_food_log(profile=profile, food_log=food_log, db=db)
-    logs = await api_food_log.get_food_logs(profile=profile, db=db)
+    await api_food_log.post_food_log(profile=logged_in['profile'], food_log=food_log, db=logged_in['db'])
+    logs = await api_food_log.get_food_logs(profile=logged_in['profile'], db=logged_in['db'])
     
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "logs": logs,
-        }
+        "request": logged_in['request'],
+        "hx_request": logged_in['hx_request'],
+        "user": logged_in['profile'],
+        "logs": logs,
+    }
     return templates.TemplateResponse("log/list.html", context)             
 
 @router.delete(
     "/{food_log_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food_log(*, request: Request, profile: Annotated_Profile, hx_request: str | None = Header(default=None), food_log_id: int, db: Session = Depends(deps.get_db)):
+async def delete_food_log(*, logged_in:LoggedInDeps, food_log_id: int):
     
-    await api_food_log.delete_food_log(food_log_id=food_log_id, profile=profile, db=db)
+    await api_food_log.delete_food_log(food_log_id=food_log_id, profile=logged_in['profile'], db=logged_in['db'])
 
     return None

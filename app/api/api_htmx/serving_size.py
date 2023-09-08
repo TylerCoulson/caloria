@@ -1,12 +1,9 @@
 from fastapi import APIRouter, Depends, status,Request, HTTPException, Header
 from fastapi.responses import HTMLResponse
-from sqlalchemy.orm import Session  # type: ignore
 from fastapi.templating import Jinja2Templates
-from fastapi.encoders import jsonable_encoder
 
 from app import deps
-from app import schemas
-from app import models
+from app.api.api_htmx.deps import CommonDeps
 from app.api.api_V1 import serving_size as api_servings
 from app.api.api_htmx.food import router as food_router
 from app.api.api_V1 import food as api_food
@@ -20,14 +17,14 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_serving(*, request: Request, profile: Annotated_User = False, food_id:int, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+async def get_create_serving(*, common:CommonDeps, food_id:int):
 
-    food = await api_food.get_food_id(food_id=food_id, db=db)
+    food = await api_food.get_food_id(food_id=food_id, db=common['db'])
 
     context = {
-            "request": request,
-            "hx_request": hx_request,
-            "user": profile,
+            "request": common['request'],
+            "hx_request": common['hx_request'],
+            "user": common['profile'],
             "food": food
         }
     return templates.TemplateResponse("food/servings/create.html", context)

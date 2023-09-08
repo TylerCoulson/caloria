@@ -8,7 +8,9 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import profile as api_profile
-from app.auth.router import Annotated_Profile, current_active_user
+from app.api.api_htmx.deps import LoggedInDeps
+
+
 router = APIRouter(prefix="/profile")
 templates = Jinja2Templates("app/templates")
 
@@ -17,12 +19,12 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: schemas.ProfileBase, user:dict=Depends(current_active_user), db: Session = Depends(deps.get_db)):
-    profile = await api_profile.create_profile(profile=profile, user=user, db=db)
+async def create_profile(*, logged_in:LoggedInDeps, profile: schemas.ProfileBase, db: Session = Depends(deps.get_db)):
+    profile = await api_profile.create_profile(profile=profile, user=logged_in['profile'], db=db)
 
     context = {
-            "request": request,
-            "hx_request": hx_request,
+            "request": logged_in['request'],
+            "hx_request": logged_in['hx_request'],
             "profile": profile
         }
     return templates.TemplateResponse("profile.html", context)
@@ -32,13 +34,13 @@ async def create_profile(*, request: Request,hx_request: str | None = Header(def
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile(*, request: Request,hx_request: str | None = Header(default=None), profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def get_profile(*, logged_in:LoggedInDeps):
     try:
-        profile_out = await api_profile.get_current_profile(profile=profile, db=db)
+        profile_out = await api_profile.get_current_profile(profile=logged_in['profile'], db=logged_in['db'])
 
         context = {
-                "request": request,
-                "hx_request": hx_request,
+                "request": logged_in['request'],
+                "hx_request": logged_in['hx_request'],
                 "profile": profile_out
             }
 
@@ -46,8 +48,8 @@ async def get_profile(*, request: Request,hx_request: str | None = Header(defaul
 
     except HTTPException:
         context = {
-            "request": request,
-            "hx_request": hx_request,
-            "message": f"Profile with id {profile.id} does not exist"
+            "request": logged_in['request'],
+            "hx_request": logged_in['hx_request'],
+            "message": f"Profile with id {logged_in['profile'].id} does not exist"
         }
         return templates.TemplateResponse("404.html", context)

@@ -3,10 +3,10 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session  # type: ignore
 from fastapi.templating import Jinja2Templates
 
-from datetime import date
 from app import deps
 from app.api.api_V1 import predictions
 from app.api.api_V1.predictions import weight_params
+from app.api.api_htmx.deps import CommonDeps
 
 router = APIRouter(prefix="/prediction")
 templates = Jinja2Templates("app/templates")
@@ -17,12 +17,12 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_page(*, request: Request, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+def get_predictions_page(*, common:CommonDeps):
     """ returns page that allows foods searching for food"""
 
     context = {
-            "request": request,
-            "hx_request": hx_request
+            "request": common['request'],
+            "hx_request": common['hx_request']
         }
     return templates.TemplateResponse("prediction/base.html", context)
 
@@ -32,29 +32,13 @@ def get_predictions_page(*, request: Request, hx_request: str | None = Header(de
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
+async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), common:CommonDeps):
     """ returns page for predictions that never faultered on calories lost """
-    pred = await predictions.get_predictions_never_fault(params=params, db=db)
+    pred = await predictions.get_predictions_never_fault(params=params, db=common['db'])
     context = {
-            "request": request,
-            "hx_request": hx_request,
+            "request": common['request'],
+            "hx_request": common['hx_request'],
             "preds": pred,
             "final_day": pred[str(len(pred)-1)]
         }
     return templates.TemplateResponse("prediction/list.html", context)
-
-# @router.get(
-#     "/get_predictions_updates_lbs_to_lose",
-#     response_class=HTMLResponse,
-#     status_code=status.HTTP_200_OK,
-# )
-# def get_predictions_updates(*, params: dict=Depends(weight_params), current_date:date=None, request: Request,hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db)):
-#     """ returns page for predictions that your activity level is updated based on what you actually ate"""
-#     pred = predictions.get_predictions_updates_lbs_to_lose(params=params, current_date=current_date, db=db)
-
-#     context = {
-#             "request": request,
-#             "hx_request": hx_request,
-#             "preds": pred
-#         }
-#     return templates.TemplateResponse("predictions.html", context)

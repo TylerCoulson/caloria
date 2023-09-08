@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status, Request, Header
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.auth.router import Annotated_User
+from app.api.api_htmx.deps import CommonDeps
+
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -11,11 +12,11 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_index(request: Request, profile: Annotated_User = False, hx_request: str | None = Header(default=None)):
+def get_index(common:CommonDeps):
     context = {
-        "request": request,
-        "hx_request":hx_request,
-        "user": profile
+        "request": common['request'],
+        "hx_request": common['hx_request'],
+        "user": common['profile']
     }
 
     return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
@@ -25,11 +26,11 @@ def get_index(request: Request, profile: Annotated_User = False, hx_request: str
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_navbar(request: Request, profile: Annotated_User = False, hx_request: str | None = Header(default=None)):
+def get_navbar(common:CommonDeps):
     context = {
-        "request": request,
-        "hx_request":hx_request,
-        "user": profile
+        "request": common['request'],
+        "hx_request": common['hx_request'],
+        "user": common['profile']
     }
 
     return templates.TemplateResponse("nav.html", context)
