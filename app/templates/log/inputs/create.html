@@ -1,5 +1,5 @@
 <div _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to $serving_amount * $calories">
-    <h1> Add Log: {{food.brand}} - {{food.name}}</h1> 
+    <h1> Add Log: {{food.type}} - {{food.subtype}}</h1> 
     Total Calories: <div id="total-calories"></div>
 
     <form hx-post="/food_log" hx-target="#content" hx-ext='json-enc' name="food_log">

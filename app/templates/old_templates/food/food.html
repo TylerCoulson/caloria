@@ -16,8 +16,8 @@
         {% for food in foods %}
         <tr name="food_id" hx-push-url="true" hx-trigger="{{trigger}}" hx-get="/food/{{food.id}}" hx-target="#content">
                 <td headers="id">{{food.id}}</td>
-                <td headers="brand">{{food.brand}}</td>
-                <td headers="name">{{food.name}}</td>
+                <td headers="brand">{{food.type}}</td>
+                <td headers="name">{{food.subtype}}</td>
                 {% if user is not none %}
                 <td headers="add_log" hx-get='/food_log/create' hx-push-url="false" hx-trigger='click consume' hx-target="closest tr" hx-swap="afterend" role="button">Add Log</td>
                 {% endif %}

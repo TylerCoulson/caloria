@@ -1,8 +1,8 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<h1>{{food.brand}} {{food.name}}</h1>
-<div role="button">Add New Serving</div>
+<h1>{{food.type}} {{food.subtype}}</h1>
+<div role="button" hx-get="/food/servings/create/{{ food.id }}" hx-target="#content">Add New Serving</div>
     <table>
         <thead>
             {% include "food/servings/headings.html" %}
