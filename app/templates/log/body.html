@@ -1,0 +1,8 @@
+{% if logs %}
+    {% for log in logs %}
+        {% include "log/row.html"%}
+    {% endfor %}
+    {% if home is false %}
+        <tr hx-get="/food_log/append_more?page={{page+1}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+    {% endif %}
+{% endif %}
