@@ -22,7 +22,7 @@ async def post_serving_size(*, deps:CommonDeps, serving_size: schemas.ServingSiz
     response_model=schemas.ServingSize,
     status_code=status.HTTP_200_OK,
 )
-async def get_serving_size_id(*, deps:CommonDeps, food_id: int, serving_id: int):
+async def get_serving_size_id(*, deps:CommonDeps, food_id: int = None, serving_id: int):
     data = await crud.read(_id=serving_id, db=deps['db'], model=models.ServingSize)
     if not data:
         raise HTTPException(status_code=404, detail="Serving size not found")
