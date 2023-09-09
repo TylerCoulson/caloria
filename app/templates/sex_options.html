@@ -1,8 +1,8 @@
 <label for="male">
-    <input type="radio" id="male" name="sex" value="male">
+    <input type="radio" id="male" name="sex" value="male" {% if profile.sex == 'male'%}checked{% endif %}>
     Male
 </label>
 <label for="female">
-    <input type="radio" id="female" name="sex" value="female">
+    <input type="radio" id="female" name="sex" value="female" {% if profile.sex == 'female'%}checked{% endif %}>
     Female
 </label>
