@@ -16,7 +16,7 @@ from app import crud
     response_model=schemas.Profile,
     status_code=status.HTTP_201_CREATED,
 )
-async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
+async  def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
     
     profile = schemas.ProfileCreate(**profile.dict(), user_id=user.id) 
     profile_out = await crud.create(obj_in=profile, db=deps['db'], model=models.Profile)
@@ -27,18 +27,18 @@ async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user
     response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
-async def get_current_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    data = await crud.read(_id=profile.id, db=db, model=models.Profile)
+async def get_current_profile(*, deps:LoggedInDeps):
+    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
     return data
 
-@router.get(
-    "/all",
-    # response_model=schemas.UserRead,
-    status_code=status.HTTP_200_OK,
-)
-async def get_user(*, db: Session = Depends(deps.get_db)):
-    data = await crud.read_all(db=db, model=models.User)
-    return data
+# @router.get(
+#     "/all",
+#     # response_model=schemas.UserRead,
+#     status_code=status.HTTP_200_OK,
+# )
+# async def get_user(*, deps:LoggedInDeps):
+#     data = await crud.read_all(db=deps['db'], model=models.User)
+#     return data
 
 @router.get(
     "/me/logs",
@@ -64,6 +64,6 @@ async def update_current_profile(*, deps:LoggedInDeps, profile_in: schemas.Profi
     status_code=status.HTTP_200_OK,
 )
 async def delete_current_profile(*, deps:LoggedInDeps):
-    data = await get_current_profile(profile=deps['profile'], db=deps['db'])
+    data = await get_current_profile(deps=deps)
     data = await crud.delete(_id=deps['profile'].id, db=deps['db'], db_obj=data)
     return

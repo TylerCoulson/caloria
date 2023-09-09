@@ -2,13 +2,13 @@ from fastapi import Depends, Request, Header
 from sqlalchemy.orm import Session
 from typing import Annotated
 
-from app.auth.router import Annotated_Profile
+from app.auth.router import Annotated_Profile, Annotated_User
 from app import deps
 
 
 
-async def common_deps(profile: Annotated_Profile = False, db: Session = Depends(deps.get_db)):
-    return {"profile":profile, "db":db}
+async def common_deps(user: Annotated_User = False, db: Session = Depends(deps.get_db)):
+    return {"user":user, "db":db}
 
 CommonDeps = Annotated[dict, Depends(common_deps)]
 

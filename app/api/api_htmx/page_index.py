@@ -16,7 +16,7 @@ def get_index(deps:CommonDeps):
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
-        "user": deps['profile']
+        "user": deps['user']
     }
 
     return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
@@ -30,7 +30,7 @@ def get_navbar(deps:CommonDeps):
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
-        "user": deps['profile']
+        "user": deps['user']
     }
 
     return templates.TemplateResponse("nav.html", context)

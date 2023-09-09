@@ -19,8 +19,8 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase, db: Session = Depends(deps.get_db)):
-    profile = await api_profile.create_profile(profile=profile, user=deps['profile'], db=db)
+async def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase,):
+    profile = await api_profile.create_profile(deps=deps, profile=profile, user=deps['profile'])
 
     context = {
             "request": deps['request'],
@@ -36,7 +36,7 @@ async def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase, db:
 )
 async def get_profile(*, deps:LoggedInDeps):
     try:
-        profile_out = await api_profile.get_current_profile(profile=deps['profile'], db=deps['db'])
+        profile_out = await api_profile.get_current_profile(deps=deps)
 
         context = {
                 "request": deps['request'],

@@ -19,12 +19,12 @@ templates = Jinja2Templates("app/templates")
 )
 async def get_create_serving(*, deps:CommonDeps, food_id:int):
 
-    food = await api_food.get_food_id(food_id=food_id, db=deps['db'])
+    food = await api_food.get_food_id(deps=deps, food_id=food_id)
 
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
-            "user": deps['profile'],
+            "user": deps['user'],
             "food": food
         }
     return templates.TemplateResponse("food/servings/create.html", context)

@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends, status, Request, HTTPException, Header
+from fastapi import APIRouter, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session  # type: ignore
 from datetime import date
 from app import schemas
 
@@ -21,7 +20,7 @@ templates = Jinja2Templates("app/templates")
 )
 async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1):
     
-    logs = await api_food_log.get_food_logs(n=n, page=page, profile=deps['profile'], db=deps['db'])
+    logs = await api_food_log.get_food_logs(deps=deps, n=n, page=page)
     
     context = {
         "request": deps['request'],
@@ -48,15 +47,15 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
     }
 
     if food_id:
-        servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=deps['db'])
+        servings = await api_servings.get_serving_size_by_food(deps=deps, food_id=food_id)
         context['serving_id'] = serving_id
-        context['food'] = await api_food.get_food_id(food_id=food_id, db=deps['db'])
+        context['food'] = await api_food.get_food_id(food_id=food_id, deps=deps)
         context['servings'] = servings['servings']
     
     if serving_id:
-        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, db=deps['db'])
+        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, deps=deps)
         food = current_serving.food
-        servings = await api_servings.get_serving_size_by_food(food_id=food.id, db=deps['db'])
+        servings = await api_servings.get_serving_size_by_food(food_id=food.id, deps=deps)
         context['serving_id'] = serving_id
         context['food'] = food
         context['servings'] = servings['servings']
@@ -73,9 +72,9 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
 async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
     
     
-    log = await api_food_log.get_food_log_id(profile=deps['profile'], food_log_id=log_id, db=deps['db'])
+    log = await api_food_log.get_food_log_id(food_log_id=log_id, deps=deps)
 
-    servings = await api_servings.get_serving_size_by_food(food_id=log.food_id, db=deps['db'])
+    servings = await api_servings.get_serving_size_by_food(food_id=log.food_id, deps=deps)
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
@@ -107,7 +106,7 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
 async def get_food_log_id(*, deps:LoggedInDeps, food_log_id: int):
     
     
-    log = await api_food_log.get_food_log_id(profile=deps['profile'], food_log_id=food_log_id, db=deps['db'])
+    log = await api_food_log.get_food_log_id(food_log_id=food_log_id, deps=deps)
     
     context = {
         "request": deps['request'],
@@ -126,7 +125,7 @@ async def get_food_log_id(*, deps:LoggedInDeps, food_log_id: int):
 async def get_food_logs_by_profile_date(*, deps:LoggedInDeps, n:int=25, page:int=1, date: date):
 
     
-    logs = await api_food_log.get_food_log_date(n=n, page=page, date=date, profile=deps['profile'], db=deps['db'])
+    logs = await api_food_log.get_food_log_date(n=n, page=page, date=date, deps=deps)
     logs = logs['log']
     context = {
         "request": deps['request'],
@@ -149,10 +148,10 @@ async def update_food_log(*, deps:LoggedInDeps, food_log_id: int, food_log_in: s
     
 
     if food_log_id == 0:
-        return post_food_log(request=deps['request'], hx_request=deps['hx_request'], profile=deps['profile'], food_log=food_log_in, db=deps['db'])
+        return post_food_log(food_log=food_log_in, deps=deps)
 
     
-    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, profile=deps['profile'], db=deps['db'])
+    log = await api_food_log.update_food_log(food_log_id=food_log_id, food_log_in=food_log_in, deps=deps)
 
     context = {
         "request": deps['request'],
@@ -169,8 +168,8 @@ async def update_food_log(*, deps:LoggedInDeps, food_log_id: int, food_log_in: s
 )
 async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
     
-    await api_food_log.post_food_log(profile=deps['profile'], food_log=food_log, db=deps['db'])
-    logs = await api_food_log.get_food_logs(profile=deps['profile'], db=deps['db'])
+    await api_food_log.post_food_log(food_log=food_log, deps=deps)
+    logs = await api_food_log.get_food_logs(deps=deps)
     
     context = {
         "request": deps['request'],
@@ -186,6 +185,6 @@ async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
 )
 async def delete_food_log(*, deps:LoggedInDeps, food_log_id: int):
     
-    await api_food_log.delete_food_log(food_log_id=food_log_id, profile=deps['profile'], db=deps['db'])
+    await api_food_log.delete_food_log(food_log_id=food_log_id, deps=deps)
 
     return None
