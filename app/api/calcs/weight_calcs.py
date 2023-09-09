@@ -1,35 +1,29 @@
 from app import models, schemas
-from sqlalchemy import select, func, extract, cast, Integer, literal, union_all, or_, column, Date, Interval, Text
+from sqlalchemy import select, func, cast, String, or_
 from sqlalchemy.orm import Session  # type: ignore
 from datetime import date, datetime, timedelta
 
 
 async def get_db_data(profile:models.Profile, db: Session):
-
-
-    # start_date = profile.start_date if type(profile.start_date) is date else datetime.strptime(profile.start_date, '%Y-%m-%d').date()
-    # end_date = date.today()
-    # dates = [start_date + timedelta(days=d) for d in range((end_date - start_date).days + 1)]
- 
-    # subqueries = [select(literal(date).label("dates")) for date in dates]
-        
-    # subquery = union_all(*subqueries).alias("dates")
-    
     statement = select(
-        models.Food_Log.date,
-        func.sum(models.ServingSize.calories * models.Food_Log.serving_amount).label("calories_eaten_today"),
+        models.Food_Log.date.label('food_log_date'),
+        models.DailyLog.date.label('daily_log_date'),
+        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("calories_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
-    ).where(models.Food_Log.profile_id == profile.id
+    ).where(or_(models.Food_Log.profile_id == profile.id, models.DailyLog.profile_id == profile.id)
     ).join(models.ServingSize, isouter=True
-    ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, isouter=True
-    ).group_by(models.Food_Log.date
+    ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, full=True
+    ).group_by(models.Food_Log.date, models.DailyLog.date
     ).order_by(models.Food_Log.date)
 
     result = await db.execute(statement)
 
     # covert from Row object to dictionary
     all_rows = result.unique().all()
-    return {date.strftime(v.date, '%Y-%m-%d'): v._asdict() for v in all_rows}
+
+    test = {date.strftime(v.food_log_date or v.daily_log_date, '%Y-%m-%d'): v._asdict() for v in all_rows}
+    
+    return test
 
 async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.today()):
     # set dates
@@ -43,6 +37,7 @@ async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.
         dates_dict[key] = {'date': start_date + timedelta(days=d), 'calories_eaten_today': 0.0, 'user_inputed_weight': None}
 
     for k, v in data.items():
+        v['date'] = v['food_log_date'] or v['daily_log_date']
         dates_dict[k] = v
     
 
@@ -54,11 +49,10 @@ async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.
     # Calcs that are changed
     est_weight = profile.start_weight
     total_calorie_goal = 0
-    previous_total_eaten = 0
     total_calories_eaten = 0
     total_rmr = 0
 
-    # iteration to get all daily outpus
+    # iteration to get all daily outpus.date
     logs = []
     for k, v in dates_dict.items():
         weight_calc = 10 * (est_weight/2.2)

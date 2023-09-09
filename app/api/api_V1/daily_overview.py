@@ -52,7 +52,6 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
         raise HTTPException(status_code=404, detail="Date is before profile start date")
     
     output_data = await daily_log(profile=deps['profile'], db=deps['db'])
-    
     for i in output_data:
         if i['date'] == current_date:
             return i
@@ -70,7 +69,7 @@ async def update_daily(*, deps:LoggedInDeps, current_date:date, daily_data:schem
     daily_data.profile_id = deps['profile'].id
     weight_data = await get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
     if weight_data is None:
-        output_data = await post_daily(actual_weight=daily_data, profile=deps['profile'], db=deps['db'])
+        output_data = await post_daily(deps=deps, actual_weight=daily_data)
     else:
         data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=deps['db'])
         output_data = await get_daily(deps=deps, current_date=data.date)

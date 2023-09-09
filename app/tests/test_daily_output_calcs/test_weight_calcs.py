@@ -4,8 +4,8 @@ import pytest
 from app import schemas
 
 data = {
-    '2023-09-06': {'date': date(2023, 9, 6), 'calories_eaten_today': 1790.0, 'user_inputed_weight': None},
-    '2023-09-07': {'date': date(2023, 9, 7), 'calories_eaten_today': 1594.0, 'user_inputed_weight': None}
+    '2023-09-06': {'food_log_date': date(2023, 9, 6),'daily_log_date': None, 'calories_eaten_today': 1790.0, 'user_inputed_weight': None},
+    '2023-09-07': {'food_log_date': None, 'daily_log_date': date(2023, 9, 7), 'calories_eaten_today': 1594.0, 'user_inputed_weight': None}
 }
 profile = {"id":1, "start_date": '2023-09-06', "start_weight": 322.4, "goal_weight": 150.0, "sex": 'Male', "birthdate": '1992-12-05', "height": 70, "lbs_per_week": 2.0, "activity_level": 1.2, "user_id": 1}
 @pytest.mark.asyncio

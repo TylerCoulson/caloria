@@ -18,7 +18,7 @@ from app import crud
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, deps:LoggedInDeps, date:date = date.today()):
+async def create_daily(*, deps:LoggedInDeps, date:date = date.today()):
     actual_weight = await api_daily.get_weight(profile_id=deps['profile'].id, current_date=date, db=deps['db']) 
     context = {
                 "request": deps['request'],
