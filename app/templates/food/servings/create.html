@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Add Serving</h1>        
 <h2>{{food.type}}, {{food.subtype}}</h2>
-<form hx-post="/food/servings" hx-target="#servings" hx-ext='json-enc' >
+<form hx-post="/food/servings" hx-target="#content" hx-ext='json-enc' >
     <input hidden type="number" min="1" step="1" name="food_id" value={{food.id}}></input>
     Description<input type="str" name="description"></input> 
     Calories<input type="number" min="0" step="1" name="calories"></input> 
