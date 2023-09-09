@@ -5,7 +5,7 @@ from app import deps
 from app.auth.router import Annotated_Profile, current_active_user
 from app import schemas
 from app import models
-
+from app.api.api_V1.deps import CommonDeps, LoggedInDeps
 router = APIRouter()
 
 from app import crud
@@ -16,10 +16,10 @@ from app import crud
     response_model=schemas.Profile,
     status_code=status.HTTP_201_CREATED,
 )
-async  def create_profile(*, profile: schemas.ProfileBase, user:dict=Depends(current_active_user), db: Session = Depends(deps.get_db)):
+async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
     
     profile = schemas.ProfileCreate(**profile.dict(), user_id=user.id) 
-    profile_out = await crud.create(obj_in=profile, db=db, model=models.Profile)
+    profile_out = await crud.create(obj_in=profile, db=deps['db'], model=models.Profile)
     return profile_out
 
 @router.get(
@@ -45,8 +45,8 @@ async def get_user(*, db: Session = Depends(deps.get_db)):
     response_model=schemas.ProfileLogs,
     status_code=status.HTTP_200_OK,
 )
-async def get_current_profile_logs(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    data = await crud.read(_id=profile.id, db=db, model=models.Profile)
+async def get_current_profile_logs(*, deps:LoggedInDeps):
+    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
     return data
 
 @router.put(
@@ -54,10 +54,8 @@ async def get_current_profile_logs(*, profile: Annotated_Profile, db: Session = 
     response_model=schemas.Profile,
     status_code=status.HTTP_200_OK,
 )
-async def update_current_profile(
-    *, profile: Annotated_Profile, profile_in: schemas.ProfileBase, db: Session = Depends(deps.get_db)
-):
-    data = await crud.update(_id=profile.id, model=models.Profile, update_data=profile_in, db=db)
+async def update_current_profile(*, deps:LoggedInDeps, profile_in: schemas.ProfileBase):
+    data = await crud.update(_id=deps['profile'].id, model=models.Profile, update_data=profile_in, db=deps['db'])
     return data
 
 
@@ -65,7 +63,7 @@ async def update_current_profile(
     "/me",
     status_code=status.HTTP_200_OK,
 )
-async def delete_current_profile(*, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    data = await get_current_profile(profile=profile, db=db)
-    data = await crud.delete(_id=profile.id, db=db, db_obj=data)
+async def delete_current_profile(*, deps:LoggedInDeps):
+    data = await get_current_profile(profile=deps['profile'], db=deps['db'])
+    data = await crud.delete(_id=deps['profile'].id, db=deps['db'], db_obj=data)
     return

@@ -5,6 +5,8 @@ from app import deps
 from app import schemas
 from app import models
 from app.auth.router import Annotated_Superuser
+from app.api.api_V1.deps import LoggedInDeps, CommonDeps
+
 router = APIRouter(tags=["food-categories"])
 
 from app import crud
@@ -15,9 +17,9 @@ from app import crud
     response_model=schemas.FoodCategory,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_category(*, super_user: Annotated_Superuser, cat:schemas.FoodCategoryCreate, db: Session = Depends(deps.get_db)):
+async def create_category(*, deps:LoggedInDeps, super_user: Annotated_Superuser, cat:schemas.FoodCategoryCreate):
     
-    food_out = await crud.create(obj_in=cat, db=db, model=models.FoodCategories)
+    food_out = await crud.create(obj_in=cat, db=deps['db'], model=models.FoodCategories)
     return food_out
 
 @router.get(
@@ -25,16 +27,15 @@ async def create_category(*, super_user: Annotated_Superuser, cat:schemas.FoodCa
     response_model=List[schemas.FoodCategory],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_categories(*, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
-    return await crud.read_all(n=n, page=page, db=db, model=models.FoodCategories)
+async def get_all_categories(*, deps:CommonDeps, n:int=25, page:int=1):
+    return await crud.read_all(n=n, page=page, db=deps['db'], model=models.FoodCategories)
 
 @router.put(
     "/{id}",
     status_code=status.HTTP_200_OK,
 )
-async def update_categories(*, super_user: Annotated_Superuser, id: int, cat_in: schemas.FoodCategoryCreate, db: Session = Depends(deps.get_db)
-):
-    data = await crud.update(_id=id, model=models.FoodCategories, update_data=cat_in, db=db)
+async def update_categories(*, deps:LoggedInDeps, super_user: Annotated_Superuser, id: int, cat_in: schemas.FoodCategoryCreate):
+    data = await crud.update(_id=id, model=models.FoodCategories, update_data=cat_in, db=deps['db'])
     
     if data is None:
         raise HTTPException(status_code=404, detail="No category with this id")
@@ -44,9 +45,9 @@ async def update_categories(*, super_user: Annotated_Superuser, id: int, cat_in:
     "/all",
     status_code=status.HTTP_200_OK,
 )
-async def delete_categories(*, super_user: Annotated_Superuser, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
-    data = await crud.read_all(n=n, page=page, db=db, model=models.FoodCategories)
+async def delete_categories(*, deps:LoggedInDeps, super_user: Annotated_Superuser, n:int=25, page:int=1):
+    data = await crud.read_all(n=n, page=page, db=deps['db'], model=models.FoodCategories)
     for i in data:
-        await crud.delete(_id=i.id, db=db, db_obj=i)
+        await crud.delete(_id=i.id, db=deps['db'], db_obj=i)
     return 
 

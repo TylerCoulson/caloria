@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session  # type: ignore
 from typing import List
 
-from app.auth.router import Annotated_Profile
+from app.api.api_V1.deps import CommonDeps
 from app import deps
 from app import schemas
 from app import models
@@ -19,9 +19,9 @@ from app import crud
     response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food_log(*, profile: Annotated_Profile, food_log: schemas.FoodLogCreate, db: Session = Depends(deps.get_db)):
-    food_log.profile_id = profile.id
-    food_log_out = await crud.create(obj_in=food_log, db=db, model=models.Food_Log)
+async def post_food_log(*, deps:CommonDeps, food_log: schemas.FoodLogCreate):
+    food_log.profile_id = deps['profile'].id
+    food_log_out = await crud.create(obj_in=food_log, db=deps['db'], model=models.Food_Log)
     return food_log_out
 
 @router.get(
@@ -29,12 +29,12 @@ async def post_food_log(*, profile: Annotated_Profile, food_log: schemas.FoodLog
     response_model=schemas.DayLog,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_date(*, date: date, n:int=25, page:int=1, profile: Annotated_Profile, db: Session = Depends(deps.get_db)) -> list[schemas.FoodLogProfile]:
+async def get_food_log_date(*, deps:CommonDeps, date: date, n:int=25, page:int=1) -> list[schemas.FoodLogProfile]:
     offset = max((page-1) * n, 0)
-    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile.id).where(models.Food_Log.date == date).limit(n).offset(offset)
-    data = await db.execute(statement)
+    statement = select(models.Food_Log).where(models.Food_Log.profile_id == deps['profile'].id).where(models.Food_Log.date == date).limit(n).offset(offset)
+    data = await deps['db'].execute(statement)
 
-    profile = await crud.read(_id=profile.id, db=db, model=models.Profile)
+    profile = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
     return {"profile":profile, "log":[value for value, in data.unique().all()]}
 
 @router.get(
@@ -42,8 +42,8 @@ async def get_food_log_date(*, date: date, n:int=25, page:int=1, profile: Annota
     response_model=schemas.FoodLogProfile,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_log_id(*, profile: Annotated_Profile, food_log_id: int, db: Session = Depends(deps.get_db)):
-    data = await crud.read(_id=food_log_id, db=db, model=models.Food_Log)
+async def get_food_log_id(*, deps:CommonDeps, food_log_id: int):
+    data = await crud.read(_id=food_log_id, db=deps['db'], model=models.Food_Log)
     if not data:
         raise HTTPException(status_code=404, detail="Food_log not found")
     return data
@@ -53,11 +53,11 @@ async def get_food_log_id(*, profile: Annotated_Profile, food_log_id: int, db: S
     response_model=List[schemas.FoodLog],
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs(*, n:int=25, page:int=1, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
+async def get_food_logs(*, deps:CommonDeps, n:int=25, page:int=1):
     offset = max((page-1) * n, 0)
-    profile_id = profile.id
+    profile_id = deps['profile'].id
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id).order_by(models.Food_Log.date.desc()).order_by(models.Food_Log.id.desc()).limit(n).offset(offset)
-    data = await db.execute(statement)
+    data = await deps['db'].execute(statement)
     test = data.unique().all()
 
     return [value for value, in test]
@@ -68,11 +68,11 @@ async def get_food_logs(*, n:int=25, page:int=1, profile: Annotated_Profile, db:
     status_code=status.HTTP_200_OK,
 )
 async def update_food_log(
-    *, food_log_id: int, food_log_in: schemas.FoodLogBase, profile: Annotated_Profile, db: Session = Depends(deps.get_db)
+    *, deps:CommonDeps, food_log_id: int, food_log_in: schemas.FoodLogBase
 ):
-    food_log_in.profile_id = profile.id
+    food_log_in.profile_id = deps['profile'].id
     
-    data = await crud.update(_id=food_log_id, model=models.Food_Log, update_data=food_log_in, db=db)
+    data = await crud.update(_id=food_log_id, model=models.Food_Log, update_data=food_log_in, db=deps['db'])
     
     return data
 
@@ -81,8 +81,8 @@ async def update_food_log(
     "/{food_log_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food_log(*, food_log_id: int, profile: Annotated_Profile, db: Session = Depends(deps.get_db)):
-    data = await get_food_log_id(profile=profile, food_log_id=food_log_id, db=db)
+async def delete_food_log(*, deps:CommonDeps, food_log_id: int):
+    data = await get_food_log_id(deps=deps, food_log_id=food_log_id)
 
-    data = await crud.delete(_id=food_log_id, db=db, db_obj=data)
+    data = await crud.delete(_id=food_log_id, db=deps['db'], db_obj=data)
     return

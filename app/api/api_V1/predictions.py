@@ -1,12 +1,8 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy.orm import Session  # type: ignore
-from datetime import date, timedelta, datetime
+from fastapi import APIRouter, Depends, status
+from datetime import date
 from typing import Dict
-from app import deps
 from app import schemas
-from app import models
-from app import crud
 
 from app.api.calcs.calorie_calcs import PersonsDay 
 
@@ -17,14 +13,14 @@ async def weight_params(height:int, start_weight:float, start_date:date, lbs_per
     return {'height':height, 'start_weight':start_weight, 'start_date':start_date, 'lbs_per_week':lbs_per_week, 'birthdate':birthdate, 'sex':sex, 'activity_level':activity_level, 'goal_weight':goal_weight, 'log':log,}
 
 
-CommonsDep = Annotated[dict, Depends(weight_params)]
+WeightParams = Annotated[dict, Depends(weight_params)]
 
 @router.get(
     "/never_faulter",
     response_model=Dict[int, schemas.Prediction],
     status_code=status.HTTP_200_OK,
 )
-async def get_predictions_never_fault(*, params:CommonsDep, db: Session = Depends(deps.get_db)):
+async def get_predictions_never_fault(*, params:WeightParams):
     log_data = PersonsDay(height=params['height'], start_weight=params['start_weight'], start_date=params['start_date'], lbs_per_day=params['lbs_per_week']/7, birthdate=params['birthdate'], sex=params['sex'], activity_level=params['activity_level'], goal_weight=params['goal_weight'], profile_logs=params['log']) 
     pred = log_data.prediction()    
     return pred
@@ -35,7 +31,7 @@ async def get_predictions_never_fault(*, params:CommonsDep, db: Session = Depend
     response_model=Dict[int, schemas.Prediction],
     status_code=status.HTTP_200_OK,
 )
-async def get_predictions_updates_lbs_to_lose(*, params:CommonsDep, current_date:date = None, db: Session = Depends(deps.get_db)):
+async def get_predictions_updates_lbs_to_lose(*, params:WeightParams, current_date:date = None):
     
     if current_date is None:
         current_date = params['start_date']

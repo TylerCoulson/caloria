@@ -6,10 +6,12 @@ from sqlalchemy import select, func
 from app import deps
 from app import schemas
 from app import models
+from app.api.api_V1.deps import CommonDeps
+from app import crud
+
 
 router = APIRouter(tags=["food"])
 
-from app import crud
 
 
 @router.post(
@@ -17,8 +19,8 @@ from app import crud
     response_model=schemas.Food,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_db)):
-    food_out = await crud.create(obj_in=food, db=db, model=models.Food)
+async def post_food(*, deps:CommonDeps, food: schemas.FoodCreate):
+    food_out = await crud.create(obj_in=food, db=deps['db'], model=models.Food)
     return food_out
 
 @router.get(
@@ -26,7 +28,7 @@ async def post_food(*, food: schemas.FoodCreate, db: Session = Depends(deps.get_
     response_model=List[schemas.Food],
     status_code=status.HTTP_200_OK,
 )
-async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
+async def get_food_search(*, deps:CommonDeps,search_word:str, n:int=25, page:int=1):
     offset = max((page-1) * n, 0)
 
     statement = select(models.Food).where(
@@ -34,7 +36,7 @@ async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session 
     ).limit(n
     ).offset(offset)
     
-    data = await db.execute(statement)
+    data = await deps['db'].execute(statement)
     
     all_data = data.unique().all()
 
@@ -45,16 +47,16 @@ async def get_food_search(*, search_word:str, n:int=25, page:int=1, db: Session 
     response_model=List[schemas.Food],
     status_code=status.HTTP_200_OK,
 )
-async def get_all_foods(*, n:int=25, page:int=1, db: Session = Depends(deps.get_db)):
-    return await crud.read_all(n=n, page=page, db=db, model=models.Food)
+async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1):
+    return await crud.read_all(n=n, page=page, db=deps['db'], model=models.Food)
 
 @router.get(
     "/{food_id}",
     response_model=schemas.Food,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_id(*, food_id: int, db: Session = Depends(deps.get_db)):
-    data = await crud.read(_id=food_id, db=db, model=models.Food)
+async def get_food_id(*, deps:CommonDeps, food_id: int):
+    data = await crud.read(_id=food_id, db=deps['db'], model=models.Food)
     if not data:
         raise HTTPException(status_code=404, detail="Food not found")
     return data
@@ -65,9 +67,9 @@ async def get_food_id(*, food_id: int, db: Session = Depends(deps.get_db)):
     status_code=status.HTTP_200_OK,
 )
 async def update_food(
-    *, food_id: int, food_in: schemas.FoodBase, db: Session = Depends(deps.get_db)
+    *, deps:CommonDeps, food_id: int, food_in: schemas.FoodBase
 ):
-    data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=db)
+    data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=deps['db'])
     
     if data is None:
         raise HTTPException(status_code=404, detail="No food with this id")
@@ -78,8 +80,8 @@ async def update_food(
     "/{food_id}",
     status_code=status.HTTP_200_OK,
 )
-async def delete_food(*, food_id: int, db: Session = Depends(deps.get_db)):
-    data = await get_food_id(food_id=food_id, db=db)
+async def delete_food(*, deps:CommonDeps, food_id: int):
+    data = await get_food_id(deps=deps, food_id=food_id)
 
-    data = await crud.delete(_id=food_id, db=db, db_obj=data)
+    data = await crud.delete(_id=food_id, db=deps['db'], db_obj=data)
     return
