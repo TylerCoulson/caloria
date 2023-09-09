@@ -83,7 +83,10 @@ current_active_user = fastapi_users.current_user(active=True, optional=True)
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
-    profile = await crud.read(_id=user.id, db=db, model=models.Profile)
+    if user:
+        profile = await crud.read(_id=user.profile.id, db=db, model=models.Profile)
+    else:
+        profile = None
     return profile
 
 Annotated_User = Annotated[models.User, Depends(current_active_user)]

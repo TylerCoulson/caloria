@@ -10,7 +10,7 @@ from app.deps import get_db
 
 class User(SQLAlchemyBaseUserTable, Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    profile: Mapped["Profile"] = relationship(back_populates="user")
+    profile: Mapped["Profile"] = relationship(back_populates="user", lazy="selectin")
  
     pass
 
