@@ -53,7 +53,7 @@ async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=Fa
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1):
+async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=False):
     
     output_data = await api_daily.get_all_daily(deps=deps, n=n, page=page)
     context = {
@@ -61,7 +61,8 @@ async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1):
                 "hx_request": deps['hx_request'],
                 "user": deps['profile'],
                 "dailies": output_data,
-                "page":page
+                "page":page,
+                "home": home
             }
     
     return templates.TemplateResponse("daily/body.html", context)

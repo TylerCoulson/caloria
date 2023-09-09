@@ -38,7 +38,7 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=Fa
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1):
+async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=False ):
     
     logs = await api_food_log.get_food_logs(deps=deps, n=n, page=page)
     
@@ -47,7 +47,8 @@ async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1):
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
         "logs": logs,
-        "page":page
+        "page":page,
+        "home":home
        }
     
     return templates.TemplateResponse("log/body.html", context)
