@@ -3,8 +3,6 @@
         {% include "daily/headings.html" %}
     </thead>
     <tbody id="forecast-body">
-            {% for daily in dailies %}
-            {% include "daily/row.html"%}
-            {% endfor %}
+            {% include "daily/body.html"%}
     </tbody>
 </table>

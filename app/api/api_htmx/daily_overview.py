@@ -42,9 +42,28 @@ async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
                 "hx_request": deps['hx_request'],
                 "user": deps['profile'],
                 "dailies": output_data,
+                "page": page
             }
     
     return templates.TemplateResponse("daily/base.html", context)
+
+@router.get(
+    "/append_more",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1):
+    
+    output_data = await api_daily.get_all_daily(deps=deps, n=n, page=page)
+    context = {
+                "request": deps['request'],
+                "hx_request": deps['hx_request'],
+                "user": deps['profile'],
+                "dailies": output_data,
+                "page":page
+            }
+    
+    return templates.TemplateResponse("daily/body.html", context)
 
 @router.get(
     "/{date}",

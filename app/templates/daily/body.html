@@ -1,0 +1,6 @@
+{% if dailies %}
+    {% for daily in dailies %}
+    {% include "daily/row.html"%}
+    {% endfor %}
+    <tr hx-get="/daily/append_more?page={{page+1}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+{% endif %}
