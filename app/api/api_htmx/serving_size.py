@@ -17,14 +17,14 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_create_serving(*, common:CommonDeps, food_id:int):
+async def get_create_serving(*, deps:CommonDeps, food_id:int):
 
-    food = await api_food.get_food_id(food_id=food_id, db=common['db'])
+    food = await api_food.get_food_id(food_id=food_id, db=deps['db'])
 
     context = {
-            "request": common['request'],
-            "hx_request": common['hx_request'],
-            "user": common['profile'],
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
+            "user": deps['profile'],
             "food": food
         }
     return templates.TemplateResponse("food/servings/create.html", context)

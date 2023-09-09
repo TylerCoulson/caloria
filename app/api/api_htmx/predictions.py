@@ -17,12 +17,12 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_predictions_page(*, common:CommonDeps):
+def get_predictions_page(*, deps:CommonDeps):
     """ returns page that allows foods searching for food"""
 
     context = {
-            "request": common['request'],
-            "hx_request": common['hx_request']
+            "request": deps['request'],
+            "hx_request": deps['hx_request']
         }
     return templates.TemplateResponse("prediction/base.html", context)
 
@@ -32,12 +32,12 @@ def get_predictions_page(*, common:CommonDeps):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), common:CommonDeps):
+async def get_predictions_never_faulter(*, params: dict=Depends(weight_params), deps:CommonDeps):
     """ returns page for predictions that never faultered on calories lost """
-    pred = await predictions.get_predictions_never_fault(params=params, db=common['db'])
+    pred = await predictions.get_predictions_never_fault(params=params, db=deps['db'])
     context = {
-            "request": common['request'],
-            "hx_request": common['hx_request'],
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
             "preds": pred,
             "final_day": pred[str(len(pred)-1)]
         }

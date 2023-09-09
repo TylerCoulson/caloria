@@ -12,11 +12,11 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_index(common:CommonDeps):
+def get_index(deps:CommonDeps):
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile']
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile']
     }
 
     return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
@@ -26,11 +26,11 @@ def get_index(common:CommonDeps):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_navbar(common:CommonDeps):
+def get_navbar(deps:CommonDeps):
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile']
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile']
     }
 
     return templates.TemplateResponse("nav.html", context)

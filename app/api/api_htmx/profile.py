@@ -19,12 +19,12 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_profile(*, logged_in:LoggedInDeps, profile: schemas.ProfileBase, db: Session = Depends(deps.get_db)):
-    profile = await api_profile.create_profile(profile=profile, user=logged_in['profile'], db=db)
+async def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase, db: Session = Depends(deps.get_db)):
+    profile = await api_profile.create_profile(profile=profile, user=deps['profile'], db=db)
 
     context = {
-            "request": logged_in['request'],
-            "hx_request": logged_in['hx_request'],
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
             "profile": profile
         }
     return templates.TemplateResponse("profile.html", context)
@@ -34,13 +34,13 @@ async def create_profile(*, logged_in:LoggedInDeps, profile: schemas.ProfileBase
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_profile(*, logged_in:LoggedInDeps):
+async def get_profile(*, deps:LoggedInDeps):
     try:
-        profile_out = await api_profile.get_current_profile(profile=logged_in['profile'], db=logged_in['db'])
+        profile_out = await api_profile.get_current_profile(profile=deps['profile'], db=deps['db'])
 
         context = {
-                "request": logged_in['request'],
-                "hx_request": logged_in['hx_request'],
+                "request": deps['request'],
+                "hx_request": deps['hx_request'],
                 "profile": profile_out
             }
 
@@ -48,8 +48,8 @@ async def get_profile(*, logged_in:LoggedInDeps):
 
     except HTTPException:
         context = {
-            "request": logged_in['request'],
-            "hx_request": logged_in['hx_request'],
-            "message": f"Profile with id {logged_in['profile'].id} does not exist"
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
+            "message": f"Profile with id {deps['profile'].id} does not exist"
         }
         return templates.TemplateResponse("404.html", context)

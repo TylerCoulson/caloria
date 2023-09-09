@@ -22,11 +22,11 @@ tabs - which tab should be active in the navigation tab
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def get_create_food(*, common:CommonDeps):
+def get_create_food(*, deps:CommonDeps):
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile']
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile']
     }
 
     return templates.TemplateResponse("food/create.html", context)
@@ -36,13 +36,13 @@ def get_create_food(*, common:CommonDeps):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food(*, common:CommonDeps, food_id:int):    
-    food = await api_food.get_food_id(food_id=food_id, db=common['db'])
-    servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=common['db'])
+async def get_food(*, deps:CommonDeps, food_id:int):    
+    food = await api_food.get_food_id(food_id=food_id, db=deps['db'])
+    servings = await api_servings.get_serving_size_by_food(food_id=food_id, db=deps['db'])
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile'],
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile'],
         "food": food,
         "servings": servings['servings']
     }
@@ -54,13 +54,13 @@ async def get_food(*, common:CommonDeps, food_id:int):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_foods(*, common:CommonDeps, n:int=25, page:int=1):
+async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1):
     """ returns page that all foods"""
-    data = await api_food.get_all_foods(n=n, page=page, db=common['db'])
+    data = await api_food.get_all_foods(n=n, page=page, db=deps['db'])
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile'],
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile'],
         "foods": data,
     }
     return templates.TemplateResponse("food/list.html", context)
@@ -70,14 +70,14 @@ async def get_all_foods(*, common:CommonDeps, n:int=25, page:int=1):
 response_class=HTMLResponse,
 status_code=status.HTTP_200_OK,
 )
-async def get_search_food_results(*, common:CommonDeps, n:int=25, page:int=1, search_word:str):
+async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, search_word:str):
     """Returns the results of searching for food"""
-    data = await api_food.get_food_search(search_word=search_word, n=n, page=page, db=common['db'])
+    data = await api_food.get_food_search(search_word=search_word, n=n, page=page, db=deps['db'])
 
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile'],
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile'],
         "foods": data,
     }
 
@@ -88,15 +88,15 @@ async def get_search_food_results(*, common:CommonDeps, n:int=25, page:int=1, se
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food(*, common:CommonDeps, food: schemas.FoodCreate):
+async def post_food(*, deps:CommonDeps, food: schemas.FoodCreate):
     
-    await api_food.post_food(food=food, db=common['db'])
-    foods = await api_food.get_all_foods(db=common['db'])
+    await api_food.post_food(food=food, db=deps['db'])
+    foods = await api_food.get_all_foods(db=deps['db'])
     
     context = {
-        "request": common['request'],
-        "hx_request": common['hx_request'],
-        "user": common['profile'],
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['profile'],
         "foods": foods,
     }
     return templates.TemplateResponse("food/list.html", context)     
