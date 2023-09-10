@@ -1,4 +1,6 @@
-
-{% for food in foods %}
-{% include "food/row.html"%}
-{% endfor %}
+{% if foods %}
+    {% for food in foods %}
+        {% include "food/row.html"%}
+    {% endfor %}
+    <tr hx-get="/food/append_more?page={{page+1}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+{% endif %}
