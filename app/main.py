@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse, JSONResponse
+
 from app.api.api_v1 import api_router
 from app.api.api_htmx_v1 import htmx_router
-
-from app.auth.router import auth_router
 from app.config import settings
 from app.db import engine, Base
 
@@ -23,6 +23,14 @@ async def on_startup():
 
 app.include_router(api_router)
 app.include_router(htmx_router)
+
+@app.exception_handler(HTTPException)
+async def exception_404(request: Request, exc:HTTPException):
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({'detail': exc.detail}, status_code=exc.status_code)
+    else:
+        return RedirectResponse('/not_found')
+    
 
 
 if __name__ == "__main__":

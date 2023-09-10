@@ -34,3 +34,15 @@ def get_navbar(deps:CommonDeps):
     }
 
     return templates.TemplateResponse("nav.html", context)
+
+@router.get(
+    "/not_found",
+)
+def get_not_found(deps:CommonDeps):
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['user']
+    }
+
+    return templates.TemplateResponse("404.html", context)
