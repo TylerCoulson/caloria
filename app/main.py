@@ -2,9 +2,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, JSONResponse
 
+from app.config import settings
 from app.api.api_v1 import api_router
 from app.api.api_htmx_v1 import htmx_router
-from app.config import settings
 from app.db import engine, Base
 
 app = FastAPI(title=settings.APP_NAME)

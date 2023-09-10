@@ -28,3 +28,4 @@ LICENSE
 README.md
 *.db
 **/test_db_stuff.py
+.env
