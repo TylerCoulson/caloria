@@ -7,7 +7,7 @@ app = "food-track"
 primary_region = "ewr"
 
 [deploy]
-  release_command = "alembic upgrade head"
+  release_command = "sh /release.sh"
   
 [http_service]
   internal_port = 8000
