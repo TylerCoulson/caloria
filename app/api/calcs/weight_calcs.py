@@ -9,6 +9,9 @@ async def get_db_data(profile:models.Profile, db: Session):
         models.Food_Log.date.label('food_log_date'),
         models.DailyLog.date.label('daily_log_date'),
         (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("calories_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("fats_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("carbs_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("protein_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
     ).where(or_(models.Food_Log.profile_id == profile.id, models.DailyLog.profile_id == profile.id)
     ).join(models.ServingSize, isouter=True
@@ -34,7 +37,7 @@ async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.
     dates_dict = {}
     for d in range((end_date - start_date).days + 1):
         key = date.strftime(start_date + timedelta(days=d), "%Y-%m-%d")
-        dates_dict[key] = {'date': start_date + timedelta(days=d), 'calories_eaten_today': 0.0, 'user_inputed_weight': None}
+        dates_dict[key] = {'date': start_date + timedelta(days=d), 'calories_eaten_today': 0.0, 'fats_eaten_today':0.0, 'carbs_eaten_today':0.0, 'protein_eaten_today':0.0, 'user_inputed_weight': None}
 
     for k, v in data.items():
         v['date'] = v['food_log_date'] or v['daily_log_date']
@@ -75,6 +78,9 @@ async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.
             'est_weight':round(est_weight,1),
             'resting_rate':resting_rate,
             'eaten_calories':round(calories_eaten_today,0),
+            'eaten_fats':round(v["fats_eaten_today"],0),
+            'eaten_carbs':round(v["carbs_eaten_today"],0),
+            'eaten_protein':round(v["protein_eaten_today"],0),
             'calorie_goal': round(calorie_goal,0),
             'total_lbs_lost':round((total_rmr - total_calories_eaten)/3500,2),
             'calorie_surplus': round(total_calorie_goal - total_calories_eaten,0),

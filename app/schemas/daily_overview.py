@@ -17,6 +17,9 @@ class DailyOverview(DailyOverviewInput):
     est_weight: float
     resting_rate: int
     eaten_calories: int | None = 0
+    eaten_fats: int | None = 0
+    eaten_carbs: int | None = 0
+    eaten_protein: int | None = 0
     calories_left: int
     calorie_goal: int
     total_lbs_lost: float
