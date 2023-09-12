@@ -8,8 +8,8 @@ from app import deps
 from app import schemas
 from app import models
 from app.api.api_V1 import profile as api_profile
-from app.api.api_htmx.deps import LoggedInDeps
-
+from app.api.api_htmx.deps import LoggedInDeps, CommonDeps
+from app.auth.router import current_active_user
 
 router = APIRouter(prefix="/profile")
 templates = Jinja2Templates("app/templates")
@@ -19,8 +19,8 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_profile(*, deps:LoggedInDeps, profile: schemas.ProfileBase,):
-    profile = await api_profile.create_profile(deps=deps, profile=profile, user=deps['profile'])
+async def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
+    profile = await api_profile.create_profile(deps=deps, profile=profile, user=user)
 
     context = {
             "request": deps['request'],
