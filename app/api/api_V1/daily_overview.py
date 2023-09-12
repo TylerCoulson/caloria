@@ -35,6 +35,9 @@ async def post_daily(*, deps:LoggedInDeps, actual_weight: schemas.DailyOverviewI
     status_code=status.HTTP_200_OK,
 )
 async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
+    if n < 0:
+        n = 25
+
     offset = max((page-1) * n, 0)
     logs = await daily_log(profile=deps['profile'], db=deps['db'])
     return logs[offset:offset+n]

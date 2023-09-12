@@ -30,6 +30,9 @@ async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
     status_code=status.HTTP_200_OK,
 )
 async def get_food_log_date(*, deps:LoggedInDeps, date: date, n:int=25, page:int=1) -> list[schemas.FoodLogProfile]:
+    if n < 0:
+        n = 25
+
     offset = max((page-1) * n, 0)
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == deps['profile'].id).where(models.Food_Log.date == date).limit(n).offset(offset)
     data = await deps['db'].execute(statement)
@@ -54,6 +57,9 @@ async def get_food_log_id(*, deps:LoggedInDeps, food_log_id: int):
     status_code=status.HTTP_200_OK,
 )
 async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1):
+    if n < 0:
+        n = 25
+
     offset = max((page-1) * n, 0)
     profile_id = deps['profile'].id
     statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id).order_by(models.Food_Log.date.desc()).order_by(models.Food_Log.id.desc()).limit(n).offset(offset)
