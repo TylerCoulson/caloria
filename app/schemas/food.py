@@ -8,6 +8,7 @@ class FoodBase(BaseModel):
     subtype: str | None
 
 class FoodCreate(FoodBase):
+    user_id: int | None
     class Config:
         orm_mode = True
 
