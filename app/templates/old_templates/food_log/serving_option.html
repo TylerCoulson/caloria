@@ -1,6 +1,6 @@
 <option selected disabled value='none'>Select Serving Size</option>
 {% for serving in servings %}
-    <option value={{serving.id}} _="on click set #serving_cals.value to {{serving.calories}} then set #serving_id.value to {{serving.id}}">
+    <option value="{{serving.id}}" _="on click set #serving_cals.value to {{serving.calories}} then set #serving_id.value to {{serving.id}}">
         {{serving.description}}
     </option>
 {% endfor %}

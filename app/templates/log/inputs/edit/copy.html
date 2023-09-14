@@ -19,7 +19,7 @@
   
     <td headers="log_edit" name="food_log_in" hx-target="#content">
         <input hidden type="number"  id="food_id" name="food_id" value="{{log.serving_size.food.id}}" />
-        <input hidden type="number" id="serving_id" name="serving_size_id" value={{serving_id}} />
+        <input hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}" />
         <div role="button" hx-post="/food_log"  hx-include="closest tr" hx-ext='json-enc'> Save </div>
     </td>
     <td headers="add_log" name="food_log_in">
