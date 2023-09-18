@@ -37,7 +37,7 @@ async def get_food_search(*, deps:CommonDeps, search_word:str, n:int=25, page:in
 
     statement = select(models.Food).where(
         func.lower(models.Food.type).contains(search_word) | func.lower(models.Food.subtype).contains(search_word) 
-    ).where(or_(models.Food.user_id == user_id, models.Food.user_id is None) 
+    ).where(or_(models.Food.user_id == user_id, models.Food.user_id == None) 
     ).limit(n
     ).offset(offset)
     
@@ -57,7 +57,7 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1):
         n = 25
     offset = max((page-1) * n, 0)
     user_id = get_user_id(deps=deps)
-    statement = select(models.Food).where(or_(models.Food.user_id == user_id, models.Food.user_id is None) 
+    statement = select(models.Food).where(or_(models.Food.user_id == user_id, models.Food.user_id == None) 
     ).limit(n
     ).offset(offset)
 
