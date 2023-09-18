@@ -23,7 +23,9 @@ async def check_food_authorized(deps:CommonDeps, food_id:int):
     response_model=schemas.ServingSize,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_serving_size(*, deps:CommonDeps, serving_size: schemas.ServingSizeCreate):
+async def post_serving_size(*, deps:CommonDeps, food_id:int, serving_size: schemas.ServingSizeCreate):
+    serving_size.food_id = food_id
+    
     await check_food_authorized(deps=deps, food_id=serving_size.food_id)
     
     serving_size_out = await crud.create(obj_in=serving_size, db=deps['db'], model=models.ServingSize)
