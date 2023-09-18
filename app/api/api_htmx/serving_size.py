@@ -34,7 +34,7 @@ async def get_create_serving(*, deps:CommonDeps, food_id:int):
     status_code=status.HTTP_201_CREATED,
 )
 async def post_servings(*, deps:CommonDeps, serving_size: schemas.ServingSizeCreate):
-    servings_out = await api_servings.post_serving_size(deps=deps, serving_size=serving_size)
+    servings_out = await api_servings.post_serving_size(deps=deps, food_id=serving_size.food_id, serving_size=serving_size)
     food = await api_food.get_food_id(deps=deps, food_id=serving_size.food_id)
     context = {
             "request": deps['request'],

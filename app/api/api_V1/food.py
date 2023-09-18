@@ -75,8 +75,8 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1):
 async def get_food_id(*, deps:CommonDeps, food_id: int):
     user_id = get_user_id(deps=deps)
     data = await crud.read(_id=food_id, db=deps['db'], model=models.Food)
-
-    if not data or user_id != data.user_id:
+    
+    if not data or (user_id != data.user_id and data.user_id is not None):
         raise HTTPException(status_code=404, detail="Food not found")
     return data
 

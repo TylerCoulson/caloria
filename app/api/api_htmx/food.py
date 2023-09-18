@@ -112,13 +112,13 @@ async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, sear
 )
 async def post_food(*, deps:CommonDeps, food: schemas.FoodCreate):
     
-    await api_food.post_food(deps=deps, food=food)
-    foods = await api_food.get_all_foods(deps=deps)
+    new_food = await api_food.post_food(deps=deps, food=food)
+    # foods = await api_food.get_all_foods(deps=deps)
     
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
         "user": deps['user'],
-        "foods": foods,
+        "food": new_food,
     }
-    return templates.TemplateResponse("food/list.html", context)     
+    return templates.TemplateResponse("food/servings/create.html", context)     
