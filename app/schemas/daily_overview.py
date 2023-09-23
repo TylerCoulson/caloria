@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 from datetime import date
 
 
@@ -25,8 +25,5 @@ class DailyOverview(DailyOverviewInput):
     total_lbs_lost: float
     calorie_surplus: int
     bmi: float
-
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 

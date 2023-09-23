@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import ConfigDict, BaseModel, validator
 from datetime import date
 from typing import List
 
@@ -25,13 +25,11 @@ class ProfileCreate(ProfileBase):
 
 class Profile(ProfileCreate):
     id: int
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ProfileLogs(Profile):
     logs: "List[FoodLog]"
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 from .food_log import FoodLog
-ProfileLogs.update_forward_refs()
+ProfileLogs.model_rebuild()

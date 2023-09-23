@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 from datetime import date
 from typing import List
 from .food import FoodNoIngredients
@@ -16,24 +16,20 @@ class FoodLogCreate(FoodLogBase):
 class FoodLog(FoodLogBase):
     id: int
     serving_size: "ServingSize"
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class FoodLogProfile(FoodLog):
     profile: "Profile"
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DayLog(BaseModel):
     profile: "Profile"
     log: List[FoodLog] = []
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 from .profile import Profile
 from .serving_size import ServingSize
-FoodLog.update_forward_refs()
-FoodLogProfile.update_forward_refs()
-DayLog.update_forward_refs()
+FoodLog.model_rebuild()
+FoodLogProfile.model_rebuild()
+DayLog.model_rebuild()

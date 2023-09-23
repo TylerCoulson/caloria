@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
 async def create(*, obj_in, db, model) -> Any:
-    created = model(**obj_in.dict())
+    created = model(**obj_in.model_dump())
     db.add(created)
     await db.commit()
     await db.refresh(created)
@@ -29,7 +29,7 @@ async def read_all(*, n:int=25, page:int=1, db, model):
 
 async def update(*, _id, model, update_data, db):
     try:
-        statement = sql_update(model).where(model.id == _id).values(update_data.dict())
+        statement = sql_update(model).where(model.id == _id).values(update_data.model_dump())
         await db.execute(statement)
         await db.commit()
         data = await read(_id=_id, db=db, model=model)

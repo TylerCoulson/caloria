@@ -18,7 +18,7 @@ from app import crud
 )
 async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
     
-    profile = schemas.ProfileCreate(**profile.dict(), user_id=user.id) 
+    profile = schemas.ProfileCreate(**profile.model_dump(), user_id=user.id) 
     profile_out = await crud.create(obj_in=profile, db=deps['db'], model=models.Profile)
     return profile_out
 

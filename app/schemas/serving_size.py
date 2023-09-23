@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 from datetime import date
 from typing import List
 
@@ -16,20 +16,15 @@ class ServingSizeCreate(ServingSizeBase):
 class ServingSize(ServingSizeBase):
     id: int
     food: "FoodNoIngredients"
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ServingSizeNoFood(ServingSizeBase):
     id:int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AllServings(BaseModel):
     servings: List[ServingSizeNoFood] = []
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 from .food import FoodNoIngredients
-ServingSize.update_forward_refs()
+ServingSize.model_rebuild()

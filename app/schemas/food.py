@@ -1,31 +1,25 @@
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 from typing import List
 from .food_categories import FoodCategory
 
 class FoodBase(BaseModel):
     category_id: int
     type: str
-    subtype: str | None
+    subtype: str | None = None
 
 class FoodCreate(FoodBase):
-    user_id: int | None
-    class Config:
-        orm_mode = True
+    user_id: int | None = None
+    model_config = ConfigDict(from_attributes=True)
 
 class Food(FoodBase):
     id: int
     category: FoodCategory
-    # ingredients: List["Food"] | None = []
-    # servings: List["Food"] | None = []
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class FoodNoIngredients(FoodBase):
     id: int
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class FoodWithServings(Food):
     servings: List["Food"] | None = []
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
