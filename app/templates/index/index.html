@@ -1,6 +1,15 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 {% block content %}
 {% if user %}
+    {% if not user.is_verified%}
+    <div>
+        <div id="verify-message" _="on htmx:beforeSwap from #verify-link set my.innerHTML to 'THANK YOU' ">Please verify your account by clicking this</div>
+        <div id="verify-link" hx-get="/food/1" hx-include="#verify-email" hx-ext='json-enc' _="on htmx:beforeSwap remove me">
+            <input hidden id="verify-email" name="email" value="{{user.email}}">
+            <a>link</a>
+        </div>
+    </div>
+    {% endif %}
     {% include "index/logged_in.html" %}
 {% else %}
     {% include "index/unlogged_in.html" %}

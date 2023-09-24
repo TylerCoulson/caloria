@@ -15,7 +15,14 @@
     </head>
     <body id="container" class="container">
         <section hx-trigger="load" hx-get="/navbar" hx-target="this"></section>
+        
         <div id="content">
+        {% if verification %}
+            <form hidden id="verify" hx-trigger="load" hx-ext='json-enc' hx-post="/api/v1/auth/verify" hx-target="this" >
+                <input name="token" value="{{token}}">
+            </form>
+            <div hx-get="/" hx-trigger="htmx:afterRequest from:#verify"></div>
+        {% endif %}
         {% block content%}
         {% endblock%}
         </div>

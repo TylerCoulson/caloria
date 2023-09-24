@@ -8,6 +8,7 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 
 from app import models, crud
 from app.deps import get_db
+from app.auth.email.email import send_email, EmailSchema
 from .db import User, get_user_db
 from .secrets import secrets
 
@@ -17,16 +18,21 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
+        self.request_verify(user=user, request=request)
 
     async def on_after_forgot_password(
         self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"User {user.id} has forgot their password. Reset token: {token}")
+        email = EmailSchema(email=user.email)
+        await send_email(email=email, request=request, _type="forgot", token=token)
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"Verification requested for user {user.id}. Verification token: {token}")
+        email = EmailSchema(email=user.email)
+        await send_email(email=email, request=request, _type="verify", token=token)
 
     async def on_after_login(
         self, user: User, request: Optional[Request] = None, response: Optional[Response] = None
