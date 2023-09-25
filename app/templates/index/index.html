@@ -2,13 +2,13 @@
 {% block content %}
 {% if user %}
     {% if not user.is_verified%}
-    <div>
-        <div id="verify-message" _="on htmx:beforeSwap from #verify-link set my.innerHTML to 'THANK YOU' ">Please verify your account by clicking this</div>
-        <div id="verify-link" hx-post="/api/v1/auth/request-verify-token" hx-include="#verify-email" hx-ext='json-enc' _="on htmx:beforeSwap remove me">
+    <article id="verify-card">
+        <div id="verify-message" _="on htmx:afterRequest from #verify-link set my.innerHTML to 'THANK YOU' "></div>
+        <div id="verify-link"  hx-include="#verify-email" hx-ext='json-enc' _="on htmx:beforeRequest remove me">
             <input hidden id="verify-email" name="email" value="{{user.email}}">
-            <a>link</a>
+            Please verify your account by clicking this <a hx-post="/api/v1/auth/request-verify-token">link</a>
         </div>
-    </div>
+    </article>
     {% endif %}
     {% include "index/logged_in.html" %}
 {% else %}
