@@ -1,6 +1,6 @@
 from typing import Optional, Annotated
 
-from fastapi import Depends, Request, Response
+from fastapi import Depends, Request, Response, HTTPException
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin, InvalidPasswordException
 from fastapi_users.authentication import AuthenticationBackend, BearerTransport, CookieTransport, JWTStrategy
 from fastapi_users.db import SQLAlchemyUserDatabase
@@ -89,10 +89,12 @@ current_active_user = fastapi_users.current_user(active=True, optional=True)
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
-    if user:
+    if user.profile:
         profile = await crud.read(_id=user.profile.id, db=db, model=models.Profile)
-    else:
+    if not user:
         profile = None
+    if user and user.profile is None:
+        raise HTTPException(status_code=404, detail="Profile Not Found")
     return profile
 
 Annotated_User = Annotated[models.User, Depends(current_active_user)]
