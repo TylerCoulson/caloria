@@ -14,20 +14,23 @@ from app.auth.router import current_active_user
 router = APIRouter(prefix="/profile")
 templates = Jinja2Templates("app/templates")
 
-@router.post(
+@router.put(
     "",
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
 async def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
-    profile = await api_profile.create_profile(deps=deps, profile=profile, user=user)
-
+    if user.profile is None:
+        profile = await api_profile.create_profile(deps=deps, profile=profile, user=user)
+    else:
+        deps['profile'] = user.profile
+        profile = await api_profile.update_current_profile(deps=deps, profile_in=profile)
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
             "profile": profile
         }
-    return templates.TemplateResponse("profile.html", context)
+    return templates.TemplateResponse("profile/profile.html", context)
 
 @router.get(
     "",
@@ -35,21 +38,38 @@ async def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:
     status_code=status.HTTP_200_OK,
 )
 async def get_profile(*, deps:LoggedInDeps):
-    try:
-        profile_out = await api_profile.get_current_profile(deps=deps)
-
-        context = {
-                "request": deps['request'],
-                "hx_request": deps['hx_request'],
-                "profile": profile_out
-            }
-
-        return templates.TemplateResponse("profile.html", context)
-
-    except HTTPException:
-        context = {
+    context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
-            "message": f"Profile with id {deps['profile'].id} does not exist"
+            "profile": deps['profile']
         }
-        return templates.TemplateResponse("404.html", context)
+
+    return templates.TemplateResponse("profile/profile.html", context)
+
+@router.get(
+    "/edit",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def edit_profile(*, deps:LoggedInDeps):
+    print(deps['request'].url)
+    context = {
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
+            "profile": deps['profile']
+        }
+
+    return templates.TemplateResponse("profile/create_profile.html", context)
+
+@router.get(
+    "/create",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+def create_profile(*, request: Request, hx_request: str | None = Header(default=None)):
+    context = {
+            "request": request,
+            "hx_request": hx_request
+        }
+
+    return templates.TemplateResponse("profile/create_profile.html", context)

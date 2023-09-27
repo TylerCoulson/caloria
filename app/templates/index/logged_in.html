@@ -4,5 +4,5 @@
     Daily: <div hx-trigger="load" hx-get="/daily?n=5&home=True"></div>
 </div>
 {% else %}
-    <div hidden hx-get='/create_profile' hx-push-url="true" hx-trigger="load" hx-target='#content'></div>
+    <div hidden hx-get='/profile/create' hx-push-url="true" hx-trigger="load" hx-target='#content'></div>
 {% endif %}

@@ -35,17 +35,3 @@ def login(*, request: Request, hx_request: str | None = Header(default=None)):
         }
 
     return templates.TemplateResponse("auth/login.html", context)
-
-
-@router.get(
-    "/create_profile",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-def create_profile(*, request: Request, hx_request: str | None = Header(default=None)):
-    context = {
-            "request": request,
-            "hx_request": hx_request
-        }
-
-    return templates.TemplateResponse("auth/create_profile.html", context)

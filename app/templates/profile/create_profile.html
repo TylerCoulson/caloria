@@ -1,0 +1,40 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+{% if not profile %} {% set profile = None %} {% endif %}
+<h1> Profile </h1>
+<form hx-put="/profile" hx-target="#content" hx-push-url="true" name='profile' hx-ext='json-enc' >
+    <label for="start-date">Start Date:</label>
+    <input type="date"  id="start_date" name="start_date" value="{{profile.start_date|default('None, true')}}">
+    
+    <label for="start_weight">Start Weight (in lbs):</label>
+    <input type="number" step=".1" id="start_weight" name="start_weight" value="{{profile.start_weight|default('None, true')}}">
+    
+    <label for="goal_weight">Goal Weight (in lbs):</label>
+    <input type="number" step=".1" id="goal_weight" name="goal_weight" value="{{profile.goal_weight|default('None, true')}}">
+    
+    <label for="sex">Sex:</label>
+    <div id="sex">
+        <input type="radio" id="male" name="sex" value="male" {% if profile.sex == "male" %} checked {% endif %}>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="sex" value="female" {% if profile.sex == "female" %} checked {% endif %}>
+        <label for="female">Female</label>
+    </div>
+    <label for="birthdate">BirthDate:</label>
+    <input type="date" id="birthdate" name="birthdate" value="{{profile.birthdate|default('None, true')}}">
+    
+    <label for="height">Height (in inches):</label>
+    <input type="number" id="height" name="height" value="{{profile.height|default('None, true')}}">
+    
+    <label for="lbs_per_week">Lbs per week (in lbs):</label>
+    <input type="number" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week" value="{{profile.lbs_per_week|default('None, true')}}">
+    
+    <label for="activity_level">Activity Level:</label>
+    <select type="number" min="1" max="2" step=".1" id="activity_level" name="activity_level" value="{{profile.activity_level|default('None, true')}}">
+        {% include "activity_level_options.html" %}
+    </select>
+    
+    
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

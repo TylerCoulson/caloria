@@ -15,6 +15,7 @@
         {% else %}
             <li><a hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none">Logout</a></li>
             <div hidden id="logout_div" hx-get="/" hx-target="#content" hx-trigger="click from:#logout"></div>
+            <li><a hx-get="/profile"> Profile</a></li>
         {% endif %}
     </ul>
 </nav>
