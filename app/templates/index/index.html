@@ -6,7 +6,7 @@
         <div id="verify-message" _="on htmx:afterRequest from #verify-link set my.innerHTML to 'THANK YOU' "></div>
         <div id="verify-link"  hx-include="#verify-email" hx-ext='json-enc' _="on htmx:beforeRequest remove me">
             <input hidden id="verify-email" name="email" value="{{user.email}}">
-            Please verify your account by clicking this <a hx-post="/api/v1/auth/request-verify-token">link</a>
+            Please verify your account by clicking this <a hx-post="/api/v1/auth/request-verify-token" _="on click hide me.parent">link</a>
         </div>
     </article>
     {% endif %}
