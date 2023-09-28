@@ -2,7 +2,8 @@
 
 {% block content %}
 <div hx-trigger="htmx:responseError from:#login-form" hx-get="/validate/username_password" hx-target="#login-error"></div> 
-<form id='login-form' hx-post="/api/v1/auth/cookie/login" hx-target="#login_div">
+
+<form id='login-form' hx-post="/api/v1/auth/cookie/login" hx-target="#login-div">
     <label for="username">Email:</label>
     <input type="text" id="username" name="username">
     
@@ -13,6 +14,7 @@
     
     <input type="submit" value="Login">
 </form>
+
 <a hx-get="/forgot-password" hx-target="#content">Forgot Password</a>
-<div hidden id="login_div" hx-push-url="true" hx-get="/" hx-target="#content" hx-trigger="htmx:beforeSwap"></div>
+<div hidden id="login-div" hx-push-url="true" hx-get="/" hx-target="#content" hx-trigger="htmx:beforeSwap" _="on htmx:responseError from #login-form send htmx:abort to me"></div>
 {% endblock %}
