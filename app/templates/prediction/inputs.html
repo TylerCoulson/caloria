@@ -1,17 +1,17 @@
 
-<div>
+<div id="prediction-inputs">
     <summary role="button">Create Prediction</summary>
     <form hx-get="/prediction/never_faulter" hx-target="#forecast">
         <label for="start-date">
-            Start Date: <input type="date"  value="{{profile.start_date}}"   id="start_date" name="start_date">
+            Start Date: <input required="required"  type="date"  value="{{profile.start_date}}" id="start_date" name="start_date">
         </label>
         
         <label for="start_weight">
-            Start Weight: <input type="number" value="{{profile.start_weight}}" step=".1" min="0" id="start_weight" name="start_weight">
+            Start Weight: <input required="required"  type="number" value="{{profile.start_weight}}" step=".1" min="0" id="start_weight" name="start_weight">
         </label>
         
         <label for="goal_weight">
-            Goal: <input type="number" value="{{profile.goal_weight}}" step=".1" min="0" id="goal_weight" name="goal_weight">
+            Goal: <input required="required"  type="number" value="{{profile.goal_weight}}" step=".1" min="0" id="goal_weight" name="goal_weight">
         </label>
 
         <fieldset>
@@ -20,15 +20,15 @@
         </fieldset>
         
         <label for="birthdate">
-            BirthDate: <input type="date" value="{{profile.birthdate}}" id="birthdate" name="birthdate">
+            BirthDate: <input required="required"  type="date" value="{{profile.birthdate}}" id="birthdate" name="birthdate">
         </label>
         
         <label for="height">
-            Height: <input type="number" value="{{profile.height}}" id="height" name="height">
+            Height: <input required="required"  type="number" value="{{profile.height}}" id="height" name="height">
         </label>
         
         <label for="lbs_per_week">
-            Lbs per week: <input type="number" value="{{profile.lbs_per_week}}" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week">
+            Lbs per week: <input required="required"  type="number" value="{{profile.lbs_per_week}}" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week">
         </label>
         
         <label for="activity_level">Activity Level:</label>
@@ -36,6 +36,6 @@
             {% include "activity_level_options.html" %}
         </select>
 
-        <input type="submit" value="Predict">
+        <input type="submit" value="Predict" _="on htmx:afterRequest from closest <form/> hide #prediction-inputs then show #prediction-hidden">
     </form>
 </div>

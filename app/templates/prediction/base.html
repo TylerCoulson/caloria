@@ -1,7 +1,9 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
+<div style="display: none;" id="prediction-hidden" role="button" _="on click hide me then show #prediction-inputs">Show Inputs</div>
 <div class="grid">
+    
     {% include "prediction/inputs.html"%}
     <div id="forecast">
         {% include "prediction/list.html"%}
