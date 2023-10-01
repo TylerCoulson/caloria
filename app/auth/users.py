@@ -89,13 +89,25 @@ current_active_user = fastapi_users.current_user(active=True, optional=True)
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 async def get_current_profile(user: User = Depends(current_active_user), db = Depends(get_db)):
-    if user.profile:
-        profile = await crud.read(_id=user.profile.id, db=db, model=models.Profile)
-    if not user:
-        profile = None
-    if user and user.profile is None:
+    """
+    Retrieves the current profile of the user.
+    Parameters:
+        user (User): The user for whom to retrieve the profile. Defaults to the current active user.
+        db: The database connection. Defaults to the database obtained from the get_db dependency.
+    Returns:
+        Profile: The profile object associated with the user.
+    Raises:
+        HTTPException: If the user does not have a profile.
+    """
+
+    if user is None:
+        return None
+    
+    if user.profile is None:
         raise HTTPException(status_code=404, detail="Profile Not Found")
-    return profile
+        
+    return await crud.read(_id=user.profile.id, db=db, model=models.Profile)
+    
 
 Annotated_User = Annotated[models.User, Depends(current_active_user)]
 Annotated_Superuser = Annotated[models.User, Depends(current_superuser)]
