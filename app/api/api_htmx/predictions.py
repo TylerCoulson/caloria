@@ -6,7 +6,7 @@ from app.api.api_V1 import predictions
 from app.api.api_V1.predictions import weight_params
 from app.api.api_htmx.deps import CommonDeps
 from app.auth.router import Annotated_Profile
-
+from datetime import date
 router = APIRouter(prefix="/prediction")
 templates = Jinja2Templates("app/templates")
 
@@ -23,7 +23,7 @@ async def get_predictions_page(*, deps:CommonDeps, profile:Annotated_Profile=Fal
             "request": deps['request'],
             "hx_request": deps['hx_request'],
             "user": deps['user'],
-            "profile": profile if profile else {"start_date":"", "start_weight":"", "goal_weight":"", "sex":"", "birthdate":"", "height":"", "lbs_per_week":"", "activity_level":""}
+            "profile": profile if profile else {"start_date":date.today(), "start_weight":"", "goal_weight":"", "sex":"", "birthdate":"", "height":"", "lbs_per_week":"", "activity_level":""}
         }
     return templates.TemplateResponse("prediction/base.html", context)
 
