@@ -73,7 +73,7 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, search_word:st
     """ returns page that more foods"""
     
     if search_word:
-        return get_search_food_results(deps=deps, n=n, page=page, search_word=search_word)
+        return await get_search_food_results(deps=deps, n=n, page=page, search_word=search_word)
     
     data = await api_food.get_all_foods(deps=deps, n=n, page=page)
     
@@ -100,7 +100,8 @@ async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, sear
         "hx_request": deps['hx_request'],
         "user": deps['user'],
         "foods": data,
-        "page": page
+        "page": page,
+        "search_word": search_word
     }
 
     return templates.TemplateResponse("food/body.html", context)
