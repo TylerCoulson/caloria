@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, HTTPException
 from typing import List
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, nulls_last
 from app import schemas
 from app import models
 from app.api.api_V1.deps import CommonDeps, LoggedInDeps
@@ -11,6 +11,19 @@ router = APIRouter(tags=["food"])
 
 def get_user_id(deps:CommonDeps):
     return None if deps['user'] is None else deps['user'].id
+
+def get_all_statement(deps, n, page):
+    if n < 0:
+        n = 25
+    offset = max((page-1) * n, 0)
+    user_id = get_user_id(deps=deps)
+
+    statement = select(models.Food).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
+    ).order_by(nulls_last(models.Food.user_id.desc()), models.Food.category_id, models.Food.type, models.Food.subtype
+    ).limit(n
+    ).offset(offset)
+
+    return statement
 
 @router.post(
     "",
@@ -29,19 +42,10 @@ async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
     status_code=status.HTTP_200_OK,
 )
 async def get_food_search(*, deps:CommonDeps, search_word:str, n:int=25, page:int=1):
-    if n < 0:
-        n = 25
-    user_id = get_user_id(deps=deps)
-    
-    offset = max((page-1) * n, 0)
-
-    statement = select(models.Food).where(
+    statement = get_all_statement(deps=deps, n=n, page=page).where(
         func.lower(models.Food.type).contains(search_word) | func.lower(models.Food.subtype).contains(search_word) 
-    ).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
-    ).order_by(models.Food.user_id.desc(), models.Food.category_id, models.Food.type, models.Food.subtype
-    ).limit(n
-    ).offset(offset)
-    
+    )
+
     data = await deps['db'].execute(statement)
     
     all_data = data.unique().all()
@@ -54,15 +58,7 @@ async def get_food_search(*, deps:CommonDeps, search_word:str, n:int=25, page:in
     status_code=status.HTTP_200_OK,
 )
 async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1):
-    if n < 0:
-        n = 25
-    offset = max((page-1) * n, 0)
-    user_id = get_user_id(deps=deps)
-
-    statement = select(models.Food).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
-    ).order_by(models.Food.user_id.desc(), models.Food.category_id, models.Food.type, models.Food.subtype
-    ).limit(n
-    ).offset(offset)
+    statement = get_all_statement(deps=deps, n=n, page=page)
 
     data = await deps['db'].execute(statement)
     
