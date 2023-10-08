@@ -2,7 +2,7 @@
     <h1> Add Log: {{food.type}} - {{food.subtype}}</h1> 
     Total Calories: <div id="total-calories"></div>
 
-    <form hx-post="/food_log" hx-target="#content" hx-ext='json-enc' name="food_log">
+    <form hx-post="/food_log" hx-push-url="true" hx-target="#content" hx-ext='json-enc' name="food_log">
         <label for="date">
             Date: <input type="date" id="date" name="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
         </label>
