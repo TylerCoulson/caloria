@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session  # type: ignore
 from fastapi.templating import Jinja2Templates
 from fastapi.encoders import jsonable_encoder
+from datetime import date
 
 from app import deps
 from app import schemas
@@ -69,7 +70,8 @@ async def edit_profile(*, deps:LoggedInDeps):
 def create_profile(*, request: Request, hx_request: str | None = Header(default=None)):
     context = {
             "request": request,
-            "hx_request": hx_request
+            "hx_request": hx_request,
+            "start_date": date.today()
         }
 
     return templates.TemplateResponse("profile/create_profile.html", context)

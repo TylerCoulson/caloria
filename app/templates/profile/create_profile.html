@@ -5,7 +5,7 @@
 <h1> Profile </h1>
 <form hx-put="/profile" hx-target="#content" hx-push-url="true" name='profile' hx-ext='json-enc' >
     <label for="start-date">Start Date:</label>
-    <input type="date"  id="start_date" name="start_date" value="{{profile.start_date|default('None, true')}}">
+    <input type="date"  id="start_date" name="start_date" value="{{profile.start_date|default(start_date)}}">
     
     <label for="start_weight">Start Weight (in lbs):</label>
     <input type="number" step=".1" id="start_weight" name="start_weight" value="{{profile.start_weight|default('None, true')}}">
