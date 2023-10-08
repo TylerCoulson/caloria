@@ -1,2 +1,2 @@
 
-<td headers="actual_weight" hx-get="/daily/create/{{ daily.date }}" hx-target="this" hx-swap="outerHTML">{{ daily.actual_weight }}</td>
+<td headers="actual_weight" {% if not home %}hx-get="/daily/create/{{ daily.date }}" hx-target="this" hx-swap="outerHTML" {%endif %}>{{ daily.actual_weight }}</td>

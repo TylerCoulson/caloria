@@ -4,6 +4,7 @@
     <td headers="log_serving">{{log.serving_size.description}}</td>
     <td headers="log_serving_amount">{{log.serving_amount|round(2, "common")}}</td>
     <td headers="log_calories">{{(log.serving_amount * log.serving_size.calories)|round|int}}</td>
+    {% if not home %}
     <td headers="edit" hx-get="/food_log/edit?log_id={{log.id}}" hx-target="closest tr" hx-trigger="edit" hx-swap="outerHTML" 
     _="on click
     if .editing is not empty
@@ -13,4 +14,5 @@
     if .editing is not empty
     end
     trigger edit">c</td>
+    {% endif %}
 </tr>
