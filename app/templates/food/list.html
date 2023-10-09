@@ -6,7 +6,7 @@
 <div role="button" hx-get="/food/create" hx-target="#content">Add New Food</div>
 {% endif %}
 {% include "food/search.html" %}
-<table name="food">
+<table role="grid" name="food">
     <thead>
         {% include "food/headings.html" %}
     </thead>

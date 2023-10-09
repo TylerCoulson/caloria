@@ -5,7 +5,7 @@
     {% if user %}
     <div role="button" hx-get="/food/servings/create/{{ food.id }}" hx-target="#content">Add New Serving</div>
     {% endif %}
-    <table>
+    <table role="grid">
             <thead>
                 {% include "food/servings/headings.html" %}
             </thead>
