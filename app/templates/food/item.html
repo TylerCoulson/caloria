@@ -1,7 +1,7 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-    <h1>{{food.type}} {{food.subtype}}</h1>
+    <h1>{{food.type}}{% if food.subtype %}, {{food.subtype}} {% endif %}</h1>
     {% if user %}
     <div role="button" hx-get="/food/servings/create/{{ food.id }}" hx-target="#content">Add New Serving</div>
     {% endif %}
