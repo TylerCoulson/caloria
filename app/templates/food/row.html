@@ -1,7 +1,7 @@
 <tr name="food_id">
     <td headers="category" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.category.description}}</td>
-    <td headers="brand" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.type}}</td>
-    <td headers="name" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</td>
+    <td headers="type" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.type}}</td>
+    <td headers="subtype" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</td>
     {% if user is not none %}
         <td headers="add_log" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">ADD</td>
     {% endif %}

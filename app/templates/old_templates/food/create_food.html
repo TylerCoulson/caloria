@@ -3,8 +3,8 @@
 {% block content %}
 <h1> Add Food</h1>        
 <form hx-post="/food" hx-target="#food" hx-ext='json-enc' >
-    BRAND - <input type="text" name="brand"></input>
-    NAME - <input type="text" name="name"></input>
+    Type - <input type="text" name="type"></input>
+    Subtype - <input type="text" name="subtype"></input>
     <input type="submit">
 </form>
 <div id="food"></div>

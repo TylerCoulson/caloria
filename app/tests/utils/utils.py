@@ -93,9 +93,9 @@ async def profile(db, user) -> models.Profile:
 
 @pytest.fixture()
 async def food(db) -> models.Food:
-    brand = random_lower_string()
-    name = random_lower_string()
-    food_dict = schemas.FoodCreate(brand= brand, name= name)
+    type = random_lower_string()
+    subtype = random_lower_string()
+    food_dict = schemas.FoodCreate(type= type, subtype= subtype)
 
     food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
     food = jsonable_encoder(food)
@@ -104,9 +104,9 @@ async def food(db) -> models.Food:
 
 @pytest.fixture()
 async def food_2(db):
-    brand = random_lower_string()
-    name = random_lower_string()
-    food_dict = schemas.FoodCreate(brand= brand, name= name)
+    type = random_lower_string()
+    subtype = random_lower_string()
+    food_dict = schemas.FoodCreate(type= type, subtype= subtype)
 
     food = await crud.create(obj_in=food_dict, db=db, model=models.Food)
     food = jsonable_encoder(food)
