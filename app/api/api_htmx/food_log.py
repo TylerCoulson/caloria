@@ -14,7 +14,7 @@ templates = Jinja2Templates("app/templates")
 
 
 @router.get(
-    "/",
+    "",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
