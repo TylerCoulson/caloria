@@ -1,6 +1,6 @@
 {% if user.profile %}
 <div>
-    Food Log: <div hx-trigger="load" hx-get="/food_log/all?n=5&home=True"></div>
+    Food Log: <div hx-trigger="load" hx-get="/food_log?n=5&home=True"></div>
     Daily: <div hx-trigger="load" hx-get="/daily?n=5&home=True"></div>
 </div>
 {% else %}
