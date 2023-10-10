@@ -1,4 +1,8 @@
+{% if loop.first %}
 <tr name="food_log_id">
+{% else %}
+<tr name="food_log_id" {% if loop.previtem.date != log.date %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
+{% endif %}
     <td headers="log_date">{{log.date}}</td>
     <td headers="log_food">{{log.serving_size.food.type}}{% if log.serving_size.food.subtype %}, {{log.serving_size.food.subtype}} {% endif %}</td>
     <td headers="log_serving">{{log.serving_size.description}}</td>
@@ -16,3 +20,4 @@
     trigger edit">c</td>
     {% endif %}
 </tr>
+
