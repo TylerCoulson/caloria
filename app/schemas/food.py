@@ -3,12 +3,12 @@ from typing import List
 from .food_categories import FoodCategory
 
 class FoodBase(BaseModel):
+    user_id: int | None = None
     category_id: int
     type: str
     subtype: str | None = None
 
 class FoodCreate(FoodBase):
-    user_id: int | None = None
     model_config = ConfigDict(from_attributes=True)
 
 class Food(FoodBase):
