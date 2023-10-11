@@ -1,4 +1,4 @@
-<tr name="food_id">
+<tr name="food_id" {% if food.user_id %}style="background-color: #f4511e25;"{% endif %}>
     <td headers="category" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.category.description}}</td>
     <td headers="type" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.type}}</td>
     <td headers="subtype" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</td>
