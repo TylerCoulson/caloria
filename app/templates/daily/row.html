@@ -1,4 +1,9 @@
+{% for daily in dailies %}
+{% if loop.first %}
 <tr id="{{ daily.date }}">
+{% else %}
+<tr id="{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
+{% endif %}
     <td hidden headers="week">{{ daily.week }}</td>
     <td headers="day">{{ daily.day }}</td>
     <td headers="date">{{ daily.date }}</td>
@@ -17,3 +22,4 @@
     <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
     <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus) }}</td>
 </tr>
+{% endfor %}
