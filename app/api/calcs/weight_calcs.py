@@ -74,7 +74,7 @@ async def transform_daily(profile:models.Profile, data:dict, end_date:date=date.
             "date": v["date"],
             "profile_id":profile.id,
             'day':day,
-            'week':(day//7)+1,
+            'week':((day-1)//7)+1,
             'est_weight':round(est_weight,1),
             'resting_rate':resting_rate,
             'eaten_calories':round(calories_eaten_today,0),
