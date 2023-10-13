@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from datetime import date
 from typing import Dict
 from app import schemas
@@ -22,6 +22,10 @@ WeightParams = Annotated[dict, Depends(weight_params)]
 )
 async def get_predictions_never_fault(*, params:WeightParams):
     log_data = PersonsDay(height=params['height'], start_weight=params['start_weight'], start_date=params['start_date'], lbs_per_day=params['lbs_per_week']/7, birthdate=params['birthdate'], sex=params['sex'], activity_level=params['activity_level'], goal_weight=params['goal_weight'], profile_logs=params['log']) 
+    
+    if isinstance(log_data.check_possible(), str):
+        raise HTTPException(status_code=404, detail=log_data.check_possible())
+
     pred = log_data.prediction()    
     return pred
 

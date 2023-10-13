@@ -47,3 +47,20 @@ def test_prediction_update_weekly_lbs_loss(daily_output:PersonsDay):
 
 
     assert pred == prediction_output
+
+
+async def test_goal_weight_higher_than_start(client:TestClient, db:Session):
+    params = {'height':profile['height'], 'start_weight':301.0, 'start_date':profile['start_date'], 'lbs_per_week':profile['lbs_per_week'], 'birthdate':profile['birthdate'], 'sex':profile['sex'], 'activity_level':profile['activity_level'], 'goal_weight':500.0, 'log':profile['log']}
+
+    response= await client.get(f"/api/v1/predictions/never_faulter", params=params)
+
+    assert response.status_code == 404
+    assert response.json() == {"detail":"Goal Weight greater than Start Weight"}
+
+async def test_goal_weight_too_low(client:TestClient, db:Session):
+    params = {'height':profile['height'], 'start_weight':profile['start_weight'], 'goal_weight':10.0, 'start_date':profile['start_date'], 'lbs_per_week':profile['lbs_per_week'], 'birthdate':profile['birthdate'], 'sex':profile['sex'], 'activity_level':profile['activity_level'], 'log':profile['log']}
+
+    response= await client.get(f"/api/v1/predictions/never_faulter", params=params)
+
+    assert response.status_code == 404
+    assert response.json() == {"detail":"Goal weight resting calories are less than lowest allowed calories"}

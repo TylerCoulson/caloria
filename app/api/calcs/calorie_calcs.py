@@ -18,7 +18,16 @@ class PersonsDay():
         self.activity_level = activity_level
         self.goal_weight = goal_weight
         self.profile_logs = profile_logs
+        self.lowest_allowed = 1200 if sex == 'female' else 1500
 
+    def check_possible(self):
+        if self.goal_weight > self.start_weight:
+            return "Goal Weight greater than Start Weight"
+        
+        if self.resting_rate(self.goal_weight, self.age(current_date=self.start_date)) < self.lowest_allowed:
+            return "Goal weight resting calories are less than lowest allowed calories"
+    
+        return True
 
     def bmi(self, current_date:date):
         est_weight = self.estimated_weight(current_date=current_date, total_calories_eaten=self.total_calories_eaten(current_date=current_date))
@@ -71,12 +80,10 @@ class PersonsDay():
         return int(round(calories_eaten_on_current_date,0))
 
     def calorie_goal(self, weight:float, age:float):
-        lowest_allowed = 1200 if self.sex == 'female' else 1500
-
         rmr = self.resting_rate(weight=weight, age=age)
 
         if weight > self.goal_weight:
-            calorie_goal = max(rmr - ((self.lbs_per_day*7) * 500), lowest_allowed) 
+            calorie_goal = max(rmr - ((self.lbs_per_day*7) * 500), self.lowest_allowed) 
         else:
             calorie_goal = rmr
 
