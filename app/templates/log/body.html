@@ -2,6 +2,6 @@
     {% include "log/row.html"%}
     
     {% if home is false %}
-        <tr hx-get="/food_log/append_more?page={{page+1}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+        <tr hx-get="/food_log?page={{page+1}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></tr>
     {% endif %}
 {% endif %}

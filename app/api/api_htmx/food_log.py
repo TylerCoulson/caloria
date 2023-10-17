@@ -18,7 +18,7 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=False):
+async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=False, appending:bool=False):
     
     logs = await api_food_log.get_food_logs(deps=deps, n=n, page=page)
     
@@ -28,30 +28,13 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=Fa
         "user": deps['profile'],
         "logs": logs,
         "home": home,
-        "page":page
+        "page":page,
+        "appending": appending
        }
+    if appending:
+        return templates.TemplateResponse("log/body.html", context)
 
     return templates.TemplateResponse("log/list.html", context)             
-
-@router.get(
-    "/append_more",
-    response_class=HTMLResponse,
-    status_code=status.HTTP_200_OK,
-)
-async def get_more(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=False ):
-    
-    logs = await api_food_log.get_food_logs(deps=deps, n=n, page=page)
-    
-    context = {
-        "request": deps['request'],
-        "hx_request": deps['hx_request'],
-        "user": deps['profile'],
-        "logs": logs,
-        "page":page,
-        "home":home
-       }
-    
-    return templates.TemplateResponse("log/body.html", context)
 
 @router.get(
     "/create",

@@ -1,6 +1,6 @@
 {% if dailies %}
     {% include "daily/row.html"%}
     {% if home is false %}
-        <tr hx-get="/daily/append_more?page={{page+1}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+        <tr hx-get="/daily?page={{page+1}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></tr>
     {% endif %}
 {% endif %}
