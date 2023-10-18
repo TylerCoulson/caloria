@@ -12,3 +12,4 @@ secrets.py
 app/add_food_to_db
 exploration
 .env
+**/node_modules

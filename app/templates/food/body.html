@@ -2,5 +2,5 @@
     {% for food in foods %}
         {% include "food/row.html"%}
     {% endfor %}
-    <tr hx-get="/food/append_more?page={{page+1}}&search_word={{search_word}}" hx-swap="afterend" hx-trigger="revealed"></tr>
+    <tr hx-get="/food/all?page={{page+1}}&search_word={{search_word}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></tr>
 {% endif %}
