@@ -1,10 +1,10 @@
 from app import models, schemas
-from sqlalchemy import select, func, cast, String, or_
+from sqlalchemy import select, func, cast, String, or_, and_
 from sqlalchemy.orm import Session  # type: ignore
 from datetime import date, datetime, timedelta
 
 
-async def get_db_data(profile:models.Profile, db: Session):
+async def get_aggregate_food_logs_and_actual_weight(profile:models.Profile, db: Session):
     statement = select(
         models.Food_Log.date.label('food_log_date'),
         models.DailyLog.date.label('daily_log_date'),
@@ -14,6 +14,7 @@ async def get_db_data(profile:models.Profile, db: Session):
         (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("protein_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
     ).where(or_(models.Food_Log.profile_id == profile.id, models.DailyLog.profile_id == profile.id)
+    ).where(and_(models.DailyLog.date >= profile.start_date, models.Food_Log.date >= profile.start_date)
     ).join(models.ServingSize, isouter=True
     ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, full=True
     ).group_by(models.Food_Log.date, models.DailyLog.date
@@ -102,7 +103,7 @@ async def daily_log(profile:models.Profile, db: Session):
     if profile is None:
         raise ValueError("profile cannot be None")
  
-    data = await get_db_data(profile, db)
+    data = await get_aggregate_food_logs_and_actual_weight(profile, db)
     logs = await transform_daily(profile, data)
     
     return logs
