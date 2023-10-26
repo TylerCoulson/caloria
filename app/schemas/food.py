@@ -3,11 +3,13 @@ from typing import List
 from .food_categories import FoodCategory
 
 class FoodNoSubtype(BaseModel):
-    category_id: int
+    category: str
     type: str
     
-class FoodBase(FoodNoSubtype):
+class FoodBase(BaseModel):
     user_id: int | None = None
+    category_id: int
+    type: str
     subtype: str | None = None
 
 class FoodCreate(FoodBase):

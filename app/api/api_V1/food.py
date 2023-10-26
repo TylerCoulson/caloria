@@ -77,8 +77,9 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     offset = max((page-1) * n, 0)
     user_id = get_user_id(deps=deps)
 
-    statement = select(models.Food.category_id, models.Food.type
+    statement = select(models.FoodCategories.description, models.Food.type
         ).distinct().where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
+        ).join(models.FoodCategories, models.FoodCategories.id == models.Food.category_id
         ).limit(n
         ).offset(offset)
 
@@ -89,7 +90,7 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     # print(result)
 
     # return result
-    return [schemas.FoodNoSubtype(category_id=r[0], type=r[1]) for r in result]
+    return [schemas.FoodNoSubtype(category=r[0], type=r[1]) for r in result]
 
 @router.get(
         "/{type:str}/subtypes",
@@ -104,7 +105,7 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
 
     statement = select(models.Food.subtype
         ).distinct().where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
-        ).where(models.Food.type == type
+        ).where(func.lower(models.Food.type) == type.lower()
         ).limit(n
         ).offset(offset)
 
@@ -112,9 +113,7 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
     data = await deps['db'].execute(statement)
     
     result = data.all()
-    print([r for r, in result])
 
-    # return result
     return [r for r, in result]
 
 
