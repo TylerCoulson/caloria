@@ -2,10 +2,12 @@ from pydantic import ConfigDict, BaseModel
 from typing import List
 from .food_categories import FoodCategory
 
-class FoodBase(BaseModel):
-    user_id: int | None = None
+class FoodNoSubtype(BaseModel):
     category_id: int
     type: str
+    
+class FoodBase(FoodNoSubtype):
+    user_id: int | None = None
     subtype: str | None = None
 
 class FoodCreate(FoodBase):
