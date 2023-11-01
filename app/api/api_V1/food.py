@@ -80,6 +80,7 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     statement = select(models.FoodCategories.description, models.Food.type
         ).distinct().where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
         ).join(models.FoodCategories, models.FoodCategories.id == models.Food.category_id
+        ).order_by(nulls_last(models.Food.user_id.desc()), models.Food.category_id, models.Food.type, models.Food.subtype
         ).limit(n
         ).offset(offset)
 
@@ -94,7 +95,7 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
 
 @router.get(
         "/{type:str}/subtypes",
-        response_model=List[str|None],
+        response_model=List[schemas.Food],
         status_code=status.HTTP_200_OK
 )
 async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
@@ -103,8 +104,8 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
     offset = max((page-1) * n, 0)
     user_id = get_user_id(deps=deps)
 
-    statement = select(models.Food.subtype
-        ).distinct().where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
+    statement = select(models.Food
+        ).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
         ).where(func.lower(models.Food.type) == type.lower()
         ).limit(n
         ).offset(offset)
@@ -112,7 +113,7 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
 
     data = await deps['db'].execute(statement)
     
-    result = data.all()
+    result = data.unique().all()
 
     return [r for r, in result]
 
