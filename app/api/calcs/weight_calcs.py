@@ -14,7 +14,7 @@ async def get_aggregate_food_logs_and_actual_weight(profile:models.Profile, db: 
         (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("protein_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
     ).where(or_(models.Food_Log.profile_id == profile.id, models.DailyLog.profile_id == profile.id)
-    ).where(and_(models.DailyLog.date >= profile.start_date, models.Food_Log.date >= profile.start_date)
+    ).where(models.Food_Log.date >= profile.start_date
     ).join(models.ServingSize, isouter=True
     ).join(models.DailyLog, models.DailyLog.date == models.Food_Log.date, full=True
     ).group_by(models.Food_Log.date, models.DailyLog.date
