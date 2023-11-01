@@ -20,7 +20,7 @@
             Calories: <div type="number" class="total-calc" id="serving_cals">{{calories}}</div>
         </label>
         <label for="serving_amount">
-            Serving Amount: <input type="number" class="total-calc" min="0" id="serving_amount" name="serving_amount" value="{{serving_amount}}" _="on change set $serving_amount to my.value then set #total-calories.innerHTML to $serving_amount * $calories">
+            Serving Amount: <input type="number" class="total-calc" min="0" step="any" id="serving_amount" name="serving_amount" value="{{serving_amount}}" _="on change set $serving_amount to my.value then set #total-calories.innerHTML to $serving_amount * $calories">
         </label>
 
         <button>Add Log</button>
