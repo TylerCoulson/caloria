@@ -69,13 +69,14 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool
     return templates.TemplateResponse("food/list.html", context)
 
 @router.get(
-    "/{type:str}/subtypes",
+    "/{food_type:str}/subtypes",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, type:str):
+async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, food_type:str):
     """ returns page that all foods"""
-    data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, type=type.lower())
+    food_type = food_type.replace("_", " ")
+    data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, food_type=food_type.lower())
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
