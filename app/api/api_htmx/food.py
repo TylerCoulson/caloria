@@ -44,7 +44,7 @@ async def get_food(*, deps:CommonDeps, food_id:int):
         "food": food,
         "servings": servings['servings']
     }
-    return templates.TemplateResponse("food/item.html", context)
+    return templates.TemplateResponse("food/servings.html", context)
 
 
 @router.get(
@@ -54,7 +54,7 @@ async def get_food(*, deps:CommonDeps, food_id:int):
 )
 async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False):
     """ returns page that all foods"""
-    data = await api_food.get_all_foods(deps=deps, n=n, page=page)
+    data = await api_food.get_food_types(deps=deps, n=n, page=page)
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
@@ -67,6 +67,27 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool
         return templates.TemplateResponse("food/body.html", context)
     
     return templates.TemplateResponse("food/list.html", context)
+
+@router.get(
+    "/{type:str}/subtypes",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, type:str):
+    """ returns page that all foods"""
+    data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, type=type.lower())
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['user'],
+        "subtypes": data,
+        "page": page,
+        "appending": appending
+    }
+    if appending:
+        return templates.TemplateResponse("food/body.html", context)
+    
+    return templates.TemplateResponse("food/subtype.html", context)
 
 @router.get(
 "/search",
