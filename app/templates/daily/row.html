@@ -1,6 +1,9 @@
 {% for daily in dailies %}
+
 {% if loop.first %}
-<tr id="{{ daily.date }}">
+<input hidden id="max_{{daily.date}}" type="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
+<input hidden id="hidden_{{daily.date}}" type="date" value="{{daily.date}}">
+<tr id="{{ daily.date }}" _="on load if #hidden_{{daily.date}} > #max_{{daily.date}} hide me">
 {% else %}
 <tr id="{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
 {% endif %}
