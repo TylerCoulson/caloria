@@ -45,7 +45,7 @@ async def post_servings(*, deps:CommonDeps, serving_size: schemas.ServingSizeCre
             "servings": [servings_out]
         }
 
-    return templates.TemplateResponse("food/item.html", context)
+    return templates.TemplateResponse("food/servings.html", context)
 
 
 
