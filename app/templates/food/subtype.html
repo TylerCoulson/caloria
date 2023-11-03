@@ -1,4 +1,5 @@
 {% if subtypes %}
+<table>
     {% for food in subtypes %}
         <tr name="food_id" {% if food.user_id %}style="background-color: #f4511e25;"{% endif %}>
             <!-- <td headers="category" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.category}}</td>
@@ -10,4 +11,5 @@
             {% endif %}
         </tr>
     {% endfor %}
+</table>
 {% endif %}
