@@ -9,9 +9,9 @@ async def get_aggregate_food_logs_and_actual_weight(profile:models.Profile, db: 
         models.Food_Log.date.label('food_log_date'),
         models.DailyLog.date.label('daily_log_date'),
         (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("calories_eaten_today"),
-        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("fats_eaten_today"),
-        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("carbs_eaten_today"),
-        (func.coalesce(func.sum(models.ServingSize.calories * models.Food_Log.serving_amount), 0)).label("protein_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.fats * models.Food_Log.serving_amount), 0)).label("fats_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.carbs * models.Food_Log.serving_amount), 0)).label("carbs_eaten_today"),
+        (func.coalesce(func.sum(models.ServingSize.protein * models.Food_Log.serving_amount), 0)).label("protein_eaten_today"),
         func.max(models.DailyLog.actual_weight).label("user_inputed_weight")                            
     ).where(or_(models.Food_Log.profile_id == profile.id, models.DailyLog.profile_id == profile.id)
     ).where(models.Food_Log.date >= profile.start_date
