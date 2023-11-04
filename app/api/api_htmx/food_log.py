@@ -162,7 +162,7 @@ async def update_food_log(*, deps:LoggedInDeps, food_log_id: int, food_log_in: s
         "request": deps['request'],
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
-        "log": log,
+        "logs": [log],
     }
     return templates.TemplateResponse("log/row.html", context)
 
