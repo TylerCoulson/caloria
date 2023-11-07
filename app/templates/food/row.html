@@ -2,7 +2,7 @@
     <td headers="category">{{food.category}}</td>
     <td headers="type" hx-target="#content">{{food.type}}</td>
     
-    {% set food_type = food.type | replace(' ','_') %}
+    {% set food_type = food.type | replace(' ','%_%') %}
     <td id="{{food_type}}_subtypes_open" _="on click hide me then show #{{food_type}}_subtypes_close then show #{{food_type}}_subtypes" hx-get="/food/{{food_type}}/subtypes" hx-target="#{{food_type}}_subtypes">A</td>
     <td id="{{food_type}}_subtypes_close" style="display: none;" _="on click hide me then set #{{food_type}}_subtypes.innerHTML to '' then show #{{food_type}}_subtypes_open then hide #{{food_type}}_subtypes"">∀</td>
 

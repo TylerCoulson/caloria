@@ -75,7 +75,7 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool
 )
 async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, food_type:str):
     """ returns page that all foods"""
-    food_type = food_type.replace("_", " ")
+    food_type = food_type.replace("%_%", " ")
     data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, food_type=food_type.lower())
     context = {
         "request": deps['request'],
