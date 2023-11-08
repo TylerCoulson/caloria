@@ -112,12 +112,12 @@ async def get_food_log_id(*, deps:LoggedInDeps, food_log_id: int):
     
     
     log = await api_food_log.get_food_log_id(food_log_id=food_log_id, deps=deps)
-    
+    print("test")
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
-        "log": log,
+        "logs": [log],
     }
     return templates.TemplateResponse("log/row.html", context)
 
