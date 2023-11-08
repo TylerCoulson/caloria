@@ -95,7 +95,7 @@ async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=
 response_class=HTMLResponse,
 status_code=status.HTTP_200_OK,
 )
-async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, search_word:str):
+async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, search_word:str):
     """Returns the results of searching for food"""
     data = await api_food.get_food_search(search_word=search_word, n=n, page=page, deps=deps)
 
@@ -105,10 +105,13 @@ async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, sear
         "user": deps['user'],
         "foods": data,
         "page": page,
-        "search_word": search_word
+        "search_word": search_word,
+        "appending": appending
     }
+    if appending:
+        return templates.TemplateResponse("food/search/rows.html", context)
 
-    return templates.TemplateResponse("food/body.html", context)
+    return templates.TemplateResponse("food/search/results.html", context)
 
 @router.post(
     "",

@@ -1,0 +1,13 @@
+{% if foods %}
+    {% for food in foods %}
+        <tr name="food_id" {% if food.user_id %} style="background-color: #f4511e25;"{% endif %}>
+            <td headers="category">{{food.category.description}}</td>
+            <td headers="type" hx-target="#content">{{food.type}}</td>
+            <td headers="subtype" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</td>
+            {% if user is not none %}
+                <td headers="add_log" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">ADD</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    <tr hx-get="/food/search?page={{page+1}}&search_word={{search_word}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></tr>
+{% endif %}

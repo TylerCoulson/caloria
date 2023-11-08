@@ -8,10 +8,17 @@
 {% include "food/search/input.html" %}
 <table role="grid" name="food" id="food-table">
     <thead>
-        {% include "food/headings.html" %}
+        <tr>
+            <th id="category">Category</th>
+            <th id="type">Type</th>
+            <th id="subtype">Subtype</th>
+            {% if user is not none %}
+                <th id="add_log">Add Log</th>
+            {% endif %}
+        </tr>        
     </thead>
     <tbody id="food-body">
-        {% include "food/body.html" %}
+        {% include "food/search/rows.html" %}
     </tbody>
 </table>
 {% endblock %}
