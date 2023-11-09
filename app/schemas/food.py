@@ -3,7 +3,7 @@ from typing import List
 from .food_categories import FoodCategory
 
 class FoodNoSubtype(BaseModel):
-    category: str
+    category: FoodCategory
     type: str
     
 class FoodBase(BaseModel):
