@@ -23,10 +23,19 @@ async def get_weight(profile_id, current_date, db: Session):
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_daily(*, deps:LoggedInDeps, actual_weight: schemas.DailyOverviewInput):
-    actual_weight.profile_id = deps['profile'].id
-    log = await crud.create(obj_in=actual_weight, db=deps['db'], model=models.DailyLog)
-    output_data = await get_daily(deps=deps, current_date=log.date)
+async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, data: schemas.DailyOverviewInput):
+    data.profile_id = deps['profile'].id
+    weight_data = await get_weight(profile_id=deps['profile'].id, current_date=data.date, db=deps['db'])
+
+    if weight_data is None:
+        log = await crud.create(obj_in=data, db=deps['db'], model=models.DailyLog)
+        output_data = await get_daily(deps=deps, current_date=log.date)
+
+    else:
+        data.activity_level = data.activity_level if activity_level else weight_data.activity_level
+        data.actual_weight = data.actual_weight if actual_weight else weight_data.actual_weight 
+        output_data = await update_daily(deps=deps, current_date=data.date, daily_data=data)
+
     return output_data
 
 @router.get(
@@ -53,8 +62,7 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
     start_date = deps['profile'].start_date if type(deps['profile'].start_date) is date else datetime.strptime(deps['profile'].start_date, '%Y-%m-%d').date()
     if current_date < start_date:
         raise HTTPException(status_code=404, detail="Date is before profile start date")
-    
-    output_data = await daily_log(profile=deps['profile'], db=deps['db'])
+    output_data = await daily_log(profile=deps['profile'], db=deps['db'], end_date=current_date)
     for i in output_data:
         if i['date'] == current_date:
             return i
@@ -67,12 +75,12 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
     response_model=schemas.DailyOverview,
     status_code=status.HTTP_200_OK,
 )
-async def update_daily(*, deps:LoggedInDeps, current_date:date, daily_data:schemas.DailyOverviewInput):
+async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, current_date:date, daily_data:schemas.DailyOverviewInput):
     
     daily_data.profile_id = deps['profile'].id
     weight_data = await get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
     if weight_data is None:
-        output_data = await post_daily(deps=deps, actual_weight=daily_data)
+        output_data = await post_daily(deps=deps, actual_weight=actual_weight, activity_level=activity_level, data=daily_data,)
     else:
         data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=deps['db'])
         output_data = await get_daily(deps=deps, current_date=data.date)

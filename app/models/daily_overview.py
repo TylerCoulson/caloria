@@ -10,6 +10,7 @@ class DailyLog(Base):
     profile_id = Column(Integer, ForeignKey("profile.id", ondelete="CASCADE"), nullable=False)
     date = Column(Date)
     actual_weight = Column(Float)
+    activity_level = Column(Float)
     
 
     profile = relationship('Profile', lazy='selectin')

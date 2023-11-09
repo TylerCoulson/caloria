@@ -5,17 +5,30 @@ from datetime import date
 class ActualWeight(BaseModel):
     actual_weight: float | None = 0
 
-class DailyOverviewInput(ActualWeight):
+class ActivityLevel(BaseModel):
+    activity_level: float | None = None
+
+class DailyOverviewInput(ActualWeight, ActivityLevel):
     profile_id: int = 0
     date: date
 
+# class DailyOverviewInput(BaseModel):
+#     profile_id: int = 0
+#     date: date
 
+# class ActualWeight(DailyOverviewInput):
+#     actual_weight: float | None = None
+
+# class ActivityLevel(DailyOverviewInput):
+#     activity_level: float | None = None
+
+# class DailyOverview(ActivityLevel, ActualWeight):
 
 class DailyOverview(DailyOverviewInput):
     day: int
     week: int
     est_weight: float
-    resting_rate: int
+    calories_burned: int
     eaten_calories: int | None = 0
     eaten_fats: int | None = 0
     eaten_carbs: int | None = 0
