@@ -4,6 +4,6 @@ async def test_get_food_types(client):
     assert len(response.json()) == 25
 
 async def test_get_food_subtypes(client, get_food):
-    response = await client.get(f"/api/v1/food/{get_food['type']}/subtypes")
+    response = await client.get(f"/api/v1/food/{get_food['type']}/subtypes?food_category=1")
     assert response.status_code == 200
-    assert isinstance(response.json(), list) 
+    assert isinstance(response.json(), list)

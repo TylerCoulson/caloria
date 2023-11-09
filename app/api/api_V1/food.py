@@ -77,28 +77,28 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     offset = max((page-1) * n, 0)
     user_id = get_user_id(deps=deps)
 
-    statement = select(models.FoodCategories.description, models.Food.type, models.Food.id
+    statement = select(models.FoodCategories, models.Food.type, models.Food.user_id
         ).distinct().where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
         ).join(models.FoodCategories, models.FoodCategories.id == models.Food.category_id
-        ).order_by(nulls_last(models.Food.user_id.desc()), models.Food.category_id, models.Food.type, models.Food.subtype
+        ).order_by(nulls_last(models.Food.user_id.desc()), models.FoodCategories.id, models.Food.type
         ).limit(n
         ).offset(offset)
 
 
     data = await deps['db'].execute(statement)
     
-    result = data.all()
+    result = data.unique().all()
     # print(result)
 
     # return result
-    return [schemas.FoodNoSubtype(category=r[0], type=r[1], id=r[2]) for r in result]
+    return [schemas.FoodNoSubtype(category=r[0], type=r[1]) for r in result]
 
 @router.get(
-        "/{type:str}/subtypes",
+        "/{food_type:str}/subtypes",
         response_model=List[schemas.Food],
         status_code=status.HTTP_200_OK
 )
-async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
+async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, food_type:str, food_category:str):
     if n < 0:
         n = 25
     offset = max((page-1) * n, 0)
@@ -106,7 +106,9 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, type:str):
 
     statement = select(models.Food
         ).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
-        ).where(func.lower(models.Food.type) == type.lower()
+        ).where(func.lower(models.Food.type) == food_type.lower()
+        ).where(models.Food.category_id == food_category
+        ).order_by(nulls_last(models.Food.user_id.desc())
         ).limit(n
         ).offset(offset)
 
