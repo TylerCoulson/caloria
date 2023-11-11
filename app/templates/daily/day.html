@@ -1,15 +1,8 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<table role="grid" name="daily">
-    <thead>
-        {% include "daily/headings.html" %}
-    </thead>
-    <tbody id="forecast-body">
-        {% include "daily/row.html"%}
-    </tbody>
-</table>
-
+<h1>Daily Overview</h1>
+ {% include "daily/daily_expanded.html" %}
 <h1>Food Log</h1>
 <table role="grid">
     {% include "log/day.html"%}
