@@ -16,6 +16,7 @@
     <td headers="eaten_calories">{{ "{:,}".format(daily.eaten_calories|int) }}</td>
     <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</td>
     <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
+    {% if not home %}
     <td 
         hx-get="/daily/{{ daily.date }}" hx-target="#expanded_{{daily.day}}" 
         _="on click hide me then show next <td/> then show #table_{{daily.day}}"
@@ -24,5 +25,6 @@
 </tr>
 <tr id="table_{{daily.day}}" style="display: none;">
     <td id="expanded_{{daily.day}}" colspan="8"></td>
+ {% endif %}
 </tr>
 {% endfor %}
