@@ -9,6 +9,7 @@
     <td hidden headers="week">{{ daily.week }}</td>
     <td headers="day">{{ daily.day }}</td>
     <td headers="date">{{ daily.date }}</td>
+    {% include "daily/activity_level.html" %}
 
     {% include "daily/weight_column.html"%}
 
@@ -23,5 +24,6 @@
     <td headers="calories_left">{{ "{:,}".format(daily.calories_left)  }}</td>
     <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
     <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus) }}</td>
+    
 </tr>
 {% endfor %}

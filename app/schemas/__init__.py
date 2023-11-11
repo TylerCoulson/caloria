@@ -3,7 +3,7 @@ from app.schemas.food import Food, FoodBase, FoodCreate, FoodNoIngredients, Food
 from app.schemas.recipe import RecipeCreate
 from app.schemas.food_log import FoodLog, FoodLogBase, FoodLogCreate, DayLog, FoodLogProfile
 from app.schemas.serving_size import ServingSize, ServingSizeBase, ServingSizeCreate, AllServings, ServingSizeNoFood
-from app.schemas.daily_overview import DailyOverview, DailyOverviewInput, ActualWeight, ActivityLevel
+from app.schemas.daily_overview import DailyOverview, DailyOverviewInput, ActualWeight, ActivityLevel, DailyOptions
 from app.schemas.predictions import Prediction
 from app.schemas.food_categories import FoodCategory, FoodCategoryCreate
 from app.auth.schemas import UserCreate, UserRead, UserUpdate

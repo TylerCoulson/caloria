@@ -1,0 +1,9 @@
+{% set activity_levels_dict = ({
+    "1.2": "Sedentary",
+    "1.4": "Lightly Active",
+    "1.6": "Moderately Active",
+    "1.8": "Very Active"
+})	%}
+<td headers="daily_activity_level" {% if (not home) and (daily.day != 1) %} hx-get="/daily/create/{{ daily.date }}/activity_level" hx-target="this" hx-swap="outerHTML" {% endif %}> 
+    {{activity_levels_dict[daily.activity_level|string]}}
+</td>

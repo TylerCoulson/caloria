@@ -8,7 +8,10 @@ class ActualWeight(BaseModel):
 class ActivityLevel(BaseModel):
     activity_level: float | None = None
 
-class DailyOverviewInput(ActualWeight, ActivityLevel):
+class DailyOptions(ActualWeight, ActivityLevel):
+    pass
+
+class DailyOverviewInput(DailyOptions):
     profile_id: int = 0
     date: date
 
