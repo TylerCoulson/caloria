@@ -326,6 +326,100 @@ async def test_daily_overview_post_both_actual_weight_and_activity_level(client:
     assert content['actual_weight'] == 158
     assert content['activity_level'] == 1.3
 
+async def test_daily_overview_update_actual_weight_with_established_activity_level(client:TestClient, db:Session):    
+    food_log = { "id":12, "date":'2024-04-17', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
+    daily = {
+        "profile_id": 1,
+        "date": food_log['date'],
+        "activity_level": 1.5,
+        "actual_weight": 315
+    }
+    
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+
+
+    data = {
+        "profile_id": 1,
+        "date": food_log['date'],
+        "actual_weight": 324
+    }
+
+    response= await client.put(f"/api/v1/daily/{daily['date']}?actual_weight=True", json=jsonable_encoder(data))
+    assert response.status_code == 200
+    content = response.json()
+
+    output = {
+        "day": 0,
+        "actual_weight": 324,
+        "week": 0,
+        "date": 0,
+        "est_weight": 311.7,
+        "calories_burned": 2860,
+        "eaten_calories": 1900,
+        "eaten_fats": 1900,
+        "eaten_carbs": 1900,
+        "eaten_protein": 1900,
+        "calories_left": -40,
+        "calorie_goal": 1860,
+        "total_lbs_lost": 10.7,
+        "calorie_surplus": -19540,
+        "profile_id": 1,
+        "bmi":44.71,
+        "activity_level": 1.5
+    }
+
+    assert content.keys() == output.keys()
+    assert content['actual_weight'] == 324
+    assert content['activity_level'] == 1.5
+
+async def test_daily_overview_update_activity_level_with_established_actual_weight(client:TestClient, db:Session):    
+    test_date = '2023-04-18'
+    
+    daily = {
+        "profile_id": 1,
+        "date": test_date,
+        "actual_weight": 255,
+        "activity_level": 1.2
+    }
+    
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+
+
+    data = {
+        "profile_id": 1,
+        "date": test_date,
+        "activity_level": 2.7
+    }
+
+    response= await client.put(f"/api/v1/daily/{test_date}?activity_level=True", json=jsonable_encoder(data))
+    assert response.status_code == 200
+    content = response.json()
+
+    output = {
+        "day": 0,
+        "actual_weight": 324,
+        "week": 0,
+        "date": 0,
+        "est_weight": 311.7,
+        "calories_burned": 2860,
+        "eaten_calories": 1900,
+        "eaten_fats": 1900,
+        "eaten_carbs": 1900,
+        "eaten_protein": 1900,
+        "calories_left": -40,
+        "calorie_goal": 1860,
+        "total_lbs_lost": 10.7,
+        "calorie_surplus": -19540,
+        "profile_id": 1,
+        "bmi":44.71,
+        "activity_level": 1.5
+    }
+
+    assert content.keys() == output.keys()
+    assert content['actual_weight'] == 255
+    assert content['activity_level'] == 2.7
+
 async def test_daily_overview_delete_by_date(client:TestClient, db:Session):    
     end_date = "2023-12-07"
 

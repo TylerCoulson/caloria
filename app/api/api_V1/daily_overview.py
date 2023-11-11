@@ -16,7 +16,10 @@ async def get_weight(profile_id, current_date, db: Session):
     data = await db.execute(statement)
     return data.unique().scalar_one_or_none()
 
-
+async def get_day_activity_level(profile_id, current_date, db: Session):
+    statement = select(models.DailyLog.activity_level).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
+    data = await db.execute(statement)
+    return data.unique().scalar_one_or_none()
 
 @router.post(
     "",
@@ -34,7 +37,7 @@ async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_le
     else:
         data.activity_level = data.activity_level if activity_level else weight_data.activity_level
         data.actual_weight = data.actual_weight if actual_weight else weight_data.actual_weight 
-        output_data = await update_daily(deps=deps, current_date=data.date, daily_data=data)
+        output_data = await update_daily(deps=deps, current_date=data.date, daily_data=data, actual_weight=actual_weight, activity_level=activity_level)
 
     return output_data
 
@@ -76,14 +79,17 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
     status_code=status.HTTP_200_OK,
 )
 async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, current_date:date, daily_data:schemas.DailyOverviewInput):
-    
     daily_data.profile_id = deps['profile'].id
     weight_data = await get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
+    
     if weight_data is None:
-        output_data = await post_daily(deps=deps, actual_weight=actual_weight, activity_level=activity_level, data=daily_data,)
+        output_data = await post_daily(deps=deps, actual_weight=actual_weight, activity_level=activity_level, data=daily_data)
     else:
+        daily_data.activity_level = daily_data.activity_level if activity_level else weight_data.activity_level
+        daily_data.actual_weight = daily_data.actual_weight if actual_weight else weight_data.actual_weight
         data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=deps['db'])
         output_data = await get_daily(deps=deps, current_date=data.date)
+
     return output_data
 
 @router.delete(
