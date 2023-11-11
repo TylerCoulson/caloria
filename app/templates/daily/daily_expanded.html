@@ -1,0 +1,66 @@
+<table >
+    <tr>
+        <th hidden id="week" scope="col">Week</th>
+        <td hidden headers="week">{{ daily.week }}</td>
+    </tr>
+    <tr>
+        <th id="day" scope="col">Day</th>
+        <td headers="day">{{ daily.day }}</td>
+    </tr>
+    <tr>
+        <th id="date" scope="col">Date</th>
+        <td headers="date">{{ daily.date }}</td>
+    </tr>
+    <tr>
+        <th id="daily_activity_level" scope="col">Activity Level</th>
+        {% include "daily/activity_level.html" %}
+    </tr>
+    <tr>
+        <th id="actual_weight" scope="col">Acutal Weight</th>
+        {% include "daily/weight_column.html"%}
+    </tr>
+    <tr>
+        <th id="est_weight" scope="col">Estimated Weight</th>
+        <td headers="est_weight">{{ daily.est_weight }}</td>
+    </tr>
+    <tr>
+        <th hidden id="bmi" scope="c">BMI</th>
+        <td hidden headers="bmi">{{ daily.bmi }}</td>
+    </tr>
+    <tr>
+        <th hidden id="resting_rate" scope="col">Resting Calories</th>
+        <td hidden headers="resting_rate">{{ daily.resting_rate }}</td>
+    </tr>
+    <tr>
+        <th id="eaten_calories" scope="col">Eaten Calories</th>
+        <td headers="eaten_calories">{{ "{:,}".format(daily.eaten_calories|int) }}</td>
+    </tr>
+    <tr>
+        <th id="eaten_fats" scope="col">Eaten Fats</th>
+        <td headers="eaten_fats">{{ "{:,}".format(daily.eaten_fats|int) }}</td>
+    </tr>
+    <tr>
+        <th id="eaten_carbs" scope="col">Eaten Carbs</th>
+        <td headers="eaten_carbs">{{ "{:,}".format(daily.eaten_carbs|int) }}</td>
+    </tr>
+    <tr>
+        <th id="eaten_protein" scope="col">Eaten Protein</th>
+        <td headers="eaten_protein">{{ "{:,}".format(daily.eaten_protein|int) }}</td>        
+    </tr>
+    <tr>
+        <th id="calorie_goal" scope="col">Calorie Goal</th>
+        <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</td>
+    </tr>
+    <tr>
+        <th id="calories_left" scope="col">Calories Left</th>
+        <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
+    </tr>
+    <tr>
+        <th hidden id="total_lbs_lost" scope="col">Lbs Lost</th>
+        <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
+    </tr>
+    <tr>
+        <th id="calorie_surplus" scope="col">Calorie Surplus</th>
+        <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus|int) }}</td>
+    </tr>
+</table>
