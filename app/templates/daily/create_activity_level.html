@@ -1,9 +1,12 @@
 {% if not hx_request %}{% extends "index.html" %}{% endif %}
 
 {% block content %}
-<td headers="actual_weight" hx-target='this' hx-swap="outerHTML"  >
+<td headers="activity_level" hx-target='this' hx-swap="outerHTML"  >
     <select type="number" min="1" max="2" step=".1" id="activity_level" name="activity_level" hx-put="/daily/{{date}}?activity_level=True" hx-trigger="change delay:500ms changed" hx-ext="json-enc" value="{{activity_level}}">
-        {% include "activity_level_options.html" %}
+        <option {% if activity_level == 1.2 %} selected {% endif %} value="1.2">Sedentary</option>
+        <option {% if activity_level == 1.4 %} selected {% endif %} value="1.4">Lightly Active</option>
+        <option {% if activity_level == 1.6 %} selected {% endif %} value="1.6">Moderately Active</option>
+        <option {% if activity_level == 1.8 %} selected {% endif %} value="1.8">Very Active</option>
     </select>
 </td>
 {% endblock %}
