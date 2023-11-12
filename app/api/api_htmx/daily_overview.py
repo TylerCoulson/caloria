@@ -7,6 +7,7 @@ from app import schemas
 from app.api.api_htmx.deps import LoggedInDeps
 from app.api.api_V1 import daily_overview as api_daily
 from app.api.api_V1 import food_log as api_food_log
+from app.api.api_V1 import utils
 
 router = APIRouter(prefix="/daily")
 templates = Jinja2Templates("app/templates")
@@ -35,7 +36,7 @@ async def create_daily(*, deps:LoggedInDeps, date:date = date.today()):
     status_code=status.HTTP_200_OK,
 )
 async def create_activity_level(*, deps:LoggedInDeps, date:date = date.today()):
-    activity_level = await api_daily.get_day_activity_level(profile_id=deps['profile'].id, current_date=date, db=deps['db'])
+    activity_level = await utils.get_day_activity_level(profile_id=deps['profile'].id, current_date=date, db=deps['db'])
 
     context = {
                 "request": deps['request'],

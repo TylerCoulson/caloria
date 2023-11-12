@@ -1,6 +1,5 @@
 from fastapi import APIRouter, status, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session  # type: ignore
 from datetime import datetime, date
 from app import schemas
 from app import models
@@ -8,18 +7,13 @@ from app import crud
 
 from app.api.calcs.weight_calcs import daily_log
 from app.api.api_V1.deps import LoggedInDeps
+from app.api.api_V1 import utils
 router = APIRouter()
 
 
-async def get_weight(profile_id, current_date, db: Session):
-    statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
-    data = await db.execute(statement)
-    return data.unique().scalar_one_or_none()
-
-async def get_day_activity_level(profile_id, current_date, db: Session):
-    statement = select(models.DailyLog.activity_level).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
-    data = await db.execute(statement)
-    return data.unique().scalar_one_or_none()
+#  ************
+#  *  CREATE  *
+#  ************
 
 @router.post(
     "",
@@ -28,7 +22,7 @@ async def get_day_activity_level(profile_id, current_date, db: Session):
 )
 async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, data: schemas.DailyOverviewInput):
     data.profile_id = deps['profile'].id
-    weight_data = await get_weight(profile_id=deps['profile'].id, current_date=data.date, db=deps['db'])
+    weight_data = await utils.get_weight(profile_id=deps['profile'].id, current_date=data.date, db=deps['db'])
 
     if weight_data is None:
         log = await crud.create(obj_in=data, db=deps['db'], model=models.DailyLog)
@@ -41,16 +35,17 @@ async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_le
 
     return output_data
 
+#  ************
+#  *  READ  *
+#  ************
 @router.get(
     "",
     response_model=list[schemas.DailyOverview],
     status_code=status.HTTP_200_OK,
 )
 async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
-    if n < 0:
-        n = 25
+    offset = utils.get_offset(page=page, n=n)
 
-    offset = max((page-1) * n, 0)
     logs = await daily_log(profile=deps['profile'], db=deps['db'])
     return logs[offset:offset+n]
     
@@ -62,10 +57,12 @@ async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
     status_code=status.HTTP_200_OK,
 )
 async def get_daily(*, deps:LoggedInDeps, current_date:date):
-    start_date = deps['profile'].start_date if type(deps['profile'].start_date) is date else datetime.strptime(deps['profile'].start_date, '%Y-%m-%d').date()
+    start_date = deps['profile'].start_date if isinstance(deps['profile'].start_date, date) else datetime.strptime(deps['profile'].start_date, '%Y-%m-%d').date()
     if current_date < start_date:
         raise HTTPException(status_code=404, detail="Date is before profile start date")
+    
     output_data = await daily_log(profile=deps['profile'], db=deps['db'], end_date=current_date)
+    
     for i in output_data:
         if i['date'] == current_date:
             return i
@@ -73,6 +70,9 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
             continue
 
 
+#  ************
+#  *  UPDATE  *
+#  ************
 @router.put(
     "/{current_date}",
     response_model=schemas.DailyOverview,
@@ -80,7 +80,7 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
 )
 async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, current_date:date, daily_data:schemas.DailyOverviewInput):
     daily_data.profile_id = deps['profile'].id
-    weight_data = await get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
+    weight_data = await utils.get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
     
     if weight_data is None:
         output_data = await post_daily(deps=deps, actual_weight=actual_weight, activity_level=activity_level, data=daily_data)
@@ -92,6 +92,9 @@ async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_
 
     return output_data
 
+#  ************
+#  *  DELETE  *
+#  ************
 @router.delete(
     "/{_id:int}",
     status_code=status.HTTP_200_OK,
@@ -109,7 +112,7 @@ async def delete_daily_by_id(*, deps:LoggedInDeps, _id:int):
 )
 async def delete_daily_by_date(*, deps:LoggedInDeps, current_date:date):
     profile_id = deps['profile'].id
-    weight_data = await get_weight(profile_id=profile_id, current_date=current_date, db=deps['db'])
+    weight_data = await utils.get_weight(profile_id=profile_id, current_date=current_date, db=deps['db'])
     await crud.delete(_id=weight_data.id, db=deps['db'], db_obj=weight_data)
     return
 
