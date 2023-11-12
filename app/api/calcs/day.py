@@ -1,5 +1,5 @@
 from datetime import date as t_date, datetime
-from app import models
+from app import schemas
 
 class Day():
     def __init__(self, date:t_date, calories_eaten_today:int=0, fats_eaten_today:int=0, carbs_eaten_today:int=0, protein_eaten_today:int=0, user_inputed_weight:float=0, user_activity_level:float=0, **kwargs) -> None:
@@ -15,7 +15,7 @@ class Day():
 class Log():
     def __init__(self,
                 day: Day,
-                profile: models.Profile,
+                profile: schemas.Profile,
                 est_weight,
                 total_calorie_goal,
                 total_calories_eaten,
@@ -29,12 +29,11 @@ class Log():
         self.total_rmr = total_rmr
 
     def resting_calories_burned(self):
-        birthdate = self.profile.birthdate if isinstance(self.profile.birthdate, t_date) else datetime.strptime(self.profile.birthdate, '%Y-%m-%d').date()
 
         weight_calc = 10 * (self.est_weight/2.2)
         sex_calc = -161 if self.profile.sex == 'female' else 5
         height_calc = (self.profile.height*2.54) * 6.25
-        age_calc = int((self.day.date - birthdate).days/365.25) * 5
+        age_calc = int((self.day.date - self.profile.birthdate).days/365.25) * 5
 
         return round(((weight_calc+height_calc-age_calc) + sex_calc) * self.day.user_activity_level,0)
     
@@ -42,9 +41,7 @@ class Log():
 
 
     def log(self):
-        
-        start_date = self.profile.start_date if isinstance(self.profile.start_date, t_date) else datetime.strptime(self.profile.start_date, '%Y-%m-%d').date()
-        day = (self.day.date - start_date).days +1 
+        day = (self.day.date - self.profile.start_date).days +1 
 
         calorie_goal = max(self.resting_calories_burned() - self.profile.lbs_per_week * 500, 1200 if self.profile.sex == 'female' else 1500)
 

@@ -38,9 +38,6 @@ async def get_aggregate_food_logs_and_actual_weight(profile:models.Profile, db: 
 
 
 def create_dictionary_of_days(start_date:date, end_date:date):
-    start_date = start_date if type(start_date) is date else datetime.strptime(start_date, '%Y-%m-%d').date()
-    end_date = end_date if type(end_date) is date else datetime.strptime(end_date, '%Y-%m-%d').date()
-
     dates_dict = OrderedDict()
     for d in range((end_date - start_date).days + 1):
         key = date.strftime(start_date + timedelta(days=d), "%Y-%m-%d")

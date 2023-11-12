@@ -57,8 +57,7 @@ async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
     status_code=status.HTTP_200_OK,
 )
 async def get_daily(*, deps:LoggedInDeps, current_date:date):
-    start_date = deps['profile'].start_date if isinstance(deps['profile'].start_date, date) else datetime.strptime(deps['profile'].start_date, '%Y-%m-%d').date()
-    if current_date < start_date:
+    if current_date < deps['profile'].start_date:
         raise HTTPException(status_code=404, detail="Date is before profile start date")
     
     output_data = await daily_log(profile=deps['profile'], db=deps['db'], end_date=current_date)
