@@ -15,18 +15,6 @@ class DailyOverviewInput(DailyOptions):
     profile_id: int = 0
     date: date
 
-# class DailyOverviewInput(BaseModel):
-#     profile_id: int = 0
-#     date: date
-
-# class ActualWeight(DailyOverviewInput):
-#     actual_weight: float | None = None
-
-# class ActivityLevel(DailyOverviewInput):
-#     activity_level: float | None = None
-
-# class DailyOverview(ActivityLevel, ActualWeight):
-
 class DailyOverview(DailyOverviewInput):
     day: int
     week: int
