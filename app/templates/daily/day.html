@@ -1,10 +1,13 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<h1>Daily Overview</h1>
+<td colspan="3">
+    <h1>Daily Overview</h1>
  {% include "daily/daily_expanded.html" %}
-<h1>Food Log</h1>
-<table role="grid">
+</td>
+<td colspan="5">
+    <h1>Food Log</h1>
+    {% set home = True %}
     {% include "log/day.html"%}
-</table>
+</td>
 {% endblock %}

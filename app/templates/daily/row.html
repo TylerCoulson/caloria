@@ -18,13 +18,13 @@
     <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
     {% if not home %}
     <td 
-        hx-get="/daily/{{ daily.date }}" hx-target="#expanded_{{daily.day}}" 
+        hx-get="/daily/{{ daily.date }}" hx-target="#table_{{daily.day}}" 
         _="on click hide me then show next <td/> then show #table_{{daily.day}}"
     >A</td>
     <td style="display: none;" _="on click hide me then show previous <td/> then hide #table_{{daily.day}}">∀</td>
 </tr>
 <tr id="table_{{daily.day}}" style="display: none;">
-    <td id="expanded_{{daily.day}}" colspan="8"></td>
+    <!-- <td id="expanded_{{daily.day}}" colspan="8"></td> -->
  {% endif %}
 </tr>
 {% endfor %}
