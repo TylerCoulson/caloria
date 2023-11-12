@@ -4,7 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
-async def create(*, obj_in, db, model) -> Any:
+async def create(*, obj_in, db, model, profile=None) -> Any:
+    if hasattr(model, "profile_id"):
+        obj_in.profile_id = profile.id
+    
     created = model(**obj_in.model_dump())
     db.add(created)
     await db.commit()
@@ -27,7 +30,9 @@ async def read_all(*, n:int=25, page:int=1, db, model):
     data = await db.execute(statement)
     return [value for value, in data.unique().all()]
 
-async def update(*, _id, model, update_data, db):
+async def update(*, _id, model, update_data, db, profile=None):
+    if hasattr(model, "profile_id"):
+        update_data.profile_id = profile.id
     try:
         statement = sql_update(model).where(model.id == _id).values(update_data.model_dump())
         await db.execute(statement)

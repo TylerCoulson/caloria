@@ -25,6 +25,13 @@ async def test_food_log_create(client:TestClient):
     for key in keys:
         assert content[key] == create_data[key]
 
+async def test_food_log_create_wrong_profile_id(client:TestClient):
+    data = {**create_data, "profile_id":3}
+    response = await client.post(f"/api/v1/food_log", json=data)
+    assert response.status_code == 201
+    content = response.json()
+    assert content['profile_id'] == 1
+
 async def test_food_log_read_day(client:TestClient, db:Session):
     response= await client.get(f"/api/v1/food_log/date/{get_log_date}")
 
@@ -59,6 +66,13 @@ async def test_food_log_update(client:TestClient, db:Session):
     assert "serving_size" in content
     for key in keys:
         assert content[key] == update_data[key]
+
+async def test_food_log_update_wrong_profile_id(client:TestClient):
+    data = {**update_data, "profile_id":3}
+    response = await client.put(f"/api/v1/food_log/{update_data['id']}", json=data)
+    assert response.status_code == 200
+    content = response.json()
+    assert content['profile_id'] == 1
 
 async def test_food_delete(client:TestClient, db:Session):
     response = await client.delete(f"/api/v1/food_log/{delete_id}")

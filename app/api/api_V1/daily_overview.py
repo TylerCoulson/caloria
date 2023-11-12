@@ -21,11 +21,10 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
 )
 async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, data: schemas.DailyOverviewInput):
-    data.profile_id = deps['profile'].id
     weight_data = await utils.get_weight(profile_id=deps['profile'].id, current_date=data.date, db=deps['db'])
 
     if weight_data is None:
-        log = await crud.create(obj_in=data, db=deps['db'], model=models.DailyLog)
+        log = await crud.create(obj_in=data, db=deps['db'], model=models.DailyLog, profile=deps['profile'])
         output_data = await get_daily(deps=deps, current_date=log.date)
 
     else:
@@ -78,7 +77,7 @@ async def get_daily(*, deps:LoggedInDeps, current_date:date):
     status_code=status.HTTP_200_OK,
 )
 async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_level:bool=False, current_date:date, daily_data:schemas.DailyOverviewInput):
-    daily_data.profile_id = deps['profile'].id
+
     weight_data = await utils.get_weight(profile_id=deps['profile'].id, current_date=current_date, db=deps['db'])
     
     if weight_data is None:
@@ -86,7 +85,7 @@ async def update_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_
     else:
         daily_data.activity_level = daily_data.activity_level if activity_level else weight_data.activity_level
         daily_data.actual_weight = daily_data.actual_weight if actual_weight else weight_data.actual_weight
-        data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=deps['db'])
+        data = await crud.update(_id=weight_data.id, model=models.DailyLog, update_data=daily_data, db=deps['db'], profile=deps['profile'])
         output_data = await get_daily(deps=deps, current_date=data.date)
 
     return output_data

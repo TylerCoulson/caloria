@@ -19,7 +19,7 @@ from app import crud
 )
 async def create_category(*, deps:LoggedInDeps, super_user: Annotated_Superuser, cat:schemas.FoodCategoryCreate):
     
-    food_out = await crud.create(obj_in=cat, db=deps['db'], model=models.FoodCategories)
+    food_out = await crud.create(obj_in=cat, db=deps['db'], model=models.FoodCategories, profile=deps['profile'])
     return food_out
 
 @router.get(
@@ -35,7 +35,7 @@ async def get_all_categories(*, deps:CommonDeps, n:int=25, page:int=1):
     status_code=status.HTTP_200_OK,
 )
 async def update_categories(*, deps:LoggedInDeps, super_user: Annotated_Superuser, id: int, cat_in: schemas.FoodCategoryCreate):
-    data = await crud.update(_id=id, model=models.FoodCategories, update_data=cat_in, db=deps['db'])
+    data = await crud.update(_id=id, model=models.FoodCategories, update_data=cat_in, db=deps['db'], profile=deps['profile'])
     
     if data is None:
         raise HTTPException(status_code=404, detail="No category with this id")

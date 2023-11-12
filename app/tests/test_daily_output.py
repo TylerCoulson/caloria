@@ -9,6 +9,7 @@ from app import schemas
 from app import models
 from app.api.calcs import calorie_calcs
 
+temp_profile = schemas.Profile(id=1, start_date=date.today(),start_weight=322, goal_weight=150, sex="M", birthdate=date.today(), height=70, lbs_per_week=2, activity_level=1.2, user_id=1, )
 
 async def get_weight(profile_id, current_date, db):
     statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
@@ -120,6 +121,22 @@ async def test_daily_overview_post_activity_level(client:TestClient, db:Session)
 
     assert content['activity_level'] == 1.8
 
+async def test_daily_overview_post_wrong_id(client:TestClient, db:Session):
+    food_log = { "id":12, "date":'2023-04-10', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
+    start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
+
+    data = {
+        "profile_id": 3,
+        "date": (start_date).strftime('%Y-%m-%d'),
+        "activity_level": 1.8,
+    }
+    response = await client.post(f"/api/v1/daily?activity_level=True", json=data)
+    content = response.json()    
+    assert response.status_code == 201
+
+    assert content['activity_level'] == 1.8
+    assert content['profile_id'] == 1
+
 async def test_daily_overview_update_actual_weight(client:TestClient, db:Session):    
     food_log = { "id":12, "date":'2023-04-11', "food_id":123, "serving_size_id":123, "serving_amount":3.0, "profile_id":1}
     start_date = datetime.strptime(food_log['date'],'%Y-%m-%d')
@@ -129,14 +146,14 @@ async def test_daily_overview_update_actual_weight(client:TestClient, db:Session
         "actual_weight": 308.8
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data.actual_weight = 256.7
     response= await client.put(f"/api/v1/daily/{data.date}", json=jsonable_encoder(data))
     assert response.status_code == 200
     content = response.json()
-    print(data.actual_weight)
+
     output = {
         "day": 0,
         "actual_weight": 256.7,
@@ -167,7 +184,7 @@ async def test_daily_overview_update_activity_level(client:TestClient, db:Sessio
         "activity_level": 1.2
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data.activity_level = 1.8
@@ -207,7 +224,7 @@ async def test_daily_overview_post_activity_level_with_established_actual_weight
         "actual_weight": 255
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data = {
@@ -253,7 +270,7 @@ async def test_daily_overview_post_actual_weight_with_established_activity_level
         "activity_level": 1.5
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data = {
@@ -336,7 +353,7 @@ async def test_daily_overview_update_actual_weight_with_established_activity_lev
         "actual_weight": 315
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data = {
@@ -383,7 +400,7 @@ async def test_daily_overview_update_activity_level_with_established_actual_weig
         "activity_level": 1.2
     }
     
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     data = {
@@ -428,7 +445,7 @@ async def test_daily_overview_delete_by_date(client:TestClient, db:Session):
         "date": end_date,
         "actual_weight": 308.8
     }
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     response= await client.delete(f"/api/v1/daily/{data.date}")
@@ -446,7 +463,7 @@ async def test_daily_overview_delete_by_id(client:TestClient, db:Session):
         "date": end_date,
         "actual_weight": 308.8
     }
-    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog)
+    data = await crud.create(obj_in=schemas.DailyOverviewInput(**daily), db=db, model=models.DailyLog, profile=temp_profile)
 
 
     response= await client.delete(f"/api/v1/daily/{data.id}")

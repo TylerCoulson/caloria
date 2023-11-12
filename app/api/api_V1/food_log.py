@@ -20,8 +20,8 @@ from app import crud
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
-    food_log.profile_id = deps['profile'].id
-    food_log_out = await crud.create(obj_in=food_log, db=deps['db'], model=models.Food_Log)
+
+    food_log_out = await crud.create(obj_in=food_log, db=deps['db'], model=models.Food_Log, profile=deps['profile'] )
     return food_log_out
 
 @router.get(
@@ -74,9 +74,8 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1):
     status_code=status.HTTP_200_OK,
 )
 async def update_food_log(*, deps:LoggedInDeps, food_log_id: int, food_log_in: schemas.FoodLogBase):
-    food_log_in.profile_id = deps['profile'].id
     
-    data = await crud.update(_id=food_log_id, model=models.Food_Log, update_data=food_log_in, db=deps['db'])
+    data = await crud.update(_id=food_log_id, model=models.Food_Log, update_data=food_log_in, db=deps['db'], profile=deps['profile'])
     
     return data
 

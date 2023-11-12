@@ -33,7 +33,7 @@ def get_all_statement(deps, n, page):
 async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
     food.user_id = deps['user'].id
 
-    food_out = await crud.create(obj_in=food, db=deps['db'], model=models.Food)
+    food_out = await crud.create(obj_in=food, db=deps['db'], model=models.Food, profile=deps['profile'])
     return food_out
 
 @router.get(
@@ -142,7 +142,7 @@ async def update_food(
     *, deps:LoggedInDeps, food_id: int, food_in: schemas.FoodBase
 ):
     user_id = get_user_id(deps=deps)
-    data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=deps['db'])
+    data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=deps['db'], profile=deps['profile'])
     
     if data is None or user_id != data.user_id:
         raise HTTPException(status_code=404, detail="No food with this id")
