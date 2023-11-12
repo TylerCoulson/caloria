@@ -1,5 +1,6 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 {% block content %}
+
 {% if user %}
     {% if not user.is_verified%}
     <article id="verify-card">
@@ -11,7 +12,7 @@
     </article>
     {% endif %}
     {% include "index/logged_in.html" %}
-{% else %}
-    {% include "index/unlogged_in.html" %}
 {% endif %}
+{% include "index/unlogged_in.html" %}
+
 {% endblock %}
