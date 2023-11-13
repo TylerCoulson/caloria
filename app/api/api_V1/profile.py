@@ -10,7 +10,9 @@ router = APIRouter()
 
 from app import crud
 
-
+#  ************
+#  *  CREATE  *
+#  ************
 @router.post(
     "",
     response_model=schemas.Profile,
@@ -22,6 +24,10 @@ async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user
     profile_out = await crud.create(obj_in=profile, db=deps['db'], model=models.Profile)
     return profile_out
 
+
+#  ************
+#  *   Read   *
+#  ************
 @router.get(
     "/me",
     response_model=schemas.Profile,
@@ -49,6 +55,10 @@ async def get_current_profile_logs(*, deps:LoggedInDeps):
     data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
     return data
 
+
+#  ************
+#  *  Update  *
+#  ************
 @router.put(
     "/me",
     response_model=schemas.Profile,
@@ -58,6 +68,10 @@ async def update_current_profile(*, deps:LoggedInDeps, profile_in: schemas.Profi
     data = await crud.update(_id=deps['profile'].id, model=models.Profile, update_data=profile_in, db=deps['db'])
     return data
 
+
+#  ************
+#  *  DELETE  *
+#  ************
 
 @router.delete(
     "/me",
