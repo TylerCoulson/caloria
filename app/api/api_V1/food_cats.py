@@ -11,7 +11,9 @@ router = APIRouter(tags=["food-categories"])
 
 from app import crud
 
-
+#  ************
+#  *  CREATE  *
+#  ************
 @router.post(
     "",
     response_model=schemas.FoodCategory,
@@ -22,6 +24,10 @@ async def create_category(*, deps:LoggedInDeps, super_user: Annotated_Superuser,
     food_out = await crud.create(obj_in=cat, db=deps['db'], model=models.FoodCategories, profile=deps['profile'])
     return food_out
 
+
+#  ************
+#  *  READ    *
+#  ************
 @router.get(
     "",
     response_model=List[schemas.FoodCategory],
@@ -30,6 +36,10 @@ async def create_category(*, deps:LoggedInDeps, super_user: Annotated_Superuser,
 async def get_all_categories(*, deps:CommonDeps, n:int=25, page:int=1):
     return await crud.read_all(n=n, page=page, db=deps['db'], model=models.FoodCategories)
 
+
+#  ************
+#  *  UPDATE  *
+#  ************
 @router.put(
     "/{id}",
     status_code=status.HTTP_200_OK,
@@ -41,6 +51,10 @@ async def update_categories(*, deps:LoggedInDeps, super_user: Annotated_Superuse
         raise HTTPException(status_code=404, detail="No category with this id")
     return data
 
+
+#  ************
+#  *  Delete  *
+#  ************
 @router.delete(
     "/all",
     status_code=status.HTTP_200_OK,

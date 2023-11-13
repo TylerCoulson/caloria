@@ -24,7 +24,7 @@ async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
     return food_out
 
 #  ************
-#  *  READ  *
+#  *  READ    *
 #  ************
 @router.get(
     "/all",
