@@ -21,12 +21,15 @@ class Log():
                 total_calories_eaten,
                 total_rmr
                 ) -> None:
+        
+        day.user_activity_level = day.user_activity_level if day.user_activity_level != 0 else profile.activity_level
         self.day = day
         self.profile = profile
         self.est_weight = est_weight
         self.total_calorie_goal = total_calorie_goal
         self.total_calories_eaten = total_calories_eaten
         self.total_rmr = total_rmr
+        
 
     def resting_calories_burned(self):
 
