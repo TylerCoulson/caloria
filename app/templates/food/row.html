@@ -1,14 +1,14 @@
-<tr name="food_id" {% if food.user_id %} style="background-color: #f4511e25;"{% endif %}>
+{% set food_type = food.type | replace(' ','___') %}
+
+<tr id="{{food_type}}_{{food.category.id}}" name="food_id" {% if food.user_id %} style="background-color: #f4511e25;"{% endif %}>
     <td headers="category">{{food.category.description}}</td>
     <td headers="type" hx-target="#content">{{food.type}}</td>
     
-    {% set food_type = food.type | replace(' ','___') %}
     <td 
-        hx-get="/food/{{food_type}}/subtypes?food_category={{food.category.id}}" hx-target="#{{food_type}}_{{food.category.id}}_subtypes" 
-        _="on click hide me then show next <td/> then show #{{food_type}}_{{food.category.id}}_subtypes"
+        hx-get="/food/{{food_type}}/subtypes?food_category={{food.category.id}}" hx-target="#{{food_type}}_{{food.category.id}}" hx-swap="afterend"
+        _="on click hide me then show next <td/>"
     >Λ</td>
     
-    <td style="display: none;" _="on click hide me then show previous <td/> then hide #{{food_type}}_{{food.category.id}}_subtypes">V</td>
+    <td style="display: none;" _="on click hide me then show previous <td/> then remove next <tr/>">V</td>
 
 </tr>
-<tr style="display: none;" id="{{food_type}}_{{food.category.id}}_subtypes"></tr>

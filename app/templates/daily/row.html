@@ -2,9 +2,9 @@
 {% if loop.first %}
 <input hidden id="max_{{daily.date}}" type="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
 <input hidden id="hidden_{{daily.date}}" type="date" value="{{daily.date}}">
-<tr id="{{ daily.date }}" _="on load if #hidden_{{daily.date}}.value > #max_{{daily.date}}.value hide me">
+<tr id="date_{{ daily.date }}" _="on load if #hidden_{{daily.date}}.value > #max_{{daily.date}}.value hide me">
 {% else %}
-<tr id="{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
+<tr id="date_{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
 {% endif %}
     <td headers="day">{{ daily.day }}</td>
     <td headers="date">{{ daily.date }}</td>
@@ -17,14 +17,11 @@
     <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</td>
     <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
     {% if not home %}
-    <td 
-        hx-get="/daily/{{ daily.date }}" hx-target="#table_{{daily.day}}" 
-        _="on click hide me then show next <td/> then show #table_{{daily.day}}"
-    >Λ</td>
-    <td style="display: none;" _="on click hide me then show previous <td/> then hide #table_{{daily.day}}">V</td>
-</tr>
-<tr id="table_{{daily.day}}" style="display: none;">
-    <!-- <td id="expanded_{{daily.day}}" colspan="8"></td> -->
- {% endif %}
+        <td 
+            hx-get="/daily/{{ daily.date }}" hx-target="#date_{{ daily.date }}" hx-swap="afterend"
+            _="on click hide me then show next <td/>"
+        >Λ</td>
+        <td style="display: none;" _="on click hide me then show previous <td/> then remove next <tr/>">V</td>
+     {% endif %}
 </tr>
 {% endfor %}
