@@ -4,7 +4,8 @@ from app import schemas
 from app import models
 from app import crud
 from app.api.api_V1.deps import CommonDeps
-from app.api.api_V1.food import router, get_food_id, get_user_id
+from app.api.api_V1.food import router, get_food_id
+from app.api.api_V1.utils import get_user_id
 
 router.tags = ['servings']
 
