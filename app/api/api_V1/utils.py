@@ -1,6 +1,7 @@
+from fastapi import status, HTTPException
 from sqlalchemy import select, or_, nulls_last, Select
 from sqlalchemy.orm import Session
-from app import models
+from app import models, crud
 from app.api.api_V1.deps import CommonDeps
 
 default_n = 25
@@ -37,3 +38,21 @@ def get_all_statement(deps:CommonDeps, n:int, page:int) -> Select:
     ).offset(offset)
 
     return statement
+
+async def get_food_by_id(*, deps:CommonDeps, food_id: int):
+    user_id = get_user_id(deps=deps)
+    data = await crud.read(_id=food_id, db=deps['db'], model=models.Food)
+    
+    if not data or (user_id != data.user_id and data.user_id is not None):
+        raise HTTPException(status_code=404, detail="Food not found")
+    return data
+
+async def check_food_authorized(deps:CommonDeps, food_id:int):
+    food = await get_food_by_id(deps=deps, food_id=food_id)
+
+    if food.user_id is None:
+        return food
+    if food.user_id == get_user_id(deps=deps):
+        return food
+
+    raise HTTPException(status_code=403, detail="Not Authorized")

@@ -105,13 +105,8 @@ async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, food_type:
     response_model=schemas.Food,
     status_code=status.HTTP_200_OK,
 )
-async def get_food_id(*, deps:CommonDeps, food_id: int):
-    user_id = utils.get_user_id(deps=deps)
-    data = await crud.read(_id=food_id, db=deps['db'], model=models.Food)
-    
-    if not data or (user_id != data.user_id and data.user_id is not None):
-        raise HTTPException(status_code=404, detail="Food not found")
-    return data
+async def get_food_by_id(*, deps:CommonDeps, food_id: int):
+    return await utils.get_food_by_id(deps=deps, food_id=food_id)
 
 
 #  ************
@@ -125,7 +120,7 @@ async def get_food_id(*, deps:CommonDeps, food_id: int):
 async def update_food(
     *, deps:LoggedInDeps, food_id: int, food_in: schemas.FoodBase
 ):
-    food = await get_food_id(deps=deps, food_id=food_id)
+    food = await get_food_by_id(deps=deps, food_id=food_id)
 
     if food.user_id is None:
         raise HTTPException(status_code=404, detail="Cannot modify this Food")
@@ -145,7 +140,7 @@ async def update_food(
 )
 async def delete_food(*, deps:LoggedInDeps, food_id: int):
     user_id = utils.get_user_id(deps=deps)
-    data = await get_food_id(deps=deps, food_id=food_id)
+    data = await get_food_by_id(deps=deps, food_id=food_id)
 
     if user_id != data.user_id:
         raise HTTPException(status_code=404, detail="No food with this id")
