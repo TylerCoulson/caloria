@@ -1,11 +1,14 @@
 {% for daily in dailies %}
-{% if loop.first %}
+{% if loop.first and not appending %}
 <input hidden id="max_{{daily.date}}" type="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
 <input hidden id="hidden_{{daily.date}}" type="date" value="{{daily.date}}">
 <tr id="date_{{ daily.date }}" _="on load if #hidden_{{daily.date}}.value > #max_{{daily.date}}.value hide me">
+{% elif loop.first %}
+<tr id="date_{{ daily.date }}_top" {% if loop.nextitem.week != daily.week %}style="border-bottom-style: dashed;  border-color: #f4511e;" {% endif %}>
 {% else %}
 <tr id="date_{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
 {% endif %}
+    <td headers="week">{{ daily.week }}</td>
     <td headers="day">{{ daily.day }}</td>
     <td headers="date">{{ daily.date }}</td>
     {% include "daily/activity_level.html" %}
