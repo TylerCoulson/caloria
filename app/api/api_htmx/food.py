@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app import schemas
-from app.api.api_htmx.deps import CommonDeps
+from app.api.api_htmx.deps import CommonDeps, LoggedInDeps
 from app.api.api_V1 import food as api_food
 from app.api.api_V1 import serving_size as api_servings
 
@@ -118,7 +118,7 @@ async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, appe
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_food(*, deps:CommonDeps, food: schemas.FoodCreate):
+async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
     
     new_food = await api_food.post_food(deps=deps, food=food)
     # foods = await api_food.get_all_foods(deps=deps)

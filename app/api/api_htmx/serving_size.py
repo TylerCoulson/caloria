@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app import schemas
-from app.api.api_htmx.deps import CommonDeps
+from app.api.api_htmx.deps import CommonDeps, LoggedInDeps
 from app.api.api_V1 import serving_size as api_servings
 from app.api.api_htmx.food import router as food_router
 from app.api.api_V1 import food as api_food
@@ -33,7 +33,7 @@ async def get_create_serving(*, deps:CommonDeps, food_id:int):
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def post_servings(*, deps:CommonDeps, serving_size: schemas.ServingSizeCreate):
+async def post_servings(*, deps:LoggedInDeps, serving_size: schemas.ServingSizeCreate):
     servings_out = await api_servings.post_serving_size(deps=deps, food_id=serving_size.food_id, serving_size=serving_size)
     food = await api_food.get_food_id(deps=deps, food_id=serving_size.food_id)
     context = {
