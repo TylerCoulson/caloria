@@ -54,7 +54,7 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
     if food_id:
         servings = await api_servings.get_serving_size_by_food(deps=deps, food_id=food_id)
         context['serving_id'] = serving_id
-        context['food'] = await api_food.get_food_id(food_id=food_id, deps=deps)
+        context['food'] = await api_food.get_food_by_id(food_id=food_id, deps=deps)
         context['servings'] = servings['servings']
     
     if serving_id:
@@ -181,6 +181,8 @@ async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
         "logs": logs,
+        "home": False,
+        "page": 1,
     }
     return templates.TemplateResponse("log/list.html", context)             
 

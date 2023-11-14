@@ -18,7 +18,7 @@ templates = Jinja2Templates("app/templates")
 )
 async def get_create_serving(*, deps:CommonDeps, food_id:int):
 
-    food = await api_food.get_food_id(deps=deps, food_id=food_id)
+    food = await api_food.get_food_by_id(deps=deps, food_id=food_id)
 
     context = {
             "request": deps['request'],
@@ -35,7 +35,7 @@ async def get_create_serving(*, deps:CommonDeps, food_id:int):
 )
 async def post_servings(*, deps:LoggedInDeps, serving_size: schemas.ServingSizeCreate):
     servings_out = await api_servings.post_serving_size(deps=deps, food_id=serving_size.food_id, serving_size=serving_size)
-    food = await api_food.get_food_id(deps=deps, food_id=serving_size.food_id)
+    food = await api_food.get_food_by_id(deps=deps, food_id=serving_size.food_id)
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],

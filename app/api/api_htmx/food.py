@@ -35,7 +35,7 @@ def get_create_food(*, deps:CommonDeps):
     status_code=status.HTTP_200_OK,
 )
 async def get_food(*, deps:CommonDeps, food_id:int):    
-    food = await api_food.get_food_id(food_id=food_id, deps=deps)
+    food = await api_food.get_food_by_id(food_id=food_id, deps=deps)
     servings = await api_servings.get_serving_size_by_food(food_id=food_id, deps=deps)
     context = {
         "request": deps['request'],
