@@ -8,7 +8,6 @@
 {% else %}
 <tr id="date_{{ daily.date }}" {% if loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
 {% endif %}
-    <td headers="week">{{ daily.week }}</td>
     <td headers="day">{{ daily.day }}</td>
     <td headers="date">{{ daily.date }}</td>
     {% include "daily/activity_level.html" %}

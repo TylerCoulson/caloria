@@ -1,4 +1,11 @@
 {% if user.profile %}
+
+
+<div 
+
+    hx-trigger="load" hx-get="/calorie_progress" hx-vals="js:{'tz_offset': tz_offset()}"
+    >
+</div>
 <div>
     Food Log: <div hx-trigger="load" hx-get="/food_log?n=5&home=True"></div>
     Daily: <div hx-trigger="load" hx-get="/daily?n=5&home=True"></div>

@@ -1,0 +1,73 @@
+<svg class="progress-ring" height="120" width="120">
+  <circle
+    style="
+      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dashoffset: -{{offsets['circumference']-offsets['white_offset_max']}};
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;"
+    stroke="hsla(60, 100%, 50%, 0.65)"
+    stroke-width="4"
+    fill="transparent"
+    r="52"
+    cx="60"
+    cy="60"
+  />
+  <circle
+    style="
+      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dashoffset: {{offsets['white_offset_max']}};
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;"
+    stroke="hsla(0, 0%, 100%, 0.65)"
+    stroke-width="4"
+    fill="transparent"
+    r="52"
+    cx="60"
+    cy="60"
+  />
+  <circle
+    style="
+      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dashoffset:  {{
+        offsets['yellow_offset']
+      }};
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;"
+    stroke="yellow"
+    stroke-width="4"
+    fill="transparent"
+    r="52"
+    cx="60"
+    cy="60"
+  />
+
+  <circle
+    style="
+      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dashoffset: {{
+        offsets['white_offset']
+      }};
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;"
+    stroke="white"
+    stroke-width="4"
+    fill="transparent"
+    r="52"
+    cx="60"
+    cy="60"
+  />
+
+  <circle
+    style="
+      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dashoffset:  {{offsets['red_offset']}};
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;"
+    stroke="red"
+    stroke-width="4"
+    fill="transparent"
+    r="52"
+    cx="60"
+    cy="60"
+  />
+</svg>

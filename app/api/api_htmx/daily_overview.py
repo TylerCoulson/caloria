@@ -6,6 +6,8 @@ from app import schemas
 
 from app.api.api_htmx.deps import LoggedInDeps
 from app.api.api_V1 import daily_overview as api_daily
+from app.api.api_htmx import page_index as api_page
+from app.api.api_htmx import utils
 from app.api.api_V1 import food_log as api_food_log
 from app.api.api_V1 import utils
 
@@ -78,13 +80,15 @@ async def get_daily(*, deps:LoggedInDeps, date:date = date.today()):
     
     output_data = await api_daily.get_daily(deps=deps, current_date=date)
     logs = await api_food_log.get_food_log_date(deps=deps, n=25, page=1, date=date)
+    progress_circle_data = await utils.calorie_progress_data(deps=deps, overview=output_data)
     logs = logs['log']
     context = {
                 "request": deps['request'],
                 "hx_request": deps['hx_request'],
                 "user": deps['profile'],
                 "daily": output_data,
-                "logs": logs
+                "logs": logs,
+                "offsets": progress_circle_data
             }
     return templates.TemplateResponse("daily/day.html", context)
     
