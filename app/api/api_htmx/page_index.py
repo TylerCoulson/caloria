@@ -1,7 +1,10 @@
 from fastapi import APIRouter, status, Request, Header
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.api.api_htmx.deps import CommonDeps
+from app.api.api_htmx.deps import CommonDeps, LoggedInDeps
+from app.api.api_V1 import daily_overview as api_daily
+from app.api.api_htmx import utils
+from datetime import date, timedelta,datetime
 
 
 router = APIRouter()
@@ -20,6 +23,21 @@ def get_index(deps:CommonDeps):
     }
 
     return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
+
+
+@router.get(
+    "/calorie_progress"
+)
+async def calorie_progress(deps:LoggedInDeps):
+    offsets = await utils.calorie_progress_data(deps=deps)
+
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "profile": deps['profile'],
+        "offsets": offsets
+    }
+    return templates.TemplateResponse("index/calorie_progress.html", context)
 
 @router.get(
     "/navbar",
