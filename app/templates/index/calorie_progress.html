@@ -1,3 +1,4 @@
+<div>
 <svg class="progress-ring" height="120" width="120">
   <circle
     style="
@@ -64,10 +65,14 @@
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
     stroke="red"
-    stroke-width="4"
+    stroke-width="5"
     fill="transparent"
     r="52"
     cx="60"
     cy="60"
   />
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle">{{offsets['calorie_info']['calories_eaten'] | int}}/{{offsets['calorie_info']['calorie_goal']}}</text>
+  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle">Calories</text>
 </svg>
+<!-- <div>Test/Ing</div> -->
+</div>

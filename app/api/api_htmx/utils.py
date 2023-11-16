@@ -7,6 +7,11 @@ async def calorie_progress_data(deps:LoggedInDeps, overview=None):
     
     circumference = 326.7256
     offsets = {
+            "calorie_info": {
+                "calories_burned":overview['calories_burned'],
+                "calories_eaten":overview['eaten_calories'],
+                "calorie_goal":overview['calorie_goal'],
+            },
             "circumference": circumference,
             "white_offset_max": ((1 - (overview['calorie_goal']/overview['calories_burned'])) * circumference),
             "white_offset": 
