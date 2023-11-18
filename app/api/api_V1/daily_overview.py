@@ -45,7 +45,7 @@ async def post_daily(*, deps:LoggedInDeps, actual_weight:bool=False, activity_le
 async def get_all_daily(*, deps:LoggedInDeps, n:int=25, page:int=1):
     offset = utils.get_offset(page=page, n=n)
 
-    logs = await daily_log(profile=deps['profile'], db=deps['db'])
+    logs = await daily_log(profile=deps['profile'], db=deps['db'], end_date=deps['client_date'])
     return logs[offset:offset+n]
     
 
