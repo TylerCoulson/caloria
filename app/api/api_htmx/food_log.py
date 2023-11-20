@@ -58,7 +58,7 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
         context['servings'] = servings['servings']
     
     if serving_id:
-        current_serving = await api_servings.get_serving_size_id(serving_id=serving_id, deps=deps)
+        current_serving = await api_servings.get_serving_size_by_id(serving_id=serving_id, deps=deps)
         food = current_serving.food
         servings = await api_servings.get_serving_size_by_food(food_id=food.id, deps=deps)
         context['serving_id'] = serving_id
