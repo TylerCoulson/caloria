@@ -1,4 +1,4 @@
-<tr name="food_log_id" id="food_log_{{log.id}}" class="editing" _="on load set $serving_amount to {{serving_amount|round(2)}} then set $calories to {{calories}} then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
+<tr name="food_log_id" {% if editable %}id="food_log_{{log.id}}"{% endif %}  _="on load set $serving_amount to {{serving_amount|round(2)}} then set $calories to {{calories}} then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
   <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
   
   <td headers="log_food">{{log.serving_size.food.type}}, {{log.serving_size.food.subtype}}</td>
@@ -14,22 +14,31 @@
   </td>
 
   <td headers="log_calories" id="total-calories">
-    {{(log.serving_size.calories * log.serving_amount|round(2))|round|int}}
+    {{(log.serving_size.calories * log.serving_amount|round(2))|int}}
   </td>
 
-  <td hidden>
+  <td headers="log_edit" name="food_log_in"
+    hx-include="closest tr"
+    hx-ext='json-enc'
+    {% if editable %} 
+      hx-target="closest tr"
+      hx-put="/food_log/{{log.id}}"
+      hx-swap="outerHTML"
+    {% else %}
+      hx-target="#content"
+      hx-post="/food_log"
+    {% endif %}
+    >
     <input hidden type="number"  id="food_id" name="food_id" value="{{log.serving_size.food.id}}" />
-    <input hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}" /> 
+    <input hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}" />
+    <div role="button"> Save </div>
   </td>
-
-  <td headers="log_edit" name="food_log_in"> 
-      <div role="button" hx-put="/food_log/{{log.id}}"  hx-include="closest tr" hx-target="closest tr" hx-swap="outerHTML" hx-ext='json-enc'> Save </div>
-  </td>
-  
+  {% if editable %}
   <td headers="add_log" name="food_log_in">
       <div role="button" hx-get="/food_log/{{log.id}}" hx-target="closest tr" hx-swap="outerHTML"> Cancel </div>
   </td>
-  <td headers="add_log" name="delete">
-    <div role="button" hx-delete="/food_log/{{log.id}}" _="on click remove closest <tr/>" hx-swap="none"> Delete </div>
-</td>
+  {% endif %}
+  <td headers="add_log">
+    <div role="button" {% if editable %} hx-delete="/food_log/{{log.id}}" {% endif %} _="on click remove closest <tr/>" hx-swap="none"> Delete </div>
+  </td>
 </tr>

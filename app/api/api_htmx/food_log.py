@@ -97,10 +97,8 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
         context["log"].date = date.today()
         context["log"].id = 0
         context['editable'] = False
-
-        return templates.TemplateResponse("log/inputs/edit/copy.html", context)
     
-    return templates.TemplateResponse("log/inputs/edit/edit.html", context)
+    return templates.TemplateResponse("log/inputs/edit.html", context)
 
 
 @router.get(
@@ -112,7 +110,6 @@ async def get_food_log_id(*, deps:LoggedInDeps, food_log_id: int):
     
     
     log = await api_food_log.get_food_log_id(food_log_id=food_log_id, deps=deps)
-    print("test")
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
