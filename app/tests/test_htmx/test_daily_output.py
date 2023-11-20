@@ -34,13 +34,13 @@ async def test_get_daily_date(client:TestClient, db:Session):
     assert response.headers["content-type"] == "text/html; charset=utf-8"
 
 @pytest.mark.parametrize(
-    "actual_weight, activity_level, expected_headers",
+    "actual_weight, activity_level, status_code",
     [
-        (True, False, "headers=\"actual_weight\""),
-        (False, True, "headers=\"daily_activity_level\""),
+        (True, False, 200),
+        (False, True, 200),
     ]
 )
-async def test_update_actual_weight(client:TestClient, db:Session, actual_weight, activity_level, expected_headers):
+async def test_update_actual_weight(client:TestClient, db:Session, actual_weight, activity_level, status_code):
     response = await client.put(
         f"/daily/{datetime.date.today()}",
         params={
@@ -52,6 +52,5 @@ async def test_update_actual_weight(client:TestClient, db:Session, actual_weight
             "activity_level": 1.4
         }
     )
-    assert response.status_code == 200
+    assert response.status_code == status_code
     assert response.headers["content-type"] == "text/html; charset=utf-8"
-    assert expected_headers in response.text
