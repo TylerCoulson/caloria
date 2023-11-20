@@ -19,7 +19,8 @@ def get_index(deps:CommonDeps):
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
-        "user": deps['user']
+        "user": deps['user'],
+        "date": deps['client_date']
     }
 
     return templates.TemplateResponse("index/index.html", context, headers={'HX-Redirect': '/'})
