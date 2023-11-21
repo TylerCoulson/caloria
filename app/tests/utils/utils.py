@@ -225,7 +225,7 @@ async def module_user(db):
 
 @pytest.fixture(scope="module")
 async def module_profile(db, module_user) -> models.Profile:
-    profile = {"id": 1, "start_date": '2023-04-09', "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": '1994-10-26', "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
+    profile = {"id": 1, "start_date": date(2023,4, 9), "start_weight": 803.3, "goal_weight": 241.0, "sex": 'Male', "birthdate": date(1994,10,26), "height": 10, "lbs_per_week": 1.38, "activity_level": 1.8, "user_id": 1}
     # data = schemas.ProfileCreate(**profile)
     
     return profile
