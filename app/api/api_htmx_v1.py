@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.api.api_htmx import daily_overview, page_index, food, serving_size, profile, food_log, predictions
 from app.auth.html_routers import validation, page_routers, verification, forgot_password
 
-htmx_router = APIRouter(include_in_schema=False)
+htmx_router = APIRouter(include_in_schema=False, tags=['htmx'])
 
 htmx_router.include_router(page_index.router, tags=['htmx-index'])
 htmx_router.include_router(food.router, tags=['htmx-food'])

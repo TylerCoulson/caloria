@@ -94,7 +94,7 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
     }
 
     if copy:
-        context["log"].date = date.today()
+        context["log"].date = deps['client_date']
         context["log"].id = 0
         context['editable'] = False
 
