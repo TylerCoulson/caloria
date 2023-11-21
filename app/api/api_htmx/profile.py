@@ -20,16 +20,17 @@ templates = Jinja2Templates("app/templates")
     response_class=HTMLResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user:dict=Depends(current_active_user)):
-    if user.profile is None:
-        profile = await api_profile.create_profile(deps=deps, profile=profile, user=user)
+async def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase):
+    if deps['user'].profile is None:
+        profile = await api_profile.create_profile(deps=deps, profile=profile, user=deps['user'])
     else:
-        deps['profile'] = user.profile
+        deps['profile'] = deps['user'].profile
         profile = await api_profile.update_current_profile(deps=deps, profile_in=profile)
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
-            "profile": profile
+            "profile": profile,
+            "user": deps['user']
         }
     return templates.TemplateResponse("profile/profile.html", context)
 
@@ -42,7 +43,8 @@ async def get_profile(*, deps:LoggedInDeps):
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
-            "profile": deps['profile']
+            "profile": deps['profile'],
+            "user": deps['user']
         }
 
     return templates.TemplateResponse("profile/profile.html", context)
@@ -53,7 +55,6 @@ async def get_profile(*, deps:LoggedInDeps):
     status_code=status.HTTP_200_OK,
 )
 async def edit_profile(*, deps:LoggedInDeps):
-    print(deps['request'].url)
     context = {
             "request": deps['request'],
             "hx_request": deps['hx_request'],
@@ -67,7 +68,7 @@ async def edit_profile(*, deps:LoggedInDeps):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-def create_profile(*, request: Request, hx_request: str | None = Header(default=None)):
+def get_create_profile(*, request: Request, hx_request: str | None = Header(default=None)):
     context = {
             "request": request,
             "hx_request": hx_request,
