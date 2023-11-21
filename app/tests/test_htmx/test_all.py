@@ -64,8 +64,27 @@ async def test_post(client:TestClient, db:Session, url):
         # food log
         "id":1001, "date":'2022-12-09', "food_id":123, "serving_size_id":123, "serving_amount":3, "profile_id":1
     }
-    # params = {"food_category": 1, "search_word":"test", "food_id":1, "log_id":1, **weight_params, "email":"test123@test.com","password":"1231412321", "password_confirm":"1231412321"}
+
     response = await client.post(url, json=data)
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "text/html; charset=utf-8"
+
+
+@pytest.mark.parametrize(
+        "url",
+        methods['PUT']
+)
+async def test_put(client:TestClient, db:Session, url):
+    data = {
+        # profile
+        "id":2, "start_date": '2023-12-06', "start_weight": 321.4, "goal_weight": 151.0, "sex": 'Female', "birthdate": '1992-12-05', "height": 70, "lbs_per_week": 1.0, "activity_level": 1.2, "user_id": 2,
+        # food_log
+        "id":100, "date":'2023-04-27', "food_id":123, "serving_size_id":123, "serving_amount":4.0, "profile_id":1,
+    #     # food log
+    #     "id":1001, "date":'2022-12-09', "food_id":123, "serving_size_id":123, "serving_amount":3, "profile_id":1
+    }
+    response = await client.put(url, json=data)
 
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/html; charset=utf-8"
