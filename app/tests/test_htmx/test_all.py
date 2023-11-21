@@ -88,3 +88,13 @@ async def test_put(client:TestClient, db:Session, url):
 
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/html; charset=utf-8"
+
+@pytest.mark.parametrize(
+        "url",
+        methods['DELETE']
+)
+async def test_delete(client:TestClient, db:Session, url):
+    response = await client.delete(url)
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/json"
