@@ -11,7 +11,11 @@
         </label>
         <label for="serving">
             Serving: 
-            <select type="date" id="serving" name="serving">
+            <select type="date" id="serving" name="serving" _="on change set #serving_id.value to my.value then
+            if my.value
+                set #serving_cals.innerHTML to $options[my.value as a String] then 
+                set $calories to $options[my.value as a String] then
+                set #total-calories.innerHTML to $serving_amount * $calories">
                 {% include "log/inputs/serving_option.html"%}    
             </select>
         </label>
