@@ -1,9 +1,10 @@
 <div>
+  {% set circumference = 326.7256 %}
 <svg class="progress-ring" height="120" width="120">
   <circle
     style="
-      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
-      stroke-dashoffset: -{{offsets['circumference']-offsets['white_offset_max']}};
+      stroke-dasharray: {{circumference}} {{circumference}};
+      stroke-dashoffset: -{{circumference - offsets['white_offset_max'] * circumference}};
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
     stroke="hsla(60, 100%, 50%, 0.65)"
@@ -15,8 +16,8 @@
   />
   <circle
     style="
-      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
-      stroke-dashoffset: {{offsets['white_offset_max']}};
+      stroke-dasharray: {{circumference}} {{circumference}};
+      stroke-dashoffset: {{offsets['white_offset_max'] * circumference}};
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
     stroke="hsla(0, 0%, 100%, 0.65)"
@@ -28,9 +29,9 @@
   />
   <circle
     style="
-      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dasharray: {{circumference}} {{circumference}};
       stroke-dashoffset:  {{
-        offsets['yellow_offset']
+        offsets['yellow_offset'] * circumference
       }};
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
@@ -44,9 +45,9 @@
 
   <circle
     style="
-      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
+      stroke-dasharray: {{circumference}} {{circumference}};
       stroke-dashoffset: {{
-        offsets['white_offset']
+        offsets['white_offset'] * circumference
       }};
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
@@ -60,8 +61,8 @@
 
   <circle
     style="
-      stroke-dasharray: {{offsets['circumference']}} {{offsets['circumference']}};
-      stroke-dashoffset:  {{offsets['red_offset']}};
+      stroke-dasharray: {{circumference}} {{circumference}};
+      stroke-dashoffset:  {{ [offsets['red_offset'] * circumference, circumference]|min}};
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
     stroke="red"
@@ -71,7 +72,7 @@
     cx="60"
     cy="60"
   />
-  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle">{{offsets['calorie_info']['calories_eaten'] | int}}/{{offsets['calorie_info']['calorie_goal']}}</text>
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle">{{offsets['calorie_info']['calories_eaten'] | int}}/{{offsets['calorie_info']['calorie_goal'] | int}}</text>
   <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle">Calories</text>
 </svg>
 <!-- <div>Test/Ing</div> -->
