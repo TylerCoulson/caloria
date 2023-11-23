@@ -29,8 +29,8 @@ def get_index(deps:CommonDeps):
 @router.get(
     "/calorie_progress"
 )
-async def calorie_progress(deps:LoggedInDeps):
-    offsets = await utils.calorie_progress_data(deps=deps)
+async def calorie_progress(deps:LoggedInDeps, total=False):
+    offsets = await utils.calorie_progress_data(deps=deps, total=total)
 
     context = {
         "request": deps['request'],

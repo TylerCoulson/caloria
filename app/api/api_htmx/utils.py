@@ -9,28 +9,34 @@ async def calorie_progress_data(deps:LoggedInDeps, overview=None, total:bool=Fal
     if overview is None:
         overview = await api_daily.get_daily(deps=deps, current_date=deps['client_date'])
     
+    calories_burned = overview['calories_burned']
+    calories_eaten = overview['eaten_calories']
+    calorie_goal = overview['calorie_goal']
+
     if total:
-        pass
+        calories_burned = overview['total_calories_burned']
+        calories_eaten = overview['total_calories_eaten']
+        calorie_goal = overview['total_calorie_goal']
 
     offsets = {
             "calorie_info": {
-                "calories_burned":overview['calories_burned'],
-                "calories_eaten":overview['eaten_calories'],
-                "calorie_goal":overview['calorie_goal'],
+                "calories_burned":calories_burned,
+                "calories_eaten":calories_eaten,
+                "calorie_goal":calorie_goal,
             },
-            "white_offset_max": ((1 - (overview['calorie_goal']/overview['calories_burned']))),
+            "white_offset_max": ((1 - (calorie_goal/calories_burned))),
             "white_offset": 
             max(
-                ((1 - min(overview['eaten_calories']/overview['calories_burned'], 1))),
-                ((1 - (overview['calorie_goal']/overview['calories_burned'])))
+                ((1 - min(calories_eaten/calories_burned, 1))),
+                ((1 - (calorie_goal/calories_burned)))
             ),
-            "yellow_offset":  ((1 - min(overview['eaten_calories']/overview['calories_burned'], 1))),
+            "yellow_offset":  ((1 - min(calories_eaten/calories_burned, 1))),
             "red_offset":
                 (
                     (
                         1 - (
                             min(
-                                overview['eaten_calories']/overview['calories_burned'] - 1,
+                                calories_eaten/calories_burned - 1,
                                 1
                             )
                         )
