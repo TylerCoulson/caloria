@@ -10,7 +10,8 @@ def _methods():
         "{date": date(2023,12,6),
         "{food_id": 1,
         "{food_type": 'posuere',
-        "{food_log_id": 1
+        "{food_log_id": 1,
+        "{serving_id": 1
     }
 
     def re_path(path) -> str:

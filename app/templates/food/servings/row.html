@@ -6,5 +6,6 @@
     <th id="protein">{{serving.protein}}</th>
     {% if user is not none %}
         <th id="add_log" hx-get="/food_log/create?serving_id={{serving.id}}" hx-target="#content" role="button">ADD Log</th>
+        <th id="edit" hx-get="/food/servings/{{serving.id}}/edit" hx-target="#content" role="button">Edit Serving</th>
     {% endif %}
 </tr>

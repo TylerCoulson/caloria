@@ -28,6 +28,44 @@ async def get_create_serving(*, deps:CommonDeps, food_id:int):
         }
     return templates.TemplateResponse("food/servings/create.html", context)
 
+@router.get(
+    "/servings/{serving_id:int}/edit",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_edit_serving(*, deps:CommonDeps, serving_id:int):
+
+    serving = await api_servings.get_serving_size_by_id(deps=deps, serving_id=serving_id)
+
+    context = {
+            "request": deps['request'],
+            "hx_request": deps['hx_request'],
+            "user": deps['user'],
+            "food": serving.food,
+            "serving": serving,
+            "edit": True
+        }
+    return templates.TemplateResponse("food/servings/create.html", context)
+
+@router.put(
+    "/servings/{serving_id:int}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def update_food(*, deps:LoggedInDeps, serving_id: int, serving_in: schemas.ServingSizeBase):
+    update_serving = await api_servings.update_serving_size(deps=deps, food_id=serving_in.food_id, serving_id=serving_id, serving_size_in=serving_in)
+    
+    servings = await api_servings.get_serving_size_by_food(deps=deps, food_id=update_serving.food_id)
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['user'],
+        "food": update_serving.food,
+        "servings": servings['servings']
+    }
+
+    return templates.TemplateResponse("food/servings.html", context)
+
 @router.post(
     "/servings",
     response_class=HTMLResponse,

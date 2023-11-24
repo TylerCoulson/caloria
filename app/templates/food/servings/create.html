@@ -3,13 +3,14 @@
 {% block content %}
 <h1>Add Serving</h1>        
 <h2>{{food.type}}, {{food.subtype}}</h2>
-<form hx-post="/food/servings" hx-target="#content" hx-ext='json-enc' >
+
+<form {% if edit %}hx-put="/food/servings/{{serving.id}}"{% else %}hx-post="/food/servings"{% endif %} hx-target="#content" hx-ext='json-enc' >
     <input hidden type="number" min="1" step="1" name="food_id" value="{{food.id}}"></input>
-    Description<input type="str" name="description"></input> 
-    Calories<input type="number" min="0" step="1" name="calories"></input> 
-    Fats<input type="number" min="0" step="1" name="fats"></input> 
-    Carbs<input type="number" min="0" step="1" name="carbs"></input> 
-    Protein<input type="number" min="0" step="1" name="protein"></input> 
+    Description<input type="str" name="description" value="{% if edit %}{{serving.description}}{% endif %}"></input> 
+    Calories<input type="number" min="0" step="1" name="calories" value="{% if edit %}{{serving.calories}}{% endif %}"></input> 
+    Fats<input type="number" min="0" step="1" name="fats" value="{% if edit %}{{serving.fats}}{% endif %}"></input> 
+    Carbs<input type="number" min="0" step="1" name="carbs" value="{% if edit %}{{serving.carbs}}{% endif %}"></input> 
+    Protein<input type="number" min="0" step="1" name="protein" value="{% if edit %}{{serving.protein}}{% endif %}"></input> 
     <input type="submit" value="Add Serving">
 </form>
 {% endblock %}
