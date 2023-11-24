@@ -46,6 +46,21 @@ async def get_food(*, deps:CommonDeps, food_id:int):
     }
     return templates.TemplateResponse("food/servings.html", context)
 
+@router.get(
+    "/{food_id:int}/edit",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_edit_food(*, deps:CommonDeps, food_id:int):    
+    food = await api_food.get_food_by_id(food_id=food_id, deps=deps)
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['user'],
+        "food": food,
+        "edit": True
+    }
+    return templates.TemplateResponse("food/create.html", context)
 
 @router.get(
     "/all",
@@ -119,7 +134,6 @@ async def get_search_food_results(*, deps:CommonDeps, n:int=25, page:int=1, appe
     status_code=status.HTTP_201_CREATED,
 )
 async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
-    
     new_food = await api_food.post_food(deps=deps, food=food)
     # foods = await api_food.get_all_foods(deps=deps)
     
@@ -129,4 +143,21 @@ async def post_food(*, deps:LoggedInDeps, food: schemas.FoodCreate):
         "user": deps['user'],
         "food": new_food,
     }
-    return templates.TemplateResponse("food/servings/create.html", context)     
+    return templates.TemplateResponse("food/servings/create.html", context)
+
+@router.put(
+    "/{food_id}",
+    response_class=HTMLResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def update_food(*, deps:LoggedInDeps, food_id: int, food_in: schemas.FoodBase):
+    food = await api_food.update_food(deps=deps, food_id=food_id, food_in=food_in)
+    servings = await api_servings.get_serving_size_by_food(food_id=food_id, deps=deps)
+    context = {
+        "request": deps['request'],
+        "hx_request": deps['hx_request'],
+        "user": deps['user'],
+        "food": food,
+        "servings": servings['servings']
+    }
+    return templates.TemplateResponse("food/servings.html", context)

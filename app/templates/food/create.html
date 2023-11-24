@@ -2,17 +2,17 @@
 
 {% block content %}
 <h1>Add Food</h1>        
-<form hx-post="/food" hx-target="#content" hx-ext='json-enc' hx-include="[name='category_id']">
+<form {% if edit %}hx-put="/food/{{food.id}}"{% else %}hx-post="/food"{% endif %} hx-target="#content" hx-ext='json-enc' hx-include="[name='category_id']">
     Category 
-    <select id="food-categories" name="category_id">
+    <select id="food-categories" name="category_id" value="{% if edit %}{{food.category_id}}{% endif %}">
         <option value="5" label="Generic">Generic></option>
         <option value="1" label="Restaurant">Restaurant></option>
         <option value="2" label="Fast Food">Fast Food></option>
         <option value="3" label="Premade/Prepared">Premade/Prepared</option>
         <option value="4" label="Home-Prepared">Home-Prepared></option>
     </select>
-    Type<input type="text" name="type"></input>
-    Subtype<input type="text" name="subtype"></input>
+    Type<input type="text" name="type" value="{% if edit %}{{food.type}}{% endif %}"></input>
+    Subtype<input type="text" name="subtype" value="{% if edit %}{{food.subtype}}{% endif %}"></input>
     <input type="submit" value="Add Food">
 </form>
 <div id="food"></div>

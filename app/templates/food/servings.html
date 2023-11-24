@@ -4,6 +4,7 @@
     <h1>{{food.type}}{% if food.subtype %}, {{food.subtype}} {% endif %}</h1>
     {% if user and food.user_id %}
     <div role="button" hx-get="/food/servings/create/{{ food.id }}" hx-target="#content">Add New Serving</div>
+    <div role="button" hx-get="/food/{{ food.id }}/edit" hx-target="#content">Edit Food</div>
     {% endif %}
     <table role="grid">
             <thead>

@@ -18,7 +18,7 @@ def _methods():
         new_path = []
         for i in sub_paths:
             try:
-                match = re.search("{\w+", i)
+                match = re.search(r"{\w+", i)
                 i = str(data[match.group(0)])
                 
             except:
