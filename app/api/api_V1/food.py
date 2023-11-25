@@ -68,10 +68,9 @@ async def get_food_search(*, deps:CommonDeps, search_word:str, n:int=25, page:in
 )
 async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     statement = utils.get_all_statement(deps=deps, n=n, page=page
-        ).with_only_columns(models.FoodCategories, models.Food.type, models.Food.user_id
+        ).with_only_columns(models.Food.type, models.Food.user_id
         ).distinct(
-        ).join(models.FoodCategories, models.FoodCategories.id == models.Food.category_id
-        ).order_by(nulls_last(models.Food.user_id.desc()), models.FoodCategories.id, models.Food.type
+        ).order_by(nulls_last(models.Food.user_id.desc()), models.Food.type
         )
 
 
@@ -79,17 +78,16 @@ async def get_food_types(*, deps:CommonDeps, n:int=25, page:int=1):
     data = await deps['db'].execute(statement)
     
     result = data.unique().all()
-    return [schemas.FoodNoSubtype(category=r[0], type=r[1]) for r in result]
+    return [schemas.FoodNoSubtype(type=r[0]) for r in result]
 
 @router.get(
         "/{food_type:str}/subtypes",
         response_model=List[schemas.Food],
         status_code=status.HTTP_200_OK
 )
-async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, food_type:str, food_category:str):
+async def get_food_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, food_type:str):
     statement = utils.get_all_statement(deps=deps, n=n, page=page
         ).where(func.lower(models.Food.type) == food_type.lower()
-        ).where(models.Food.category_id == food_category
         )
 
 

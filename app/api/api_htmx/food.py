@@ -88,10 +88,10 @@ async def get_all_foods(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, food_type:str, food_category:int):
+async def get_subtypes(*, deps:CommonDeps, n:int=25, page:int=1, appending:bool=False, food_type:str):
     """ returns page that all foods"""
     food_type = food_type.replace("___", " ")
-    data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, food_type=food_type.lower(), food_category=food_category)
+    data = await api_food.get_food_subtypes(deps=deps, n=n, page=page, food_type=food_type.lower())
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
