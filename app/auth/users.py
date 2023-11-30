@@ -75,7 +75,15 @@ jwt_auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
+session_transport = CookieTransport()
 cookie_transport = CookieTransport(cookie_max_age=secrets['ACCESS_TOKEN_EXPIRE_SECONDS'])
+
+
+session_auth_backend = AuthenticationBackend(
+    name="session",
+    transport=session_transport,
+    get_strategy=get_jwt_strategy,
+)
 
 cookie_auth_backend = AuthenticationBackend(
     name="cookie",
@@ -83,7 +91,9 @@ cookie_auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
-fastapi_users = FastAPIUsers[User, int](get_user_manager, [jwt_auth_backend, cookie_auth_backend])
+
+
+fastapi_users = FastAPIUsers[User, int](get_user_manager, [jwt_auth_backend, cookie_auth_backend, session_auth_backend])
 
 current_active_user = fastapi_users.current_user(active=True, optional=True)
 current_superuser = fastapi_users.current_user(active=True, superuser=True)
