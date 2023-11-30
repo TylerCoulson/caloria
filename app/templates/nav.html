@@ -1,21 +1,66 @@
-<nav id="nav-bar" hx-push-url="true" hx-target="#content" _="on htmx:afterOnLoad take .secondary for event.target">
-    <ul>
-        <li><a class="secondary" hx-get="/">Home</a></li>
-        <li><a hx-get="/food/all">Foods</a></li>
-        <li><a hx-get="/prediction">Prediction</a></li>
+<nav id="nav-bar" hx-push-url="true" hx-target="#content" class="flex flex-wrap bg-gray-500 text-gray-50 px-10 py-5 items-center justify-between rounded-b-md">
+  <ul class="font-semibold text-2xl md:h-auto p-2 md:w-auto rounded hover:bg-gray-200 hover:text-gray-700">
+    <li><a hx-get="/">Home</a></li>
+  </ul>
+
+  <ul class="md:hidden hover:bg-gray-200 p-2 rounded hover:text-gray-600">
+    <li>
+      <button
+      _="on click toggle .hidden on #mobile-menu" 
+        type="button"
+        id="mobile-menu-button"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          id="mobile-menu-open"
+          class="w-8 h-8"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <svg
+          id="mobile-menu-close"
+          class="hidden w-6 h-6"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </li>
+  </ul>
+  <div class="hidden md:flex flex-col md:flex-row mt-4 md:mt-0 md:min-w-max md:w-2/3 md:h-auto border-t-2 w-full items-center text-center justify-between text-xl md:border-none" 
+       id="mobile-menu"> 
+      <ul class="flex-col md:flex-row flex md:space-x-5">
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/food/all">Foods</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/prediction">Prediction</a></li>
         {% if user is not none %}
-            <li><a hx-get="/food_log">Food Log</a></li>
-            <li><a hx-get="/daily">Daily</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/food_log">Food Log</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/daily">Daily</a></li>
         {% endif %}
-    </ul>
-    <ul>
+      </ul>
+      <ul class="flex-col md:flex-row flex border-t-2 md:border-none">
         {% if user is none %}
-            <li><a hx-get="/register">Register</a></li>
-            <li><a hx-push-url="false" hx-get="/login">Login</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/register">Register</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-push-url="false" hx-get="/login">Login</a></li>
         {% else %}
-            <li><a hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none">Logout</a></li>
-            <div hidden id="logout_div" hx-get="/" hx-target="#content" hx-trigger="click from:#logout"></div>
-            <li><a hx-get="/profile"> Profile</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"
+        hx-get="/" hx-target="#content" hx-trigger="click from:#logout"><a hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none">Logout</a></li>
+        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/profile"> Profile</a></li>
         {% endif %}
-    </ul>
+      </ul>
+    </div>
 </nav>
