@@ -8,8 +8,8 @@ from app import deps
 
 
 
-async def common_deps(request: Request, user: Annotated_User = False, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db), timezone_offset: int = 0):
-    client_date = (datetime.now() - timedelta(minutes=timezone_offset)).date()
+async def common_deps(request: Request, user: Annotated_User = False, hx_request: str | None = Header(default=None), db: Session = Depends(deps.get_db), tz_offset: int = 0):
+    client_date = (datetime.now() - timedelta(minutes=tz_offset)).date()
     return {"request":request, "user":user, "hx_request":hx_request, "db":db, "client_date":client_date}
 
 CommonDeps = Annotated[dict, Depends(common_deps)]
