@@ -16,7 +16,8 @@
         if .editing is not empty
         end
         trigger edit">e</td>
-        <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-target="closest tr" hx-trigger="edit" hx-swap="afterend" _="on click
+        <td headers="add_log" hx-get="/food_log/edit?log_id={{log.id}}&copy=True" hx-vals="js:{'tz_offset': tz_offset()}" hx-target="closest tr" hx-trigger="edit" hx-swap="afterend" 
+        _="on click
         if .editing is not empty
         end
         trigger edit">c</td>
