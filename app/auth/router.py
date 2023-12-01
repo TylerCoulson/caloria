@@ -14,7 +14,7 @@ auth_router.include_router(
     fastapi_users.get_auth_router(cookie_auth_backend), prefix="/auth/cookie", tags=["auth"]
 )
 auth_router.include_router(
-    fastapi_users.get_auth_router(cookie_auth_backend), prefix="/auth/session", tags=["auth"]
+    fastapi_users.get_auth_router(session_auth_backend), prefix="/auth/session", tags=["auth"]
 )
 auth_router.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
