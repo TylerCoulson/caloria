@@ -1,12 +1,15 @@
 <nav id="nav-bar" hx-push-url="true" hx-target="#content" class="flex flex-wrap bg-gray-500 text-gray-50 px-10 py-5 items-center justify-between rounded-b-md drop-shadow-xl">
-  <ul class="font-semibold text-2xl md:h-auto p-2 md:w-auto rounded hover:bg-gray-200 hover:text-gray-700">
-    <li><a hx-get="/">Home</a></li>
+  <ul class="font-semibold text-2xl md:h-auto p-2 md:w-auto rounded hover:bg-gray-200 hover:text-gray-700"
+    hx-get="/">
+    <li><a>Home</a></li>
   </ul>
 
-  <ul class="md:hidden hover:bg-gray-200 p-2 rounded hover:text-gray-600">
+  <ul class="md:hidden hover:bg-gray-200 p-2 rounded hover:text-gray-600"
+    _="on click toggle .hidden on #mobile-menu"
+  >
     <li>
       <button
-      _="on click toggle .hidden on #mobile-menu" 
+      
         type="button"
         id="mobile-menu-button"
         aria-controls="mobile-menu"
@@ -45,21 +48,25 @@
   <div class="hidden md:flex flex-col md:flex-row mt-4 md:mt-0 md:min-w-max md:w-2/3 md:h-auto border-t-2 w-full items-center text-center justify-between text-xl md:border-none" 
        id="mobile-menu"> 
       <ul class="flex-col md:flex-row flex md:space-x-5">
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/food/all">Foods</a></li>
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/prediction">Prediction</a></li>
+        <li hx-get="/food/all" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Foods</a></li>
+        <li hx-get="/prediction" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Prediction</a></li>
         {% if user is not none %}
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/food_log">Food Log</a></li>
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/daily">Daily</a></li>
+        <li hx-get="/food_log" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Food Log</a></li>
+        <li hx-get="/daily" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Daily</a></li>
         {% endif %}
       </ul>
       <ul class="flex-col md:flex-row flex border-t-2 md:border-none">
         {% if user is none %}
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/register">Register</a></li>
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-push-url="false" hx-get="/login">Login</a></li>
+        <li hx-get="/register" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Register</a></li>
+        <li hx-push-url="false" hx-get="/login" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a>Login</a></li>
         {% else %}
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"
-        hx-get="/" hx-target="#content" hx-trigger="click from:#logout"><a hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none">Logout</a></li>
-        <li class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a hx-get="/profile"> Profile</a></li>
+        <li hx-push-url="false" id="logout" hx-post="/api/v1/auth/cookie/logout" hx-target="this" hx-swap="none" 
+          class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"
+         >
+          <a hx-get="/" hx-target="#content" hx-trigger="click from:#logout"
+          >Logout</a>
+        </li>
+        <li hx-get="/profile" class="p-5 hover:bg-gray-200 rounded hover:text-gray-600"><a> Profile</a></li>
         {% endif %}
       </ul>
     </div>
