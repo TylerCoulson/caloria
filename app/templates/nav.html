@@ -1,4 +1,8 @@
-<nav id="nav-bar" hx-push-url="true" hx-target="#content" class="flex flex-wrap bg-gray-500 text-gray-50 px-10 py-5 items-center justify-between rounded-b-md drop-shadow-xl">
+<nav id="nav-bar" hx-push-url="true" hx-target="#content" class="flex flex-wrap bg-gray-500 text-gray-50 px-10 py-5 items-center justify-between rounded-b-md drop-shadow-xl"
+  _="on htmx:afterRequest if not #mobile-menu.flex add .hidden to #mobile-menu end
+     on click from #content if not #mobile-menu.flex add .hidden to #mobile-menu end
+  "
+>
   <ul class="font-semibold text-2xl md:h-auto p-2 md:w-auto rounded hover:bg-gray-200 hover:text-gray-700"
     hx-get="/">
     <li><a>Home</a></li>
