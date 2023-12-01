@@ -1,0 +1,60 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+{% block content %}
+<div>
+  <div class="grid">
+    <div>Description</div>
+    <div>Calorie</div>
+    <div>Fats</div>
+    <div>Carbs</div>
+    <div>Protein</div>
+  </div>
+
+  {% for i in range(2) %}
+  <div
+    class="nut_inputs grid"
+    _="on change 
+      if not next <div.nut_inputs/> 
+        put my outerHTML after me
+      end then 
+      
+      set sums to [0, 0, 0, 0, 0] then 
+      repeat for v in .nut_inputs 
+          set sums[1] to sums[1] + v.children[1].value as Number then
+          set sums[2] to sums[2] + v.children[2].value as Number then
+          set sums[3] to sums[3] + v.children[3].value as Number then
+          set sums[4] to sums[4] + v.children[4].value as Number then
+          end then 
+
+      set #cal_total.value to sums[1] then
+      set #fats_total.value to sums[2] then
+      set #carbs_total.value to sums[3] then
+      set #protein_total.value to sums[4]
+    "
+  >
+    <input class="name_input"/>
+    <input type="number" class="cal_input" value="0" value="0"/>
+    <input type="number" class="fats_input" value="0" />
+    <input type="number" class="carbs_input" value="0" />
+    <input type="number" class="protein_input" value="0" />
+  </div>
+  {% endfor %}
+  <form  {% if edit %}hx-put="/food/servings/{{serving.id}}"{% else %}hx-post="/food/servings"{% endif %} hx-target="#content" hx-ext='json-enc' >
+  <div>Totals</div>
+    <input hidden type="number" min="1" step="1" name="food_id" value="{{food.id}}"></input>
+    <div class="grid">
+      <input type="str" name="description" value="{% if edit %}{{serving.description}}{% endif %}"></input>
+      <input readonly id="cal_total" type="number" min="0" step="1" name="calories" value={% if edit %}{{serving.calories}}{% else %} 0 {% endif %}></input> 
+      <input readonly id="fats_total" type="number" min="0" step="1" name="fats" value={% if edit %}{{serving.fats}}{% else %} 0 {% endif %}></input> 
+      <input readonly id="carbs_total" type="number" min="0" step="1" name="carbs" value={% if edit %}{{serving.carbs}}{% else %} 0 {% endif %}></input> 
+      <input readonly id="protein_total" type="number" min="0" step="1" name="protein" value={% if edit %}{{serving.protein}}{% else %} 0 {% endif %}></input> 
+    </div>
+    <input type="submit" value="Add Serving">
+</form>
+</div>
+{% endblock %}
+<!-- If a serving size is already in the database don't need to show all the calorie info for it. Just the add it to the total amount -->
+
+<!-- Search Food | serving size | amount -->
+<!-- Need to create/update the search endpoint -->
+<!-- Maybe seperate buttons to add included food or one off -->
+<!--  -->
