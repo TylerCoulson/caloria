@@ -1,20 +1,91 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<div hx-trigger="htmx:responseError from:#login-form" hx-get="/validate/username_password" hx-target="#login-error"></div> 
 
-<form id='login-form' hx-post="/api/v1/auth/cookie/login" hx-target="#login-div">
-    <label for="username">Email:</label>
-    <input type="text" id="username" name="username">
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
-    
-    <div id="login-error"></div>
-    
-    <input type="submit" value="Login">
-</form>
+<div class="flex mt-32 w-screen justify-center items-center">
+  <form
+    class="w-full grow max-w-3xl md:w-1/2 flex flex-col items-center"
+    id="login-form"
+    hx-target="#login-div"
+    _="on htmx:responseError remove .hidden from #login-error then send htmx:abort to #login-div end"
+  >
+    <h1 class="text-center text-2xl font-bold text-gray-600 mb-6">LOGIN</h1>
 
-<a hx-get="/forgot-password" hx-target="#content">Forgot Password</a>
-<div hidden id="login-div" hx-push-url="true" hx-get="/" hx-target="#content" hx-trigger="htmx:beforeSwap" _="on htmx:responseError from #login-form send htmx:abort to me"></div>
+    <div class="w-3/4 mb-6">
+      <input
+        type="email"
+        id="username"
+        name="username"
+        placeholder="Email"
+        class="w-full py-4 px-8 bg-gray-200 rounded placeholder:font-semibold"
+      />
+    </div>
+    <div class="w-3/4 mb-6">
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        class="w-full py-4 px-8 bg-gray-200 rounded placeholder:font-semibold"
+      />
+    </div>
+    <div class="w-3/4 flex flex-row justify-between">
+      <div class="flex items-center gap-x-1">
+        <input
+          type="checkbox"
+          name="remember"
+          id="remember"
+          class="w-4 h-4"
+          _="
+            on change toggle .hidden on #login-session end
+            on change toggle .hidden on #login-cookie end
+          "
+        />
+        <label for="remember" class="text-sm text-gray-400">Remember me</label>
+      </div>
+      <a
+        class="text-sm text-gray-400 hover:text-gray-600"
+        hx-get="/forgot-password"
+        hx-target="#content"
+        >Forgot Password?</a
+      >
+    </div>
+    <div class="w-3/4 mt-4">
+      <input
+        type="submit"
+        id="login-session"
+        value="Login"
+        hx-post="/api/v1/auth/session/login"
+        hx-include="#login-form"
+        hx-trigger="click"
+        class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+        _="on load if #remember.checked add .hidden to me"
+      />
+      <input
+        type="submit"
+        id="login-cookie"
+        value="Login"
+        hx-post="/api/v1/auth/cookie/login"
+        hx-include="#login-form"
+        hx-trigger="click"
+        class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+        _="on load if not #remember.checked add .hidden to me"
+      />
+      <div
+        class="hidden bg-red-100 border-red-400 border py-2 my-4 text-red-600 font-light text-sm text-center rounded"
+        id="login-error"
+      >
+        Incorrect Username or Password
+      </div>
+    </div>
+  </form>
+  <div
+    hidden
+    id="login-div"
+    hx-push-url="true"
+    hx-get="/"
+    hx-target="#content"
+    hx-trigger="htmx:beforeSwap"
+  ></div>
+</div>
 {% endblock %}
