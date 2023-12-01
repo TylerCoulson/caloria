@@ -78,9 +78,12 @@ async def get_all_daily(*, deps: LoggedInDeps, n: int = 25, page: int = 1, home:
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_daily(*, deps: LoggedInDeps, date: date = date.today()):
-    output_data = await api_daily.get_daily(deps=deps, current_date=date)
-    logs = await api_food_log.get_food_log_date(deps=deps, n=25, page=1, date=date)
+async def get_daily(*, deps: LoggedInDeps, _date: date = None):
+    if _date is None:
+        _date = deps['client_date']
+
+    output_data = await api_daily.get_daily(deps=deps, current_date=_date)
+    logs = await api_food_log.get_food_log_date(deps=deps, n=25, page=1, date=_date)
     progress_circle_data = await htmx_utils.calorie_progress_data(deps=deps, overview=output_data)
     logs = logs["log"]
     context = {
