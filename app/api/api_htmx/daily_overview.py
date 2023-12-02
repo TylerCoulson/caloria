@@ -74,7 +74,7 @@ async def get_all_daily(*, deps: LoggedInDeps, n: int = 25, page: int = 1, home:
 
 
 @router.get(
-    "/{date}",
+    "/{_date}",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
