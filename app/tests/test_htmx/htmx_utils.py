@@ -8,6 +8,7 @@ weight_params = {"height":70, "start_weight":320, "start_date":date(2023,7,12), 
 def _methods():
     data = {
         "{date": date(2023,12,6),
+        "{_date": date(2023,12,6),
         "{food_id": 1,
         "{food_type": 'posuere',
         "{food_log_id": 1,
