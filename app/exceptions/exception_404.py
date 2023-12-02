@@ -6,5 +6,7 @@ async def exception_404(request: Request, exc:HTTPException):
         return JSONResponse({'detail': exc.detail}, status_code=exc.status_code)
     if exc.detail == "Profile Not Found":
         return RedirectResponse('/profile/create')
-    else:
+    if exc.status_code == 404:
         return RedirectResponse('/not_found')
+
+    return JSONResponse({'detail': exc.detail}, status_code=exc.status_code)
