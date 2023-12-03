@@ -48,7 +48,9 @@
         
         <div class="w-3/4 mb-6">
             <input type="submit" id="register-submit" value="Register" class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
-            _="on focus if #password-confirm.value != #password.value add [@diasbled=True] else remove [@diasbled=True]"
+            _="on change from #password-confirm if #password-confirm.value != #password.value add [@disabled] to me else remove [@disabled] from me end
+               on change from #password         if #password-confirm.value != #password.value add [@disabled] to me else remove [@disabled] from me
+            "
             >
         </div>
     
