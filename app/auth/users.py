@@ -57,6 +57,20 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         print(f"the user is {user}")
         return  # pragma: no cover
 
+    async def on_after_reset_password(
+        self, user: User, request: Optional[Request] = None
+    ) -> None:
+        """
+        Perform logic after successful password reset.
+
+        *You should overload this method to add your own logic.*
+
+        :param user: The user that reset its password.
+        :param request: Optional FastAPI request that
+        triggered the operation, defaults to None.
+        """
+        print(f"The password for {user.email} been reset")
+        return  # pragma: no cover
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db)
