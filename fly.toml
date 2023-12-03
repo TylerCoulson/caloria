@@ -15,3 +15,6 @@ primary_region = "ewr"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
+
+[env]
+  SURPRESS_EMAIL_SEND = 0

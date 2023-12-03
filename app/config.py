@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_TEST_DATABASE_URI: str = ""
     DATE_FORMAT: str = "%Y-%m-%dT%H:%M:%S.%f"
     APP_NAME: str = ""
-
+    SURPRESS_EMAIL_SEND: bool = Field(..., validation_alias='SURPRESS_EMAIL_SEND')
 
 settings = Settings(
     # SQLALCHEMY_DATABASE_URI="postgresql+asyncpg://user:password@localhost:5432/trackfood"
