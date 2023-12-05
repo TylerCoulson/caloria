@@ -2,57 +2,20 @@
 
 {% block content %}
 <div class="flex mt-32 w-screen justify-center items-center">
-    <form id="register-form" class="w-full grow max-w-3xl md:w-1/2 flex flex-col items-center" hx-post="/api/v1/auth/register" hx-target="#register-div" hx-ext='json-enc'>
+    <form id="register-form" class="w-full grow max-w-3xl md:w-1/2 flex flex-col items-center"
+          hx-post="/api/v1/auth/register" hx-target="#register-div" hx-ext='json-enc'
+          _="on submit halt the event"
+    >
         
         <h1 class="text-center text-2xl font-bold text-gray-600 mb-6">Register</h1>
         
-        <div class="w-3/4 mb-6" hx-target="this" hx-swap="none">
-            <input type="text" id="email" name="email" placeholder="Email" hx-get="/validate/email" hx-trigger="focusout" aria-invalid="true" required minlength="2" pattern=".+@.+\..+"
-                   class="w-full py-4 px-8 bg-gray-200 rounded placeholder:font-semibold border border-none border-red-400"
-                   required
-            >
-            <div id="email-error"
-            _="on htmx:responseError from #email remove .hidden from me then remove .border-none from #email end
-                    on focus from #email add .hidden to me then add .border-none to #email
-            " 
-                class="hidden text-red-400 font-medium text-sm ">This email is already taken</div>
-        </div>
+        {% include "errors/auth/registration/email.html"%}
         
-        <div class="w-3/4 mb-6">
-            <input type="password" id="password" name="password" placeholder="Password" hx-get="/validate/password" hx-include="closest form" 
-                   class="w-full py-4 px-8 bg-gray-200 rounded placeholder:font-semibold" 
-                   required
-            >
-            <div id="password-error" 
-                 class="hidden text-red-400 font-medium text-sm"
-                 _="on htmx:responseError from #password remove .hidden from me then remove .border-none from #password"
-            >
-                Not a valid password
-            </div>
-        </div>
+        {% include "errors/auth/registration/password.html"%}
+
+        {% include "errors/auth/registration/password-confirm.html"%}
         
-        <div class="w-3/4 mb-6">
-            <input type="password" id="password-confirm" name="password_confirm" placeholder="Password Confirm" class="w-full py-4 px-8 bg-gray-200 rounded placeholder:font-semibold">
-            <div
-            id="confirm-error"
-            _="on focusout from #password-confirm 
-                if #password-confirm.value != #password.value 
-                    remove .hidden from me then remove .border-none from #password-confirm
-                end
-               end
-               on focus from #password-confirm add .hidden to me then add .border-none to #password-confirm end
-               on focus from #password add .hidden to me then add .border-none to #password-confirm
-            " 
-            class="hidden text-red-400 font-medium text-sm ">Passwords do not match</div>
-        </div>
-        
-        <div class="w-3/4 mb-6">
-            <input type="submit" id="register-submit" value="Register" class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
-            _="on change from #password-confirm if #password-confirm.value != #password.value add [@disabled] to me else remove [@disabled] from me end
-               on change from #password         if #password-confirm.value != #password.value add [@disabled] to me else remove [@disabled] from me
-            "
-            >
-        </div>
+        {% include "errors/auth/registration/submit.html"%}
     
     </form>
     <div

@@ -41,7 +41,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         return  # pragma: no cover
     
     async def validate_password(
-        self, password: str, user: User
+        self, password: str, email: str
     ) -> None:
         """
         Validate a password.
@@ -54,7 +54,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         :return: None if the password is valid.
         """
         print(f"the password is {password}")
-        print(f"the user is {user}")
+        print(f"the user is {email}")
         return  # pragma: no cover
 
     async def on_after_reset_password(

@@ -1,0 +1,7 @@
+<div class="w-3/4 mb-6" hx-target="this" hx-swap="outerHTML">
+    <input type="submit" id="register-submit" value="Register" 
+           class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+           hx-get="/validate/submit" hx-include="closest form" hx-trigger="change from:closest form"
+           {% if (not is_valid) %}disabled{% endif %}
+    >
+</div>
