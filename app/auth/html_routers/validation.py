@@ -30,7 +30,7 @@ async def validate_passsword(deps:CommonDeps, email:str, password:str, manager =
     except InvalidPasswordException:
         context['is_valid'] = False
 
-    return templates.TemplateResponse("errors/auth/registration/password.html", context)
+    return templates.TemplateResponse("auth/registration/password.html", context)
 
 @router.get(
     "/password_confirm",
@@ -46,7 +46,7 @@ async def confirm_password(deps:CommonDeps, password:str, password_confirm:str):
         "password_confirm": password_confirm or ""
     }
 
-    return templates.TemplateResponse("errors/auth/registration/password-confirm.html", context) 
+    return templates.TemplateResponse("auth/registration/password-confirm.html", context) 
 
 @router.get(
     "/email",
@@ -70,7 +70,7 @@ async def validate_email(*, deps:CommonDeps, email:str, db = Depends(get_user_db
     if user:
         context['is_unique'] = False
 
-    return templates.TemplateResponse("errors/auth/registration/email.html", context)
+    return templates.TemplateResponse("auth/registration/email.html", context)
 
 @router.get(
     "/submit",
@@ -93,4 +93,4 @@ async def submit(deps:CommonDeps, password:str, password_confirm:str, email:str,
         context['is_valid'] = True
 
 
-    return templates.TemplateResponse("errors/auth/registration/submit.html", context) 
+    return templates.TemplateResponse("auth/registration/submit.html", context) 
