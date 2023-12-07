@@ -1,21 +1,20 @@
-{% if not remember %}
     <input
         type="submit"
         id="auth_type"
         value="Login"
-        hx-post="/api/v1/auth/session/login"
+        {% if not remember %}
+            hx-post="/api/v1/auth/session/login"
+            class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+
+        {% else %}
+            hx-post="/api/v1/auth/cookie/login"
+            class="bg-red-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+
+        {% endif %}
+        hx-target="#login-div"
+        hx-swap="innerHTML"
         hx-include="#login-form"
         hx-trigger="click"
-        class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
-    />
-{% else %}
-    <input
-        type="submit"
-        id="auth_type"
-        value="Login"
-        hx-post="/api/v1/auth/cookie/login"
-        hx-include="#login-form"
-        hx-trigger="click"
-        class="bg-red-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
-    />
-{% endif %}
+        _="on htmx:responseError remove .hidden from #login-error then send htmx:abort to #login-div"
+
+        />

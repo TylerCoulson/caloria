@@ -1,4 +1,4 @@
-from typing import Optional, Annotated
+from typing import Optional, Annotated, Any, Dict
 
 from fastapi import Depends, Request, Response, HTTPException
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin, InvalidPasswordException
@@ -38,7 +38,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self, user: User, request: Optional[Request] = None, response: Optional[Response] = None
     ) -> None:
         print(f'{user.email} has logged in')
-        return  # pragma: no cover
+        return  response
     
     async def validate_password(
         self, password: str, email: str

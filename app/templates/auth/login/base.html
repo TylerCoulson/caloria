@@ -6,8 +6,6 @@
   <form
     class="w-full grow max-w-3xl md:w-1/2 flex flex-col items-center"
     id="login-form"
-    hx-target="#login-div"
-    _="on htmx:responseError remove .hidden from #login-error"
   >
     <h1 class="text-center text-2xl font-bold text-gray-600 mb-6">LOGIN</h1>
 
@@ -52,7 +50,7 @@
     hx-push-url="true"
     hx-get="/"
     hx-target="#content"
-    hx-trigger="htmx:afterSettle"
+    hx-trigger="htmx:afterSwap"
   ></div>
 </div>
 {% endblock %}
