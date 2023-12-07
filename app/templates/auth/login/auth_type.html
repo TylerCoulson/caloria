@@ -1,0 +1,21 @@
+{% if not remember %}
+    <input
+        type="submit"
+        id="auth_type"
+        value="Login"
+        hx-post="/api/v1/auth/session/login"
+        hx-include="#login-form"
+        hx-trigger="click"
+        class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+    />
+{% else %}
+    <input
+        type="submit"
+        id="auth_type"
+        value="Login"
+        hx-post="/api/v1/auth/cookie/login"
+        hx-include="#login-form"
+        hx-trigger="click"
+        class="bg-red-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600"
+    />
+{% endif %}

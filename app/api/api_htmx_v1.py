@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.api_htmx import daily_overview, page_index, food, serving_size, profile, food_log, predictions
-from app.auth.html_routers import validation, page_routers, verification, forgot_password
+from app.auth.html_routers import validation, page_routers, verification, forgot_password, auth_type
 
 htmx_router = APIRouter(include_in_schema=False, tags=['htmx'])
 
@@ -16,3 +16,4 @@ htmx_router.include_router(page_routers.router, tags=['htmx-auth-pages'])
 htmx_router.include_router(validation.router, tags=['htmx-validation'])
 htmx_router.include_router(verification.router, tags=['htmx-verification'])
 htmx_router.include_router(forgot_password.router, tags=['htmx-reset-password'])
+htmx_router.include_router(auth_type.router, tags=['htmx-auth-type'])

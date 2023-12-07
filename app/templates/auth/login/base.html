@@ -1,0 +1,58 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+
+<div class="flex mt-32 w-screen justify-center items-center">
+  <form
+    class="w-full grow max-w-3xl md:w-1/2 flex flex-col items-center"
+    id="login-form"
+    hx-target="#login-div"
+    _="on htmx:responseError remove .hidden from #login-error"
+  >
+    <h1 class="text-center text-2xl font-bold text-gray-600 mb-6">LOGIN</h1>
+
+    {% include "auth/login/email.html"%}
+    
+    {% include "auth/login/password.html"%}
+
+    <div class="w-3/4 flex flex-row justify-between">
+      <div class="flex items-center gap-x-1" hx-target="#auth_type" hx-swap="outerHTML">
+        <input
+          type="checkbox"
+          name="remember"
+          id="remember"
+          class="w-4 h-4"
+          hx-get="/auth_type" 
+        />
+        <label for="remember" class="text-sm text-gray-400">Remember me</label>
+      </div>
+      
+      <a
+        class="text-sm text-gray-400 hover:text-gray-600"
+        hx-get="/forgot-password"
+        hx-target="#content"
+        >Forgot Password?</a
+      >
+    </div>
+    <div class="w-3/4 mt-4">
+
+      {% include "auth/login/auth_type.html"%}
+
+      <div
+        class="hidden bg-red-100 border-red-400 border py-2 my-4 text-red-600 font-light text-sm text-center rounded"
+        id="login-error"
+      >
+        Incorrect Username or Password
+      </div>
+    </div>
+  </form>
+  <div
+    hidden
+    id="login-div"
+    hx-push-url="true"
+    hx-get="/"
+    hx-target="#content"
+    hx-trigger="htmx:afterSettle"
+  ></div>
+</div>
+{% endblock %}

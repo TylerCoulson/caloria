@@ -34,4 +34,4 @@ def login(*, request: Request, hx_request: str | None = Header(default=None)):
             "hx_request": hx_request,
         }
 
-    return templates.TemplateResponse("auth/login.html", context)
+    return templates.TemplateResponse("auth/login/base.html", context)
