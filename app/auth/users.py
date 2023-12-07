@@ -38,7 +38,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self, user: User, request: Optional[Request] = None, response: Optional[Response] = None
     ) -> None:
         print(f'{user.email} has logged in')
-        return  response
+        return
     
     async def validate_password(
         self, password: str, email: str
@@ -70,6 +70,25 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         triggered the operation, defaults to None.
         """
         print(f"The password for {user.email} been reset")
+        return  # pragma: no cover
+    
+    async def on_after_update(
+        self,
+        user: User,
+        update_dict: Dict[str, Any],
+        request: Optional[Request] = None,
+    ) -> None:
+        """
+        Perform logic after successful user update.
+
+        *You should overload this method to add your own logic.*
+
+        :param user: The updated user
+        :param update_dict: Dictionary with the updated user fields.
+        :param request: Optional FastAPI request that
+        triggered the operation, defaults to None.
+        """
+        print(user, update_dict)
         return  # pragma: no cover
 
 async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
