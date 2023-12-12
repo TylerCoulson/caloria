@@ -1,1 +1,10 @@
-<input id="food-search" name='search_word' hx-trigger="keyup changed delay:500ms" hx-select="#food-table" hx-get="/food/search" hx-target="#food-table">
+<div class="flex justify-center m-3 gap-2">
+    {% if user %}
+        <div class="bg-gray-400 text-gray-50 font-bold py-4 rounded hover:bg-gray-600 text-center w-1/2 " role="button" hx-get="/food/create" hx-target="#content">Add New Food</div>
+    {% endif %}
+    <input id="food-search" name='search_word' 
+        placeholder="Search Food"
+        class="w-3/4 py-4  bg-gray-200 rounded placeholder:font-semibold text-center"
+        hx-trigger="keyup changed delay:500ms" hx-select="#food-table" hx-get="/food/search" hx-target="#food-table"
+>
+</div>

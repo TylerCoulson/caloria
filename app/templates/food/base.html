@@ -1,0 +1,16 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+
+
+{% include "food/search/input.html" %}
+<div id="food-table">
+    <div class=" text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">
+        Food Type
+    </div>
+    <div id="food-body" 
+        class="grid grid-cols-[3fr_1fr] m-auto w-10/12 bg-gray-100">
+        {% include "food/body.html" %}
+    </div>
+</div>
+{% endblock %}
