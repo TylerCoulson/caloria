@@ -1,19 +1,31 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<h1>Add Food</h1>        
-<form {% if edit %}hx-put="/food/{{food.id}}"{% else %}hx-post="/food"{% endif %} hx-target="#content" hx-ext='json-enc' hx-include="[name='category_id']">
-    Category 
-    <select id="food-categories" name="category_id" value="{% if edit %}{{food.category_id}}{% endif %}">
+<h1 class=" text-2xl font-bold text-gray-600 bg-gray-300 text-center pt-3 pb-3">Add Food</h1>        
+<form {% if edit %}hx-put="/food/{{food.id}}"{% else %}hx-post="/food"{% endif %} hx-target="#content" hx-ext='json-enc' hx-include="[name='category_id']"
+    class="text-gray-600 bg-gray-100 text-center border-b border-gray-300"
+    > 
+    <select id="food-categories" name="category_id" value="{% if edit %}{{food.category_id}}{% endif %}"
+        class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center">
+        <option disabled selected class="text-gray-400">Select Category</option>
         <option value="5" label="Generic">Generic></option>
         <option value="1" label="Restaurant">Restaurant></option>
         <option value="2" label="Fast Food">Fast Food></option>
         <option value="3" label="Premade/Prepared">Premade/Prepared</option>
         <option value="4" label="Home-Prepared">Home-Prepared></option>
     </select>
-    Type<input type="text" name="type" value="{% if edit %}{{food.type}}{% endif %}"></input>
-    Subtype<input type="text" name="subtype" value="{% if edit %}{{food.subtype}}{% endif %}"></input>
-    <input type="submit" value="Add Food">
+    <input type="text" name="type" value="{% if edit %}{{food.type}}{% endif %}"
+           placeholder="Type"
+           class="w-3/4 py-4  bg-gray-200 rounded placeholder:font-semibold text-center"
+    >
+    
+    <input type="text" name="subtype" value="{% if edit %}{{food.subtype}}{% endif %}"
+        placeholder="Subtype"
+        class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"
+    >
+    
+    <input type="submit" value="Add Food"
+    class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+    >
 </form>
-<div id="food"></div>
 {% endblock %}
