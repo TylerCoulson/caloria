@@ -12,15 +12,19 @@
             items-baseline
             "
         >
-            <div class="text-xs m-auto">{{food.category.description}}</div>
+            <div class="text-sm m-auto">{{food.category.description}}</div>
             <div hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content"
-                 class="text-xs m-auto"
+                 class="text-sm m-auto"
             >
                 {{food.subtype}}
             </div>
             {% if user is not none %}
                 <div hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content"
-                class="flex text-end text-xs">ADD</div>
+                class="flex justify-end items-center">                
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </div>
             {% endif %}
         </div>
     {% endfor %}

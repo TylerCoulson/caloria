@@ -1,13 +1,16 @@
 {% if foods %}
     {% for food in foods %}
-        <tr name="food_id" {% if food.user_id %} style="background-color: #f4511e25;"{% endif %}>
-            <td headers="category">{{food.category.description}}</td>
-            <td headers="type" hx-target="#content">{{food.type}}</td>
-            <td headers="subtype" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</td>
-            {% if user is not none %}
-                <td headers="add_log" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">ADD</td>
-            {% endif %}
-        </tr>
+        <!-- <div class="text-sm font-medium py-2 border-b border-gray-300">{{food.category.description}}</div> -->
+        <div class="text-sm font-medium py-2 border-b border-gray-300" hx-target="#content">{{food.type}}</div>
+        <div class="text-sm font-medium py-2 border-b border-gray-300" hx-push-url="true" hx-get="/food/{{food.id}}" hx-target="#content">{{food.subtype}}</div>
+        {% if user is not none %}
+            <div class="text-sm font-medium py-2 border-b border-gray-300 flex justify-center items-center" hx-get="/food_log/create?food_id={{food.id}}" hx-target="#content">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                  
+            </div>
+        {% endif %}
     {% endfor %}
-    <tr hx-get="/food/search?page={{page+1}}&search_word={{search_word}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></tr>
+    <div hx-get="/food/search?page={{page+1}}&search_word={{search_word}}&appending=True" hx-swap="outerHTML" hx-trigger="revealed"></div>
 {% endif %}

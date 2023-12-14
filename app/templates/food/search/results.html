@@ -2,23 +2,21 @@
 
 {% block content %}
 
-{% if user %}
-<div role="button" hx-get="/food/create" hx-target="#content">Add New Food</div>
-{% endif %}
 {% include "food/search/input.html" %}
-<table role="grid" name="food" id="food-table">
-    <thead>
-        <tr>
-            <th id="category">Category</th>
-            <th id="type">Type</th>
-            <th id="subtype">Subtype</th>
+<div id="food-table">
+    <div class=" text-2xl font-bold text-gray-600 bg-gray-300 text-center pt-3 pb-3 border-b border-gray-300">
+        Search
+    </div>
+    <div class="grid grid-cols-[2fr_3fr_1fr] text-gray-600 bg-gray-100 text-center border-b border-gray-300">
+            <!-- <div class="text-xl font-semibold">Category</div> -->
+            <div class="text-xl font-semibold bg-gray-200 py-2">Type</div>
+            <div class="text-xl font-semibold bg-gray-200 py-2">Subtype</div>
             {% if user is not none %}
-                <th id="add_log">Add Log</th>
+                <div class="text-xl font-semibold bg-gray-200 py-2">Add</div>
             {% endif %}
-        </tr>        
-    </thead>
-    <tbody id="food-body">
+
         {% include "food/search/rows.html" %}
-    </tbody>
+    </div>
+
 </table>
 {% endblock %}
