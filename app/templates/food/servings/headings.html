@@ -1,10 +1,8 @@
-<tr>
-    <th id=description>Description</th>
-    <th id=calories>Calories</th>
-    <th id=fats>Fats</th>
-    <th id=carbs>Carbs</th>
-    <th id=protein>Protein</th>
-    {% if user is not none %}
-        <th id="add_log">Add Log</th>
-    {% endif %}
-</tr>
+<div class="text-xl font-semibold bg-gray-200 py-2">Description</div>
+<div class="text-xl font-semibold bg-gray-200 py-2">Calories</div>
+<!-- <div class="text-xl font-semibold bg-gray-200 py-2">Fats</div>
+<div class="text-xl font-semibold bg-gray-200 py-2">Carbs</div>
+<div class="text-xl font-semibold bg-gray-200 py-2">Protein</div> -->
+{% if user %}
+    <div  class="text-xl font-semibold bg-gray-200 py-2">Add</div>
+{% endif %}

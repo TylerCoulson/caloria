@@ -44,7 +44,7 @@ async def get_food(*, deps:CommonDeps, food_id:int):
         "food": food,
         "servings": servings['servings']
     }
-    return templates.TemplateResponse("food/servings.html", context)
+    return templates.TemplateResponse("food/servings/base.html", context)
 
 @router.get(
     "/{food_id:int}/edit",
@@ -161,4 +161,4 @@ async def update_food(*, deps:LoggedInDeps, food_id: int, food_in: schemas.FoodB
         "food": food,
         "servings": servings['servings']
     }
-    return templates.TemplateResponse("food/servings.html", context)
+    return templates.TemplateResponse("food/servings/base.html", context)

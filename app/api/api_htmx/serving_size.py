@@ -64,7 +64,7 @@ async def update_food(*, deps:LoggedInDeps, serving_id: int, serving_in: schemas
         "servings": servings['servings']
     }
 
-    return templates.TemplateResponse("food/servings.html", context)
+    return templates.TemplateResponse("food/servings/base.html", context)
 
 @router.post(
     "/servings",
@@ -83,7 +83,7 @@ async def post_servings(*, deps:LoggedInDeps, serving_size: schemas.ServingSizeC
             "servings": [servings_out]
         }
 
-    return templates.TemplateResponse("food/servings.html", context)
+    return templates.TemplateResponse("food/servings/base.html", context)
 
 
 

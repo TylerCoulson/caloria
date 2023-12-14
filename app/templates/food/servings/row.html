@@ -1,11 +1,23 @@
-<tr name="servings">
-    <th id="description">{{serving.description}}</th>
-    <th id="calories">{{serving.calories}}</th>
-    <th id="fats">{{serving.fats}}</th>
-    <th id="carbs">{{serving.carbs}}</th>
-    <th id="protein">{{serving.protein}}</th>
-    {% if user is not none %}
-        <th id="add_log" hx-get="/food_log/create?serving_id={{serving.id}}" hx-target="#content" role="button">ADD Log</th>
-        <th id="edit" hx-get="/food/servings/{{serving.id}}/edit" hx-target="#content" role="button">Edit Serving</th>
+{% for serving in servings %}
+    <div class="text-sm font-medium py-2 border-b border-gray-300">{{serving.description}}</div>
+    <div class="text-sm font-medium py-2 border-b border-gray-300">{{serving.calories}}</div>
+    <!-- <div class="text-sm font-medium py-2 border-b border-gray-300">{{serving.fats}}</div> -->
+    <!-- <div class="text-sm font-medium py-2 border-b border-gray-300">{{serving.carbs}}</div> -->
+    <!-- <div class="text-sm font-medium py-2 border-b border-gray-300">{{serving.protein}}</div> -->
+    {% if user %}
+    <div class="flex justify-evenly items-center border-b border-gray-300">
+        <div class="text-sm font-medium py-2 hover:text-gray-400" hx-get="/food_log/create?serving_id={{serving.id}}" hx-target="#content" role="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+        </div>
+        {% if food.user_id %}
+        <div class="text-sm font-medium py-2 hover:text-gray-400" hx-get="/food/servings/{{serving.id}}/edit" hx-target="#content" role="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+            </svg>                          
+        </div>
+        {% endif %}
+    </div>
     {% endif %}
-</tr>
+{% endfor %}

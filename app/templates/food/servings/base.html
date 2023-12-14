@@ -1,0 +1,17 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+
+{% block content %}
+    <h1 class=" text-2xl font-bold text-gray-600 bg-gray-300 text-center pt-3 pb-3">{{food.type}}{% if food.subtype %}, {{food.subtype}} {% endif %}</h1>
+    
+    {% if user and food.user_id %}
+    <div class="flex justify-center m-3 gap-2">
+        <div class="bg-gray-400 text-gray-50 font-bold py-4 rounded hover:bg-gray-600 text-center w-1/2" hx-get="/food/servings/create/{{ food.id }}" hx-target="#content">Add New Serving</div>
+        <div class="bg-gray-400 text-gray-50 font-bold py-4 rounded hover:bg-gray-600 text-center w-1/2" hx-get="/food/{{ food.id }}/edit" hx-target="#content">Edit Food</div>
+    </div>
+    {% endif %}
+    
+    <div class="grid grid-cols-[3fr_2fr{% if user %}_2fr{% endif %}] text-gray-600 bg-gray-100 text-center border-b border-gray-300">
+        {% include "food/servings/headings.html" %}
+        {% include "food/servings/row.html" %}
+    </div>
+{% endblock %}
