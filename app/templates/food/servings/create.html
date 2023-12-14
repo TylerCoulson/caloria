@@ -1,16 +1,31 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<h1>Add Serving</h1>        
-<h2>{{food.type}}, {{food.subtype}}</h2>
+<h1 class=" text-2xl font-bold text-gray-600 bg-gray-300 text-center pt-3 pb-3">Add Serving</h1>        
+<h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">{{food.type}}, {{food.subtype}}</h2>
 
-<form {% if edit %}hx-put="/food/servings/{{serving.id}}"{% else %}hx-post="/food/servings"{% endif %} hx-target="#content" hx-ext='json-enc' >
-    <input hidden type="number" min="1" step="1" name="food_id" value="{{food.id}}"></input>
-    Description<input type="str" name="description" value="{% if edit %}{{serving.description}}{% endif %}"></input> 
-    Calories<input type="number" min="0" step="1" name="calories" value="{% if edit %}{{serving.calories}}{% endif %}"></input> 
-    Fats<input type="number" min="0" step="1" name="fats" value="{% if edit %}{{serving.fats}}{% endif %}"></input> 
-    Carbs<input type="number" min="0" step="1" name="carbs" value="{% if edit %}{{serving.carbs}}{% endif %}"></input> 
-    Protein<input type="number" min="0" step="1" name="protein" value="{% if edit %}{{serving.protein}}{% endif %}"></input> 
-    <input type="submit" value="Add Serving">
+<form {% if edit %}hx-put="/food/servings/{{serving.id}}"{% else %}hx-post="/food/servings"{% endif %} hx-target="#content" hx-ext='json-enc'
+    class="grid grid-cols-2 text-gray-600 bg-gray-100 text-center border-b border-gray-300">
+    <input hidden type="number" min="1" step="1" name="food_id" value="{{food.id}}"
+           class="py-4 bg-gray-200 rounded placeholder:font-semibold text-center">
+    
+    <input type="str" name="description" value="{% if edit %}{{serving.description}}{% endif %}" placeholder="Description"
+           class="col-span-2 justify-self-center w-3/4 py-4 m-4  bg-gray-200 rounded placeholder:font-semibold text-center"> 
+    <div class="font-semibold text-center m-auto pt-2 pb-2">Calories</div>
+    <input type="number" min="0" step="1" name="calories" value="{% if edit %}{{serving.calories}}{% endif %}" placeholder="0"
+           class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"> 
+    <div class="font-semibold text-center m-auto pt-2 pb-2">Fats</div>
+    <input type="number" min="0" step="1" name="fats" value="{% if edit %}{{serving.fats}}{% endif %}" placeholder="0"
+           class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"> 
+    <div class="font-semibold text-center m-auto pt-2 pb-2">Carbs</div>
+    <input type="number" min="0" step="1" name="carbs" value="{% if edit %}{{serving.carbs}}{% endif %}" placeholder="0"
+           class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"> 
+    <div class="font-semibold text-center m-auto pt-2 pb-2">Protein</div>
+    <input type="number" min="0" step="1" name="protein" value="{% if edit %}{{serving.protein}}{% endif %}" placeholder="0"
+           class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"> 
+    </div>
+    <input type="submit" value="Add Serving"
+           class="bg-gray-400 text-gray-50 w-full font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+    >
 </form>
 {% endblock %}
