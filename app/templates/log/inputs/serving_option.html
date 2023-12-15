@@ -1,9 +1,9 @@
-<option {% if serving_id == none %} selected {% endif %} value='' disabled
+<option {% if serving_id == none %} selected {% endif %} disabled
         _="on load set $options to {}"
 >Select Serving Size</option>
 {% for serving in servings %}
     <option {% if serving_id == serving.id %} selected {% endif %} value="{{serving.id}}" class="total-calc" 
-        _="on load set $options['{{serving.id}}'] to {{serving.calories}} then log $options['{{serving.id}}']">
+        _="on load set $options['{{serving.id}}'] to {{serving.calories}}">
         {{serving.description}}
     </option>
 {% endfor %}

@@ -1,33 +1,47 @@
+{% if not hx_request %}{% extends "base.html" %}{% endif %}
+{% block content %}
 <div _="on load set $serving_amount to {{serving_amount}} then set $calories to {{calories}} then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
-    <h1> Add Log: {{food.type}} - {{food.subtype}}</h1> 
-    Total Calories: <div id="total-calories"></div>
+    <h1 class=" text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3"> <div>Add Log</div> {{food.type}} - {{food.subtype}}</h1> 
+    
 
-    <form hx-post="/food_log" hx-push-url="true" hx-target="#content" hx-ext='json-enc' name="food_log">
-        <label for="date">
-            Date: <input type="date" id="date" name="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
-        </label>
-        <label for="food_id">
-            <input hidden type="number"  id="food_id" name="food_id" value="{{food.id}}">
-        </label>
-        <label for="serving">
-            Serving: 
-            <select type="date" id="serving" name="serving" _="on change set #serving_id.value to my.value then
-            if my.value
-                set #serving_cals.innerHTML to $options[my.value as a String] then 
-                set $calories to $options[my.value as a String] then
-                set #total-calories.innerHTML to $serving_amount * $calories">
+
+    <form hx-post="/food_log" hx-push-url="true" hx-target="#content" hx-ext='json-enc' name="food_log"
+    class="grid grid-cols-2 text-gray-600 bg-gray-100 text-center border-b border-gray-300">
+        
+            <div class="font-semibold text-center m-auto pt-2 pb-2">Date:</div> <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" type="date" id="date" name="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
+        
+        
+            <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" hidden type="number"  id="food_id" name="food_id" value="{{food.id}}">
+        
+        
+            <div class="font-semibold text-center m-auto pt-2 pb-2">Serving:</div> 
+            <select type="date" id="serving" name="serving" 
+            class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center"
+            _="on change
+                if my.value
+                    set $calories to $options[my.value as a String] then
+                    set #total-calories.innerHTML to $serving_amount * $calories">
                 {% include "log/inputs/serving_option.html"%}    
             </select>
-        </label>
-        <label for="serving_id">
-            <input hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}">
-            Calories: <div type="number" class="total-calc" id="serving_cals">{{calories}}</div>
-        </label>
-        <label for="serving_amount">
-            Serving Amount: <input type="number" class="total-calc" min="0" step="any" id="serving_amount" name="serving_amount" value="{{serving_amount}}" _="on change set $serving_amount to my.value then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
-        </label>
-
-        <button>Add Log</button>
+        
+        
+            <!-- <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}">
+            <div class="font-semibold text-center m-auto pt-2 pb-2">Calories per Serving:</div> <div type="number" class="text-center m-auto pt-2 pb-2" id="serving_cals">{{calories}}</div> -->
+        
+        
+            <div class="font-semibold text-center m-auto pt-2 pb-2">Serving Amount:</div> 
+            <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" type="number"  min="0" step="any" id="serving_amount" name="serving_amount" value="{{serving_amount or 1}}" 
+            _="on change set $serving_amount to my.value then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
+        
+        <h2 class="col-span-2  justify-center text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">
+            <div>Total Calories</div>
+            
+            <div id="total-calories"></div>
+        </h2>
+        <input required type="submit" value="Add Log"
+               class="col-span-2 bg-gray-400 text-gray-50 w-full my-4 font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+        >
         
     </form>
 </div>
+{% endblock %}

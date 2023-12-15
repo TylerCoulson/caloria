@@ -34,7 +34,7 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=Fa
     if appending:
         return templates.TemplateResponse("log/body.html", context)
 
-    return templates.TemplateResponse("log/list.html", context)             
+    return templates.TemplateResponse("log/base.html", context)             
 
 @router.get(
     "/create",
@@ -181,7 +181,7 @@ async def post_food_log(*, deps:LoggedInDeps, food_log: schemas.FoodLogCreate):
         "home": False,
         "page": 1,
     }
-    return templates.TemplateResponse("log/list.html", context)             
+    return templates.TemplateResponse("log/base.html", context)             
 
 @router.delete(
     "/{food_log_id}",
