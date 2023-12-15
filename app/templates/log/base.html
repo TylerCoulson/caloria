@@ -2,12 +2,11 @@
 
 {% block content %}
 {% include "log/inputs/add_log.html" %}
-<table role="grid" name="food">
-    <thead>
+<div role="grid" name="food">
+    <div class="grid grid-cols-[1fr_2fr_1fr_1fr] text-center bg-gray-100">
         {% include "log/headings.html" %}
-    </thead>
-    <tbody>
+
         {% include "log/body.html"%}
-    </tbody>
-</table>
+    </div>
+</div>
 {% endblock %}
