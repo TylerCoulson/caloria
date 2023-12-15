@@ -47,6 +47,7 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
         "request": deps['request'],
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
+        "date": deps['client_date'],
         "serving_amount": 1,
         "calories": 0,
     }
@@ -85,8 +86,10 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
         "hx_request": deps['hx_request'],
         "user": deps['profile'],
         "trigger": 'click',
+        "date": log.date,
         "log":log,
         "editable": True,
+        "food": log.serving_size.food,
         'servings': servings['servings'],
         'serving_id': log.serving_size_id,
         "serving_amount":log.serving_amount,
@@ -94,11 +97,12 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
     }
 
     if copy:
+        context["date"] = deps['client_date']
         context["log"].date = deps['client_date']
         context["log"].id = 0
         context['editable'] = False
     
-    return templates.TemplateResponse("log/inputs/edit.html", context)
+    return templates.TemplateResponse("log/inputs/create.html", context)
 
 
 @router.get(

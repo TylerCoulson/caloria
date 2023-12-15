@@ -8,7 +8,10 @@
     <form hx-post="/food_log" hx-push-url="true" hx-target="#content" hx-ext='json-enc' name="food_log"
     class="grid grid-cols-2 text-gray-600 bg-gray-100 text-center border-b border-gray-300">
         
-            <div class="font-semibold text-center m-auto pt-2 pb-2">Date:</div> <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" type="date" id="date" name="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
+            <div class="font-semibold text-center m-auto pt-2 pb-2">Date:</div>
+            <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" type="date" id="date" name="date" 
+            value="{{date}}"
+            >
         
         
             <input required class="w-3/4 py-4 m-4 bg-gray-200 rounded placeholder:font-semibold text-center" hidden type="number"  id="food_id" name="food_id" value="{{food.id}}">
@@ -41,7 +44,7 @@
         <input required type="submit" value="Add Log"
                class="col-span-2 bg-gray-400 text-gray-50 w-full my-4 font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
         >
-        
+        <input hidden type="number" id="serving_id" name="serving_size_id" value="{{serving_id}}" />
     </form>
 </div>
 {% endblock %}

@@ -1,4 +1,5 @@
-<tr name="food_log_id" {% if editable %}id="food_log_{{log.id}}"{% endif %}  _="on load set $serving_amount to {{serving_amount|round(2)}} then set $calories to {{calories}} then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
+<!-- Not currently used might be good info for larger screens -->
+<!-- <tr name="food_log_id" {% if editable %}id="food_log_{{log.id}}"{% endif %}  _="on load set $serving_amount to {{serving_amount|round(2)}} then set $calories to {{calories}} then set #total-calories.innerHTML to ($serving_amount * $calories) as Int">
   <td headers="log_date"><input type="date" id='date' name="date" value="{{log.date}}" /></td>
   
   <td headers="log_food">{{log.serving_size.food.type}}, {{log.serving_size.food.subtype}}</td>
@@ -41,4 +42,4 @@
   <td headers="add_log">
     <div role="button" {% if editable %} hx-delete="/food_log/{{log.id}}" {% endif %} _="on click remove closest <tr/>" hx-swap="none"> Delete </div>
   </td>
-</tr>
+</tr> -->
