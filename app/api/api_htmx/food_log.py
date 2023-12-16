@@ -29,7 +29,7 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1, home:bool=Fa
         "logs": logs,
         "home": home,
         "page":page,
-        "appending": appending
+        "appending": appending,
        }
     if appending:
         return templates.TemplateResponse("log/body.html", context)
@@ -50,6 +50,7 @@ async def get_create_log(*, deps:LoggedInDeps, food_id:int=None, serving_id:int=
         "date": deps['client_date'],
         "serving_amount": 1,
         "calories": 0,
+        "title": "Add Log"
     }
 
     if food_id:
@@ -93,7 +94,8 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
         'servings': servings['servings'],
         'serving_id': log.serving_size_id,
         "serving_amount":log.serving_amount,
-        "calories": log.serving_size.calories
+        "calories": log.serving_size.calories,
+        "title": "Edit Log"
     }
 
     if copy:
@@ -101,6 +103,7 @@ async def get_log_edit(*, deps:LoggedInDeps, log_id:int, copy:bool = False):
         context["log"].date = deps['client_date']
         context["log"].id = 0
         context['editable'] = False
+        context["title"] = "Copy Log"
     
     return templates.TemplateResponse("log/inputs/create.html", context)
 
