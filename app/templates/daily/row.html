@@ -1,29 +1,39 @@
+
 {% for daily in dailies %}
-{% if loop.first and not appending %}
-<input hidden id="max_{{daily.date}}" type="date" _="on load make a Date then set my.value to it.toLocaleDateString('sv')">
-<input hidden id="hidden_{{daily.date}}" type="date" value="{{daily.date}}">
-<tr id="date_{{ daily.date }}" _="on load if #hidden_{{daily.date}}.value > #max_{{daily.date}}.value hide me">
-{% elif loop.first %}
-<tr id="date_{{ daily.date }}" {% if loop.nextitem and loop.nextitem.week != daily.week %}style="border-bottom-style: dashed;  border-color: #f4511e;" {% endif %}>
-{% else %}
-<tr id="date_{{ daily.date }}" {% if loop.previtem and loop.previtem.week != daily.week %}style="border-top-style: dashed;  border-color: #f4511e;" {% endif %}>
-{% endif %}
-    <td headers="day">{{ daily.day }}</td>
-    <td headers="date">{{ daily.date }}</td>
-    {% include "daily/activity_level.html" %}
+<div class="contents">
+        <div class="contents" id="date_{{ daily.date }}" >
+            <!-- <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="day">{{ daily.day }}</div> -->
+            <div class="flex flex-col w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="date">
+                <div>{{daily.date.strftime('%m/%d')}}</div>
+                <div class="text-xs">{{daily.date.strftime('%Y')}}</div>
+            </div>
+            <!-- {% include "daily/activity_level.html" %} -->
 
-    {% include "daily/weight_column.html"%}
+            <!-- {% include "daily/weight_column.html"%} -->
 
-    <td headers="est_weight">{{ daily.est_weight }}</td>
-    <td headers="eaten_calories">{{ "{:,}".format(daily.eaten_calories|int) }}</td>
-    <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</td>
-    <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
-    {% if not home %}
-        <td 
-            hx-get="/daily/{{ daily.date }}" hx-target="#date_{{ daily.date }}" hx-swap="afterend"
-            _="on click hide me then show next <td/>"
-        >Λ</td>
-        <td style="display: none;" _="on click hide me then show previous <td/> then remove next <tr/>">V</td>
-     {% endif %}
-</tr>
+            <!-- <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="est_weight">{{ daily.est_weight }}</div> -->
+            <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="eaten_calories">{{ "{:,}".format(daily.eaten_calories|int) }}</div>
+            <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</div>
+            <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400" headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</div>
+            {% if not home %}
+                <div 
+                    hx-get="/daily/{{ daily.date }}" hx-target="closest .contents" hx-swap="beforeend"
+                    _="on click hide me then show next <div/>"
+                    class="px-5 flex justify-center m-auto h-full w-full items-center rounded-br border-t border-gray-400"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 align-bottom">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                    </svg>
+                </div>
+                <div style="display: none;" 
+                    _="on click hide me then show previous <div/> then remove next <div/>"
+                    class="px-5 flex justify-center m-auto h-full w-full items-center rounded-br border-t border-gray-300"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </div>
+            {% endif %}
+    </div>
+</div>
 {% endfor %}
