@@ -1,6 +1,9 @@
 {% for log in logs %}
         <div class="contents">
-            <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400{% if not loop.first and loop.previtem.date != log.date %} border-t-2  {% endif %}">{{log.date.strftime('%m/%d')}}</div>
+            <div class="flex flex-col w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400{% if not loop.first and loop.previtem.date != log.date %} border-t-2  {% endif %}">
+                <div>{{log.date.strftime('%m/%d')}}</div>
+                <div class="text-xs">{{log.date.strftime('%Y')}}</div>
+            </div>
             <div class="flex flex-col w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400{% if not loop.first and loop.previtem.date != log.date %} border-t-2  {% endif %}">
                 <div>{{log.serving_size.food.type}}</div>
                 <div class="text-xs">{% if log.serving_size.food.subtype %}{{log.serving_size.food.subtype}} {% endif %}</div>
