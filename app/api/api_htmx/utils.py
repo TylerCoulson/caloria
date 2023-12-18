@@ -18,29 +18,27 @@ async def calorie_progress_data(deps:LoggedInDeps, overview=None, total:bool=Fal
         calories_eaten = overview['total_calories_eaten']
         calorie_goal = overview['total_calorie_goal']
 
+    goal_to_burn = calorie_goal/calories_burned
     offsets = {
             "calorie_info": {
                 "calories_burned":calories_burned,
                 "calories_eaten":calories_eaten,
                 "calorie_goal":calorie_goal,
             },
-            "white_offset_max": ((1 - (calorie_goal/calories_burned))),
-            "white_offset": 
-            max(
-                ((1 - min(calories_eaten/calories_burned, 1))),
-                ((1 - (calorie_goal/calories_burned)))
-            ),
-            "yellow_offset":  ((1 - min(calories_eaten/calories_burned, 1))),
-            "red_offset":
-                (
-                    (
-                        1 - (
-                            min(
-                                calories_eaten/calories_burned - 1,
-                                1
-                            )
-                        )
-                    )
-                ), 
+            "goal_rotation": (goal_to_burn) * 360 ,
+            "max_eaten":goal_to_burn,
+            "max_goal": (calories_burned - calorie_goal) / calories_burned,
+            "eaten_percentage": min(
+                                    (calories_eaten/calories_burned),
+                                    goal_to_burn
+                                ),
+            "over_goal_percentage":  min(
+                                        max(calories_eaten - calorie_goal, 0) / calories_burned,
+                                        (calories_burned - calorie_goal) / calories_burned
+                                    ),
+            "over_rmr_percentage": min(
+                                        max((calories_eaten/calories_burned - 1), 0),
+                                        1
+                                    ), 
         }
     return offsets

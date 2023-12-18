@@ -6,7 +6,7 @@
     <h1 class=" text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">
         Food Log
     </h1>
-    <div class="grid grid-cols-[1fr_2fr_1fr_1fr] text-center bg-gray-100">
+    <div class="grid grid-cols-[1fr_2fr_1fr{% if not home %}_1fr{% endif %}] text-center bg-gray-100">
         {% include "log/headings.html" %}
 
         {% include "log/body.html"%}

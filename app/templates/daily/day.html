@@ -1,16 +1,18 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %} 
 
 {% block content %}
-<tr>
-  <td colspan="3">
-    <h1>Daily Overview</h1>
-    {% include "daily/daily_expanded.html" %}
-  </td>
-  <td colspan="5">
+<div id="daily-log" class="col-span-5">
+  <div class="">
     {% include "index/calorie_progress.html"%}
-    <h1>Food Log</h1>
-    {% set home = True %}
-    {% include "log/day.html"%}
-  </td>
-</tr>
+  </div>
+  <div>
+   
+    {% include "daily/daily_expanded.html" %}
+  </div>
+
+  <!-- <div class="bg-green-300">
+    {# set home = True #}
+    {# include "log/base.html"#}
+  </div> -->
+</div>
 {% endblock %}

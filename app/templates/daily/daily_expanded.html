@@ -1,66 +1,84 @@
-<table >
-    <tr>
-        <th hidden id="week" scope="col">Week</th>
-        <td hidden headers="week">{{ daily.week }}</td>
-    </tr>
-    <tr>
-        <th id="day" scope="col">Day</th>
-        <td headers="day">{{ daily.day }}</td>
-    </tr>
-    <tr>
-        <th id="date" scope="col">Date</th>
-        <td headers="date">{{ daily.date }}</td>
-    </tr>
-    <tr>
-        <th id="daily_activity_level" scope="col">Activity Level</th>
+<h1 class="col-span-2 text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">Daily Overview</h1>
+
+<div class="grid grid-cols-[1fr_1fr] m-auto bg-gray-100">
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Week</div>
+        <div class="m-auto text-center">{{ daily.week }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Day</div>
+        <div class="m-auto text-center">{{ daily.day }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Date</div>
+        <div class="m-auto text-center">{{ daily.date }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Activity Level</div>
         {% include "daily/activity_level.html" %}
-    </tr>
-    <tr>
-        <th id="actual_weight" scope="col">Acutal Weight</th>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Acutal Weight</div>
         {% include "daily/weight_column.html"%}
-    </tr>
-    <tr>
-        <th id="est_weight" scope="col">Estimated Weight</th>
-        <td headers="est_weight">{{ daily.est_weight }}</td>
-    </tr>
-    <tr>
-        <th hidden id="bmi" scope="c">BMI</th>
-        <td hidden headers="bmi">{{ daily.bmi }}</td>
-    </tr>
-    <tr>
-        <th id="resting_rate" scope="col">Resting Calories</th>
-        <td headers="resting_rate">{{ daily.calories_burned }}</td>
-    </tr>
-    <tr>
-        <th id="eaten_calories" scope="col">Eaten Calories</th>
-        <td headers="eaten_calories">{{ "{:,}".format(daily.eaten_calories|int) }}</td>
-    </tr>
-    <tr>
-        <th id="eaten_fats" scope="col">Eaten Fats</th>
-        <td headers="eaten_fats">{{ "{:,}".format(daily.eaten_fats|int) }}</td>
-    </tr>
-    <tr>
-        <th id="eaten_carbs" scope="col">Eaten Carbs</th>
-        <td headers="eaten_carbs">{{ "{:,}".format(daily.eaten_carbs|int) }}</td>
-    </tr>
-    <tr>
-        <th id="eaten_protein" scope="col">Eaten Protein</th>
-        <td headers="eaten_protein">{{ "{:,}".format(daily.eaten_protein|int) }}</td>        
-    </tr>
-    <tr>
-        <th id="calorie_goal" scope="col">Calorie Goal</th>
-        <td headers="calorie_goal">{{ "{:,}".format(daily.calorie_goal|int) }}</td>
-    </tr>
-    <tr>
-        <th id="calories_left" scope="col">Calories Left</th>
-        <td headers="calories_left">{{ "{:,}".format(daily.calories_left|int)  }}</td>
-    </tr>
-    <tr>
-        <th hidden id="total_lbs_lost" scope="col">Lbs Lost</th>
-        <td hidden headers="total_lbs_lost">{{ daily.total_lbs_lost }}</td>
-    </tr>
-    <tr>
-        <th id="calorie_surplus" scope="col">Calorie Surplus</th>
-        <td headers="calorie_surplus">{{ "{:,}".format(daily.calorie_surplus|int) }}</td>
-    </tr>
-</table>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Estimated Weight</div>
+        <div class="m-auto text-center">{{ daily.est_weight }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2" >BMI</div>
+        <div class="m-auto text-center" >{{ daily.bmi }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Resting Calories</div>
+        <div class="m-auto text-center">{{ daily.calories_burned|int }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Eaten Calories</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.eaten_calories|int) }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Eaten Fats</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.eaten_fats|int) }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Eaten Carbs</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.eaten_carbs|int) }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Eaten Protein</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.eaten_protein|int) }}</div>        
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Calorie Goal</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.calorie_goal|int) }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Calories Left</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.calories_left|int)  }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2" >Lbs Lost</div>
+        <div class="m-auto text-center" >{{ daily.total_lbs_lost }}</div>
+    </div>
+    
+    <div class="contents">
+        <div class="font-semibold text-center pt-2 pb-2">Calorie Surplus</div>
+        <div class="m-auto text-center">{{ "{:,}".format(daily.calorie_surplus|int) }}</div>
+    </div>
+</div>

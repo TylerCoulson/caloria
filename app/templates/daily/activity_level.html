@@ -4,6 +4,10 @@
     "1.6": "Moderately Active",
     "1.8": "Very Active"
 })	%}
-<td headers="daily_activity_level" {% if (not home) and (daily.day != 1) %} hx-get="/daily/create/{{ daily.date }}/activity_level" hx-target="this" hx-swap="outerHTML" {% endif %}> 
+<div headers="daily_activity_level" 
+    {% if (not home) and (daily.day != 1) %} hx-get="/daily/create/{{ daily.date }}/activity_level" hx-target="this" hx-swap="outerHTML" {% endif %}
+    class="w-3/4 m-auto text-center"
+    > 
+    
     {{activity_levels_dict[daily.activity_level|string]}}
-</td>
+</div>

@@ -1,79 +1,73 @@
 <div>
-  {% set circumference = 326.7256 %}
-<svg class="progress-ring" height="120" width="120">
+  {% set radius = 40 %}
+  {% set circumference = 2*radius*3.14159 %}
+<svg class="progress-ring" width="200" height="200" viewbox="0 0 100 100">
   <circle
+    class="stroke-zinc-200"
     style="
-      stroke-dasharray: {{circumference}} {{circumference}};
-      stroke-dashoffset: -{{circumference - offsets['white_offset_max'] * circumference}};
+      stroke-dasharray: {{(offsets['max_eaten'] * circumference)}} 999;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
-    stroke="hsla(60, 100%, 50%, 0.65)"
     stroke-width="4"
     fill="transparent"
-    r="52"
-    cx="60"
-    cy="60"
+    r="{{radius}}"
+    cx="50"
+    cy="50"
   />
   <circle
+    class="stroke-zinc-300"
     style="
-      stroke-dasharray: {{circumference}} {{circumference}};
-      stroke-dashoffset: {{offsets['white_offset_max'] * circumference}};
-      transform: rotate(-90deg);
+      stroke-dasharray: {{(offsets['max_goal'] * circumference)}} 999;
+      transform: rotate({{offsets['goal_rotation'] - 90}}deg);
       transform-origin: 50% 50%;"
-    stroke="hsla(200, 100%, 50%, 0.65)"
     stroke-width="4"
     fill="transparent"
-    r="52"
-    cx="60"
-    cy="60"
+    r="{{radius}}"
+    cx="50"
+    cy="50"
   />
   <circle
+    class="stroke-zinc-500"
     style="
-      stroke-dasharray: {{circumference}} {{circumference}};
-      stroke-dashoffset:  {{
-        offsets['yellow_offset'] * circumference
-      }};
+      stroke-dasharray: {{(offsets['eaten_percentage'] * circumference)}} 999;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
-    stroke="yellow"
     stroke-width="4"
     fill="transparent"
-    r="52"
-    cx="60"
-    cy="60"
+    r="{{radius}}"
+    cx="50"
+    cy="50"
   />
-
   <circle
+    class="stroke-zinc-700"
     style="
-      stroke-dasharray: {{circumference}} {{circumference}};
-      stroke-dashoffset: {{
-        offsets['white_offset'] * circumference
-      }};
-      transform: rotate(-90deg);
+      stroke-dasharray:  {{(offsets['over_goal_percentage'] * circumference)}} 999;
+      transform: rotate({{offsets['goal_rotation'] - 90}}deg);
       transform-origin: 50% 50%;"
-    stroke="hsla(200, 100%, 50%, 1)"
     stroke-width="4"
     fill="transparent"
-    r="52"
-    cx="60"
-    cy="60"
+    r="{{radius}}"
+    cx="50"
+    cy="50"
   />
-
   <circle
+    class="stroke-black"
     style="
-      stroke-dasharray: {{circumference}} {{circumference}};
-      stroke-dashoffset:  {{ [offsets['red_offset'] * circumference, circumference]|min}};
+      stroke-dasharray:  {{(offsets['over_rmr_percentage'] * (circumference))}} 999;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;"
-    stroke="red"
-    stroke-width="5"
+    stroke-width="4"
     fill="transparent"
-    r="52"
-    cx="60"
-    cy="60"
+    r="{{radius}}"
+    cx="50"
+    cy="50"
   />
-  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle">{{offsets['calorie_info']['calories_eaten'] | int}}/{{offsets['calorie_info']['calorie_goal'] | int}}</text>
-  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle">Calories</text>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="font-semibold">
+    {{(offsets['calorie_info']['calories_eaten'] | int / offsets['calorie_info']['calorie_goal'] | int) | round(4) * 100}}%
+  </text>
+  <!-- <line x1="40%" x2="60%" y1="44%" y2="44%" stroke="black" stroke-width="2"/>
+  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" class="font-semibold">{{offsets['calorie_info']['calorie_goal'] | int}}</text>
+  <text x="50%" y="67%" dominant-baseline="middle" text-anchor="middle" class="font-semibold">Calories</text> -->
 </svg>
-<!-- <div>Test/Ing</div> -->
+
 </div>
