@@ -25,11 +25,11 @@
     </head>    
 <body class="bg-gray-50 mb-10">
 
-    <main id="container" class="md:w-3/4 m-auto">
+    <main id="container" class="bg-gray-100 md:w-3/4 m-auto">
         <div class="bg-gray-300">
             {% include "nav.html" %}
         </div>
-        <div id="content">
+        <div id="content" class="m-auto">
         {% if verification %}
             <form hidden id="verify" hx-trigger="load" hx-ext='json-enc' hx-post="/api/v1/auth/verify" hx-target="this" >
                 <input name="token" value="{{token}}">

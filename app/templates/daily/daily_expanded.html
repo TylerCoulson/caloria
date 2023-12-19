@@ -1,22 +1,22 @@
-<h1 class="col-span-2 text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">Daily Overview</h1>
+<!-- <h1 class="col-span-2 text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">Daily Overview</h1> -->
 
-<div class="grid grid-cols-[1fr_1fr] m-auto bg-gray-100">
-    
-    <div class="contents">
-        <div class="font-semibold text-center pt-2 pb-2">Week</div>
-        <div class="m-auto text-center">{{ daily.week }}</div>
+<!-- <div class="grid grid-cols-[1fr_1fr] m-auto bg-gray-100"> -->
+    <div class="grid grid-cols-[1fr_3fr]">
+        <div class="contents">
+            <div class="m-auto font-semibold pt-2 pb-2">Date</div>
+            <div class="m-auto">{{ daily.date }}</div>
+        </div>
+
+        <div class="contents">
+            <div class="m-auto font-semibold pt-2 pb-2">Week</div>
+            <div class="m-auto">{{ daily.week }}</div>
+        </div>
+        
+        <div class="contents">
+            <div class="m-auto font-semibold pt-2 pb-2">Day</div>
+            <div class="m-auto">{{ daily.day }}</div>
+        </div>
     </div>
-    
-    <div class="contents">
-        <div class="font-semibold text-center pt-2 pb-2">Day</div>
-        <div class="m-auto text-center">{{ daily.day }}</div>
-    </div>
-    
-    <div class="contents">
-        <div class="font-semibold text-center pt-2 pb-2">Date</div>
-        <div class="m-auto text-center">{{ daily.date }}</div>
-    </div>
-    
     <!-- <div class="contents">
         <div class="font-semibold text-center pt-2 pb-2">Activity Level</div>
         {% include "daily/activity_level.html" %}
@@ -81,4 +81,4 @@
         <div class="font-semibold text-center pt-2 pb-2">Calorie Surplus</div>
         <div class="m-auto text-center">{{ "{:,}".format(daily.calorie_surplus|int) }}</div>
     </div>
-</div>
+<!-- </div> -->
