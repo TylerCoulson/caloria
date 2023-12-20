@@ -1,12 +1,19 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<div style="display: none;" id="prediction-hidden" role="button" _="on click hide me then show #prediction-inputs">Show Inputs</div>
-<div class="grid">
-    
+<h1 class=" text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">Create Prediction</h1>
+
+<div class="flex justify-center text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2" 
+     _="on click toggle .hidden on #prediction-inputs"
+>
+    <div class="bg-gray-400 text-gray-50 w-1/2 h-full rounded hover:bg-gray-500">Inputs V</div> 
+</div>
+
+<div id="prediction-inputs" >
     {% include "prediction/inputs.html"%}
-    <div id="forecast">
-        {% include "prediction/list.html"%}
-    </div>
+</div>
+
+<div id="prediction">
+    {#% include "prediction/list.html"%#}
 </div>
 {% endblock %}

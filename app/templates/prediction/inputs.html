@@ -1,41 +1,33 @@
+<form hx-get="/prediction/never_faulter" hx-target="#prediction" class="grid grid-cols-2 w-10/12 m-auto bg-gray-300 pb-6 rounded-b-lg">
+    
+    <div class="m-auto p-4">Start Date:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="date"  value="{{profile.start_date}}" id="start_date" name="start_date">
+    
+    
+    <div class="m-auto p-4">Start Weight:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="number" value="{{profile.start_weight}}" step=".1" min="0" id="start_weight" name="start_weight">
+    
+    
+    <div class="m-auto p-4">Goal:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="number" value="{{profile.goal_weight}}" step=".1" min="0" id="goal_weight" name="goal_weight">
 
-<div id="prediction-inputs">
-    <h1 >Create Prediction</h1>
-    <form hx-get="/prediction/never_faulter" hx-target="#forecast">
-        <label for="start-date">
-            Start Date: <input required="required"  type="date"  value="{{profile.start_date}}" id="start_date" name="start_date">
-        </label>
-        
-        <label for="start_weight">
-            Start Weight: <input required="required"  type="number" value="{{profile.start_weight}}" step=".1" min="0" id="start_weight" name="start_weight">
-        </label>
-        
-        <label for="goal_weight">
-            Goal: <input required="required"  type="number" value="{{profile.goal_weight}}" step=".1" min="0" id="goal_weight" name="goal_weight">
-        </label>
+    <fieldset class="contents">
+    <div class="m-auto p-4"><legend for="sex">Sex:</div></legend>
+        {% include "sex_options.html" %}
+    </fieldset>
+    
+    
+    <div class="m-auto p-4">BirthDate:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="date" value="{{profile.birthdate}}" id="birthdate" name="birthdate">
+    
+    
+    <div class="m-auto p-4">Height:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="number" value="{{profile.height}}" id="height" name="height">
+    
+    
+    <div class="m-auto p-4">Lbs per week:</div> <input class="m-auto w-10/12 bg-gray-50 text-center" required="required"  type="number" value="{{profile.lbs_per_week}}" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week">
+    
+    <div class="m-auto p-4">Activity Level:</div>
+    <select type="number" value="{{profile.activity_level}}" min="1" max="2" step=".1" id="activity_level" name="activity_level"
+            class="m-auto w-10/12 bg-gray-50 text-center"
+    >
+        {% include "activity_level_options.html" %}
+    </select>
 
-        <fieldset>
-            <legend for="sex">Sex:</legend>
-            {% include "sex_options.html" %}
-        </fieldset>
-        
-        <label for="birthdate">
-            BirthDate: <input required="required"  type="date" value="{{profile.birthdate}}" id="birthdate" name="birthdate">
-        </label>
-        
-        <label for="height">
-            Height: <input required="required"  type="number" value="{{profile.height}}" id="height" name="height">
-        </label>
-        
-        <label for="lbs_per_week">
-            Lbs per week: <input required="required"  type="number" value="{{profile.lbs_per_week}}" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week">
-        </label>
-        
-        <label for="activity_level">Activity Level:</label>
-        <select type="number" value="{{profile.activity_level}}" min="1" max="2" step=".1" id="activity_level" name="activity_level">
-            {% include "activity_level_options.html" %}
-        </select>
-
-        <input type="submit" value="Predict" _="on htmx:afterRequest from closest <form/> hide #prediction-inputs then show #prediction-hidden">
-    </form>
-</div>
+    <input class="m-auto col-span-2 w-10/12 bg-gray-400 text-gray-50 font-bold py-4 rounded hover:bg-gray-600" type="submit" value="Predict">
+</form>

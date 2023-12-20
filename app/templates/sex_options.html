@@ -1,8 +1,10 @@
-<label for="male">
-    <input type="radio" id="male" name="sex" value="male" {% if profile.sex == 'male'%}checked{% endif %}>
-    Male
-</label>
-<label for="female">
-    <input type="radio" id="female" name="sex" value="female" {% if profile.sex == 'female'%}checked{% endif %}>
-    Female
-</label>
+<div class="flex flex-col justify-center text-center ">
+    <label for="male" class="cursor-pointer">
+        <input class="cursor-pointer" type="radio" id="male" name="sex" value="male" {% if profile.sex == 'male'%}checked{% endif %}>
+        Male
+    </label>
+    <label for="female" class="cursor-pointer">
+        <input class="cursor-pointer" type="radio" id="female" name="sex" value="female" {% if profile.sex == 'female'%}checked{% endif %}>
+        Female
+    </label>
+</div>
