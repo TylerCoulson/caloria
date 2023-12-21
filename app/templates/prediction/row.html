@@ -1,9 +1,9 @@
-<div>
-    <div headers="day">{{pred.day}}</div>
-    <!-- <div headers="date">{{pred.date}}</div> -->
-    <div headers="est_weight">{{pred.est_weight}}</div>
-    <div headers="resting_rate">{{pred.resting_rate}}</div>
-    <div headers="net_calories">{{pred.net_calories}}</div>
-    <div headers="total_lbs_lost">{{pred.total_lbs_lost}}</div>
-    <!-- <div headers="bmi">{{pred.bmi}}</div> -->
+<div class="contents">
+    <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.day}}</div>
+    <!-- <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.date}}</div> -->
+    <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.est_weight}}</div>
+    <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.resting_rate}}</div>
+    <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.net_calories}}</div>
+    <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2 border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.total_lbs_lost}}</div>
+    <!-- <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t{%if pred.day % 7 == 0 %}-2{%endif%} border-gray-300">{{pred.bmi}}</div> -->
 </div>

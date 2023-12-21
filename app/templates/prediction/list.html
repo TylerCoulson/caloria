@@ -1,17 +1,22 @@
-<div> Date Finished - {% if preds %}{{ final_day.date }}{% endif %}</div>
-<div> Days - {% if preds %}{{ final_day.day }}{% endif %}</div>
-<table role="grid" name="prediction">
-    <thead>
-        {% include "prediction/headings.html" %}
-    </thead>
-    <tbody id="prediction-body">
-        {% if preds %}
-            {% for pred in preds.values() %}
-            
-            {% include "prediction/row.html"%}
-            {% endfor %}
-        {% else %}
 
-        {% endif %}
-    </tbody>
-</table>
+{% if preds %}
+
+<div class="grid grid-cols-5">
+    
+        <div class="col-span-3 bg-gray-300"> 
+            <div class="font-semibold text-center">Date Finished</div> 
+            <div class="font-semibold text-center">{{ final_day.date }}</div>
+
+        </div>
+        <div class="col-span-2 bg-gray-300">
+            <div class="font-semibold text-center">Days</div>
+            <div class="font-semibold text-center">{{ final_day.day }}</div>
+        </div>
+    <div class="contents">
+            {% include "prediction/headings.html" %}
+            {% for pred in preds.values() %}
+                {% include "prediction/row.html"%}
+            {% endfor %}
+    </div>
+</div>
+{% endif %}    
