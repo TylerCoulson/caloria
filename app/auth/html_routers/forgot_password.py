@@ -27,11 +27,12 @@ async def reset_password(deps:CommonDeps, token:str = None):
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def reset_password(deps:CommonDeps, token:str = None):
+async def reset_password(deps:CommonDeps, reset:bool = False, token:str = None):
     context = {
         "request": deps['request'],
         "hx_request": deps['hx_request'],
         "user": deps['user'],
+        "reset": reset
     }
     
     return templates.TemplateResponse("auth/forgot_password.html", context)
