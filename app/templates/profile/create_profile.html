@@ -2,39 +2,38 @@
 
 {% block content %}
 {% if not profile %} {% set profile = None %} {% endif %}
-<h1> Profile </h1>
-<form hx-put="/profile" hx-target="#content" hx-push-url="true" name='profile' hx-ext='json-enc' >
-    <label for="start-date">Start Date:</label>
-    <input type="date"  id="start_date" name="start_date" value="{{profile.start_date|default(start_date)}}">
+<h1 class="text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3"> Profile </h1>
+<form hx-put="/profile" hx-target="#content" hx-push-url="true" name='profile' hx-ext='json-enc' 
+      class="grid grid-cols-2 w-10/12 m-auto bg-gray-300 pb-6 rounded-b-lg">
     
-    <label for="start_weight">Start Weight (in lbs):</label>
-    <input type="number" step=".1" id="start_weight" name="start_weight" value="{{profile.start_weight|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="start-date">Start Date:</label>
+    <input class="m-auto w-10/12 text-center" type="date"  id="start_date" name="start_date" value="{{profile.start_date|default(start_date)}}">
     
-    <label for="goal_weight">Goal Weight (in lbs):</label>
-    <input type="number" step=".1" id="goal_weight" name="goal_weight" value="{{profile.goal_weight|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="start_weight">Start Weight (in lbs):</label>
+    <input class="m-auto w-10/12 text-center" type="number" step=".1" id="start_weight" name="start_weight" value="{{profile.start_weight|default('None, true')}}">
     
-    <label for="sex">Sex:</label>
+    <label class="m-auto font-semibold p-4" for="goal_weight">Goal Weight (in lbs):</label>
+    <input class="m-auto w-10/12 text-center" type="number" step=".1" id="goal_weight" name="goal_weight" value="{{profile.goal_weight|default('None, true')}}">
+    
+    <label class="m-auto font-semibold p-4" for="sex">Sex:</label>
     <div id="sex">
-        <input type="radio" id="male" name="sex" value="male" {% if profile.sex == "male" %} checked {% endif %}>
-        <label for="male">Male</label>
-        <input type="radio" id="female" name="sex" value="female" {% if profile.sex == "female" %} checked {% endif %}>
-        <label for="female">Female</label>
+        {% include "sex_options.html" %}
     </div>
-    <label for="birthdate">BirthDate:</label>
-    <input type="date" id="birthdate" name="birthdate" value="{{profile.birthdate|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="birthdate">BirthDate:</label>
+    <input class="m-auto w-10/12 text-center" type="date" id="birthdate" name="birthdate" value="{{profile.birthdate|default('None, true')}}">
     
-    <label for="height">Height (in inches):</label>
-    <input type="number" id="height" name="height" value="{{profile.height|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="height">Height (in inches):</label>
+    <input class="m-auto w-10/12 text-center" type="number" id="height" name="height" value="{{profile.height|default('None, true')}}">
     
-    <label for="lbs_per_week">Lbs per week (in lbs):</label>
-    <input type="number" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week" value="{{profile.lbs_per_week|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="lbs_per_week">Lbs per week (in lbs):</label>
+    <input class="m-auto w-10/12 text-center" type="number" min="0" max="2" step=".1" id="lbs_per_week" name="lbs_per_week" value="{{profile.lbs_per_week|default('None, true')}}">
     
-    <label for="activity_level">Activity Level:</label>
-    <select type="number" min="1" max="2" step=".1" id="activity_level" name="activity_level" value="{{profile.activity_level|default('None, true')}}">
+    <label class="m-auto font-semibold p-4" for="activity_level">Activity Level:</label>
+    <select class="m-auto w-10/12 bg-gray-50 text-center" type="number" min="1" max="2" step=".1" id="activity_level" name="activity_level" value="{{profile.activity_level|default('None, true')}}">
         {% include "activity_level_options.html" %}
     </select>
     
     
-    <input type="submit" value="Save">
+    <input class="bg-gray-400 text-gray-50 w-3/4 m-auto col-span-2 font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black" type="submit" value="Save">
 </form>
 {% endblock %}

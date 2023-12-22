@@ -1,55 +1,66 @@
 {% if not hx_request %}{% extends "base.html" %}{% endif %}
 
 {% block content %}
-<table id="cridentials" name="cridentials">
-    <tr>
-        <th id="email">email</th>
-        <td headers="email">{{user.email}}</td>
-        <td role="button">Edit</td>
-    </tr>
-    <tr>
-        <th id="password">password</th>
-        <td headers="password">**************</td>
-        <td role="button" hx-get="/forgot-password" hx-push-url="true" hx-target="#content">Edit</td>
-    </tr>
-</table>
+<h1 class="text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">
+    Login Details
+</h1>
+<div class="grid grid-cols-[1fr_4fr] w-10/12 m-auto bg-gray-300 pb-6 rounded-b-lg" id="cridentials" name="cridentials">
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="email">Email</div>
+        <div class="my-auto w-11/12 text-clip overflow-hidden" headers="email">{{user.email}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="password">Password</div>
+        <div class="my-auto w-11/12 text-clip overflow-hidden" headers="password">**************</div>
+        <!-- <div role="button" hx-get="/forgot-password" hx-push-url="true" hx-target="#content">Edit</div> -->
+    </div>
+    <input hx-get="/forgot-password" hx-target="#content" hx-trigger="click" type="button" value="Reset Password"
+        class="bg-gray-400 text-gray-50 w-3/4 m-auto col-span-2 font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+    >
+</div>
+<div class="p-5"></div>
+<h1 class="text-2xl font-bold text-gray-600 bg-gray-200 text-center pt-3 pb-3">
+    Profile
+</h1>
+<div name="profile" class="grid grid-cols-2 w-10/12 m-auto bg-gray-300 pb-6 rounded-b-lg">
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="start_date">Start Date:</div>
+        <div class="m-auto w-10/12 text-center" headers="start_date">{{profile.start_date}}</div>
+    </div>
 
-<div role="button" hx-get="/profile/edit" hx-target="#content">EDIT PROFILE</div>
-<table id="profile-table" name="profile">
-    <tr>
-        <th id="start_date">start_date</th>
-        <td headers="start_date">{{profile.start_date}}</td>
-    </tr>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="start_weight">Start Weight:</div>
+        <div class="m-auto w-10/12 text-center" headers="start_weight">{{profile.start_weight}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="goal_weight">Goal:</div>
+        <div class="m-auto w-10/12 text-center" headers="goal_weight">{{profile.goal_weight}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="sex">Sex</div>
+        <div class="m-auto w-10/12 text-center" headers="sex">{{profile.sex}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="birthdate">BirthDate:</div>
+        <div class="m-auto w-10/12 text-center" headers="birthdate">{{profile.birthdate}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="height">Height:</div>
+        <div class="m-auto w-10/12 text-center" headers="height">{{profile.height}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="lbs_per_week">Lbs per week:</div>
+        <div class="m-auto w-10/12 text-center" headers="lbs_per_week">{{profile.lbs_per_week}}</div>
+    </div>
+    <div class="contents">
+        <div class="m-auto font-semibold p-4" id="activity_level">Activity Level:</div>
+        <div class="m-auto w-10/12 text-center" headers="activity_level">{{profile.activity_level}}</div>
+    </div>
+    <input hx-get="/profile/edit" hx-target="#content" hx-trigger="click" type="button" value="Edit Profile"
+        class="bg-gray-400 text-gray-50 w-3/4 m-auto col-span-2 font-bold py-4 rounded hover:bg-gray-600 disabled:bg-black"
+    >
+</div>
 
-    <tr>
-        <th id="start_weight">start_weight</th>
-        <td headers="start_weight">{{profile.start_weight}}</td>
-    </tr>
-    <tr>
-        <th id="goal_weight">goal_weight</th>
-        <td headers="goal_weight">{{profile.goal_weight}}</td>
-    </tr>
-    <tr>
-        <th id="sex">sex</th>
-        <td headers="sex">{{profile.sex}}</td>
-    </tr>
-    <tr>
-        <th id="birthdate">birthdate</th>
-        <td headers="birthdate">{{profile.birthdate}}</td>
-    </tr>
-    <tr>
-        <th id="height">height</th>
-        <td headers="height">{{profile.height}}</td>
-    </tr>
-    <tr>
-        <th id="lbs_per_week">lbs_per_week</th>
-        <td headers="lbs_per_week">{{profile.lbs_per_week}}</td>
-    </tr>
-    <tr>
-        <th id="activity_level">activity_level</th>
-        <td headers="activity_level">{{profile.activity_level}}</td>
-    </tr>
-</table>
 {% endblock %}
 
 
