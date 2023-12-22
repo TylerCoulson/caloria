@@ -63,7 +63,7 @@
     cy="50%"
   />
   <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="font-semibold">
-    {{(offsets['calorie_info']['calories_eaten'] | int / offsets['calorie_info']['calorie_goal'] | int) | round(4) * 100}}%
+    {{((offsets['calorie_info']['calories_eaten'] | int / offsets['calorie_info']['calorie_goal'] | int) * 100) | round(2) }}%
   </text>
   <!-- <line x1="40%" x2="60%" y1="44%" y2="44%" stroke="black" stroke-width="2"/>
   <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" class="font-semibold">{{offsets['calorie_info']['calorie_goal'] | int}}</text>
