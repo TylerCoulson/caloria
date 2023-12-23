@@ -13,7 +13,7 @@
             <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400{% if not loop.first and loop.previtem.date != log.date %} border-t-2  {% endif %}">{{(log.serving_amount * log.serving_size.calories)|round|int}}</div>
             
             
-            {% if not home %}
+
                 <div class="flex w-full h-full justify-center items-center text-sm m-auto p-2  border-t border-gray-400{% if not loop.first and loop.previtem.date != log.date %} border-t-2  {% endif %}">
                     <div    hx-get="/food_log/edit?log_id={{log.id}}" hx-target="closest .contents" hx-trigger="edit" hx-vals="js:{'tz_offset': tz_offset()}" hx-swap="beforeend" 
                             _="on click
@@ -38,6 +38,6 @@
                         </svg>
                     </div>
                 </div>
-            {% endif %}
+
         </div>
 {% endfor %}
