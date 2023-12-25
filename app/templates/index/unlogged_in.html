@@ -1,69 +1,85 @@
-<h1>Welcome to Food Tracker</h1>
+<h1 class="text-2xl font-bold text-gray-700 bg-gray-300 text-center pt-3 pb-3">Welcome to Food Tracker</h1>
 
-<h2>Home page</h2>
-<ul>
-    <li>When not logged in only displays this information</li>
-    <li>When logged in shows this info, last 5 food logs, and overview of last 5 days</li>
-</ul>
-<h2>Foods</h2>
-<ul>
-    <li>Lists Foods with their category and type</li>
-    <li>Categories can be
-        <ul>
-            <li>Restaurant</li>
-            <li>Fast Food</li>
-            <li>Commercial</li>
-            <li>Homemade</li>
-            <li>Raw</li>
-            <li>Generic</li>
-        </ul>
-    </li>
-    <li>Types is user generated. There are some base food items for users to start with</li>
-    <li>When A is click a dropdown of subtypes are show. For instance the Apple type has Fuji, Gala, Grannysmith, Honeycrisp, and Red Delicious subtypes</li>
-    <li>Click on a subtype brings you to it's food page which shows all it's servings</li>
-    <li>The search bar allows you to search in type and subtype for a match </li>
-    <li> Loggedin Features
-        <ul>
-            <li>You are able to create a new food that's only available to you</li>
-            <li>Createing a food brings you to create a serving</li>
-            <li>With Subtypes open you are able to Add it to your food log.</li>
-            <li>The subtype food page allows you to add a new serving</li>
-        </ul>
-    </li>
-</ul>
-<h2>Prediction</h2>
-<ul>
-    <li>The prediction page allows you to input your stats and will give you a rundown of when you'll reach your goal weight as well as the amount of calories you would eat on a given day</li>
-    <li>When logged in the stats will be auto input from your profile</li>
-    <li>After hitting the predict button the inputs will close to allow you to view the prediciton table</li>
-</ul>
+<div class="flex flex-row">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Home page</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>When not logged in only displays this information</li>
+        <li>When logged in shows this info, last 5 food logs, and overview of last 5 days</li>
+    </ul>
+</div>
 
-<h2>Food Log</h2>
-<ul>
-    <li>Shows Food logs created</li>
-    <li>Can edit logs</li>
-    <li>Can copy logs and the date will be the current date based of UTC.(I need to fix that)</li>
-</ul>
+<div class="flex flex-row-reverse">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Foods</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>Lists Foods with their category and type</li>
+        <li>Categories can be
+            <ul class="list-[circle] list-inside pl-4">
+                <li>Restaurant</li>
+                <li>Fast Food</li>
+                <li>Commercial</li>
+                <li>Homemade</li>
+                <li>Raw</li>
+                <li>Generic</li>
+            </ul>
+        </li>
+        <li>Types are user generated. There are some base food items for users to start with</li>
+        <li>When A is click a dropdown of subtypes are show. For instance the Apple type has Fuji, Gala, Grannysmith, Honeycrisp, and Red Delicious subtypes</li>
+        <li>Click on a subtype brings you to it's food page which shows all it's servings</li>
+        <li>The search bar allows you to search in type and subtype for a match </li>
+        <li> Loggedin Features
+            <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+                <li>You are able to create a new food that's only available to you</li>
+                <li>Createing a food brings you to create a serving</li>
+                <li>With Subtypes open you are able to Add it to your food log.</li>
+                <li>The subtype food page allows you to add a new serving</li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
-<h2>Daily</h2>
-<ul>
-    <li>Shows Aggregate values for all food logs eaten that date</li>
-    <li>Can select an activity level for that day (effects the calculations)</li>
-    <li>Can add an actual weight for that day. (does not effect calculations)</li>
-    <li>The "A" will create a dropdown with addtional overview data as well as all food logs for that date</li>
-</ul>
+<div class="flex flex-row">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Prediction</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>The prediction page allows you to input your stats and will give you a rundown of when you'll reach your goal weight as well as the amount of calories you would eat on a given day</li>
+        <li>When logged in the stats will be auto input from your profile</li>
+        <li>After hitting the predict button the inputs will close to allow you to view the prediciton table</li>
+    </ul>
+</div>
 
-<h2>Register</h2>
-<ul>
-    <li>Creates an account and logs you in</li>
-    <li>After successful creation will be brought to create profile page</li>
-    <li>If you don't create a profile going to any page should redirect to create a profile</li>
-    <li>Registering will send an email from techgnome@gmail.com to verify the account</li>
-    <li>If you do not verify the account a card will be displayed to resend the verify email</li>
-</ul>
+<div class="flex flex-row-reverse">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Food Log</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>Shows Food logs created</li>
+        <li>Can edit logs</li>
+        <li>Can copy logs and the date will be the current date based of UTC.(I need to fix that)</li>
+    </ul>
+</div>
 
-<h2>Profile</h2>
-<ul>
-    <li>Shows email and starred out password(no password info is sent) and the ability to edit them</li>
-    <li>Show profile information and ability to edit it</li>
-</ul>
+<div class="flex flex-row">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Daily</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>Shows Aggregate values for all food logs eaten that date</li>
+        <li>Can select an activity level for that day (effects the calculations)</li>
+        <li>Can add an actual weight for that day. (does not effect calculations)</li>
+        <li>The "A" will create a dropdown with addtional overview data as well as all food logs for that date</li>
+    </ul>
+</div>
+
+<div class="flex flex-row-reverse">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Register</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>Creates an account and logs you in</li>
+        <li>After successful creation will be brought to create profile page</li>
+        <li>If you don't create a profile going to any page should redirect to create a profile</li>
+        <li>Registering will send an email from techgnome@gmail.com to verify the account</li>
+        <li>If you do not verify the account a card will be displayed to resend the verify email</li>
+    </ul>
+</div>
+
+<div class="flex flex-row">
+    <h2 class="text-xl font-semibold bg-gray-200 text-gray-600 text-center pt-2 pb-2">Profile</h2>
+    <ul class="list-disc list-inside bg-gray-100 w-10/12 m-auto">
+        <li>Shows email and starred out password(no password info is sent) and the ability to edit them</li>
+        <li>Show profile information and ability to edit it</li>
+    </ul>
+</div>
