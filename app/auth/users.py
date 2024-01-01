@@ -18,7 +18,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
-        self.request_verify(user=user, request=request)
+        await self.request_verify(user=user, request=request)
 
     async def on_after_forgot_password(
         self, user: User, token: str, request: Optional[Request] = None
