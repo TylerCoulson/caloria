@@ -1,11 +1,8 @@
-from fastapi import APIRouter, Depends, status, HTTPException
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy import select
-from sqlalchemy.orm import Session  # type: ignore
+from fastapi import APIRouter, status, HTTPException
+from sqlalchemy import select, and_
 from typing import List
 
 from app.api.api_V1.deps import LoggedInDeps
-from app import deps
 from app import schemas
 from app import models
 
@@ -62,7 +59,18 @@ async def get_food_logs(*, deps:LoggedInDeps, n:int=25, page:int=1):
 
     offset = max((page-1) * n, 0)
     profile_id = deps['profile'].id
-    statement = select(models.Food_Log).where(models.Food_Log.profile_id == profile_id).order_by(models.Food_Log.date.desc()).order_by(models.Food_Log.id.desc()).limit(n).offset(offset)
+    start_date = deps['profile'].start_date
+    statement = select(models.Food_Log
+        ).where(
+            and_(
+                    models.Food_Log.profile_id == profile_id, 
+                    models.Food_Log.date >= start_date
+                )
+        ).order_by(models.Food_Log.date.desc()
+        ).order_by(models.Food_Log.id.desc()
+        ).limit(n
+        ).offset(offset
+                                           )
     data = await deps['db'].execute(statement)
     test = data.unique().all()
 
