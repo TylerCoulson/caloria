@@ -2,9 +2,6 @@ from typing import Generator
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import create_engine  # type:ignore
-from sqlalchemy.orm import sessionmaker  # type:ignore
-from sqlalchemy.sql import text
 from app.db import Base  # type:ignore
 from app.config import settings
 from app.main import app
@@ -12,7 +9,7 @@ from app.deps import get_db
 from app.auth.users import get_current_profile, current_active_user
 from app import models
 from app.tests.utils import *
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from app.tests.utils import read_data_from_file, add_data_to_db
 
 engine = create_async_engine(
