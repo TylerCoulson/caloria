@@ -1,8 +1,8 @@
 # from fastapi import status, HTTPException
-# from sqlalchemy import select, or_, nulls_last, Select
+from sqlalchemy import select, or_, nulls_last, Select
 # from sqlalchemy.orm import Session
-# from app import models, crud
-# from app.api.api_V1.deps import CommonDeps
+from app import models, crud
+from app.api.api_V1.deps import CommonDeps
 
 # default_n = 25
 
@@ -26,18 +26,17 @@
 # def get_user_id(deps:CommonDeps):
 #     return None if deps['user'] is None else deps['user'].id
 
-# def get_all_statement(deps:CommonDeps, n:int, page:int) -> Select:
-#     n = n if n > 0 else default_n
-#     offset = get_offset(page=page, n=n)
-#     user_id = get_user_id(deps=deps)
+async def get_all_statement(deps:CommonDeps, n:int, page:int) -> Select:
+    statement = await crud.read_all_statement(n=n, page=page, db=deps['db'], model=models.Food, profile=deps['profile'])
+    
+    statement = statement.order_by(
+        nulls_last(models.Food.profile_id.desc()),
+        models.Food.category_id,
+        models.Food.type,
+        models.Food.subtype
+    )
 
-#     statement = select(models.Food
-#     ).where(or_(models.Food.user_id == user_id, models.Food.user_id == None)
-#     ).order_by(nulls_last(models.Food.user_id.desc()), models.Food.category_id, models.Food.type, models.Food.subtype
-#     ).limit(n
-#     ).offset(offset)
-
-#     return statement
+    return statement
 
 # async def get_food_by_id(*, deps:CommonDeps, food_id: int):
 #     user_id = get_user_id(deps=deps)

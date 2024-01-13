@@ -16,7 +16,7 @@ class Food(Base):
     category_id = Column(Integer, ForeignKey("food_categories.id", ondelete="CASCADE"), nullable=False)
     type = Column(String)
     subtype = Column(String)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+    profile_id = Column(Integer, ForeignKey("profile.id", ondelete="CASCADE"))
 
     servings = relationship(
         "ServingSize", back_populates="food", lazy="joined", cascade="all, delete-orphan"

@@ -8,9 +8,9 @@ from app import deps, schemas
 
 
 
-async def common_deps(user: Annotated_User = False, db: Session = Depends(deps.get_db), timezone_offset: int = 0):
+async def common_deps(user: Annotated_User = False, db: Session = Depends(deps.get_db), timezone_offset: int = 0, profile:Annotated_Profile=False):
     client_date = (datetime.now() - timedelta(minutes=timezone_offset)).date()  
-    return {"user":user, "db":db, "client_date": client_date}
+    return {"user":user, "db":db, "client_date": client_date, "profile": profile}
 
 CommonDeps = Annotated[dict, Depends(common_deps)]
 

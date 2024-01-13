@@ -34,7 +34,8 @@ async  def create_profile(*, deps:CommonDeps, profile: schemas.ProfileBase, user
     status_code=status.HTTP_200_OK,
 )
 async def get_current_profile(*, deps:LoggedInDeps):
-    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
+    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile, profile=deps['profile'])
+    print(data)
     return data
 
 # @router.get(
@@ -52,7 +53,7 @@ async def get_current_profile(*, deps:LoggedInDeps):
     status_code=status.HTTP_200_OK,
 )
 async def get_current_profile_logs(*, deps:LoggedInDeps):
-    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile)
+    data = await crud.read(_id=deps['profile'].id, db=deps['db'], model=models.Profile, profile=deps['profile'])
     return data
 
 
@@ -65,7 +66,7 @@ async def get_current_profile_logs(*, deps:LoggedInDeps):
     status_code=status.HTTP_200_OK,
 )
 async def update_current_profile(*, deps:LoggedInDeps, profile_in: schemas.ProfileBase):
-    data = await crud.update(_id=deps['profile'].id, model=models.Profile, update_data=profile_in, db=deps['db'])
+    data = await crud.update(_id=deps['profile'].id, model=models.Profile, update_data=profile_in, db=deps['db'], profile=deps['profile'])
     return data
 
 
@@ -78,6 +79,8 @@ async def update_current_profile(*, deps:LoggedInDeps, profile_in: schemas.Profi
     status_code=status.HTTP_200_OK,
 )
 async def delete_current_profile(*, deps:LoggedInDeps):
-    data = await get_current_profile(deps=deps)
-    data = await crud.delete(_id=deps['profile'].id, db=deps['db'], db_obj=data)
+    data = await crud.delete(_id=deps['profile'].id, db=deps['db'], model=models.Profile, profile=deps['profile'])
+    print("delete output", data)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Cannot Delete Profile")
     return

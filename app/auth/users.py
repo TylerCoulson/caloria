@@ -149,7 +149,7 @@ async def get_current_profile(user: User = Depends(current_active_user), db = De
     if user.profile is None:
         raise HTTPException(status_code=404, detail="Profile Not Found")
         
-    return await crud.read(_id=user.profile.id, db=db, model=models.Profile)
+    return await crud.read(_id=user.profile.id, db=db, model=models.Profile, profile=user.profile)
     
 
 Annotated_User = Annotated[models.User, Depends(current_active_user)]

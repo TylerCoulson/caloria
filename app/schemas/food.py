@@ -6,7 +6,7 @@ class FoodNoSubtype(BaseModel):
     type: str
     
 class FoodBase(BaseModel):
-    user_id: int | None = None
+    profile_id: int | None = None
     category_id: int
     type: str
     subtype: str | None = None
