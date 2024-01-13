@@ -1,20 +1,23 @@
 from typing import Any
-from sqlalchemy import select, or_, and_, false, update as sql_update
+from sqlalchemy import select, or_, and_, false, true, update as sql_update
 from sqlalchemy.orm.exc import UnmappedInstanceError
 from app import schemas, models
 
 
 def gatekeeper(data, model, profile):
-    non_profile_id_models = [models.Profile]
+    non_profile_id_models = [models.Profile, models.ServingSize]
     if not data:
         return None
-    if model != models.Profile:
+    if model != models.Profile and model != models.ServingSize:
         if not hasattr(model, "profile_id"):
             return None
         if profile.id != data.profile_id:
             return None 
     if model == models.Profile:
         if profile.id != data.id:
+            return None
+    if model == models.ServingSize:
+        if profile.id != data.food.profile_id:
             return None
     return True
     
@@ -44,6 +47,10 @@ async def read(*, _id: int, db, model, profile:schemas.Profile=None):
     if model == models.Profile:
         if profile:
             or_criteria = or_(model.id == profile.id)
+
+    if model == models.ServingSize:
+        or_criteria = or_(true())
+
     criteria = and_(and_criteria, or_criteria)
 
     statement = select(model).where(criteria)
