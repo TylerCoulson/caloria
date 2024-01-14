@@ -1,15 +1,15 @@
-# from fastapi import APIRouter, Depends, status, HTTPException
-# from sqlalchemy.orm import Session  # type: ignore
-# from typing import List
-# from app import deps
-# from app import schemas
-# from app import models
-# from app.auth.router import Annotated_Superuser
-# from app.api.api_V1.deps import LoggedInDeps, CommonDeps
+from fastapi import APIRouter, Depends, status, HTTPException
+from sqlalchemy.orm import Session  # type: ignore
+from typing import List
+from app import deps
+from app import schemas
+from app import models
+from app.auth.router import Annotated_Superuser
+from app.api.api_V1.deps import LoggedInDeps, CommonDeps
 
-# router = APIRouter(tags=["food-categories"])
+router = APIRouter(tags=["food-categories"])
 
-# from app import crud
+from app import crud
 
 # #  ************
 # #  *  CREATE  *
@@ -25,16 +25,16 @@
 #     return food_out
 
 
-# #  ************
-# #  *  READ    *
-# #  ************
-# @router.get(
-#     "",
-#     response_model=List[schemas.FoodCategory],
-#     status_code=status.HTTP_200_OK,
-# )
-# async def get_all_categories(*, deps:CommonDeps, n:int=25, page:int=1):
-#     return await crud.read_all(n=n, page=page, db=deps['db'], model=models.FoodCategories)
+#  ************
+#  *  READ    *
+#  ************
+@router.get(
+    "",
+    response_model=List[schemas.FoodCategory],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_categories(*, deps:CommonDeps, n:int=25, page:int=1):
+    return await crud.read_all(n=n, page=page, db=deps['db'], model=models.FoodCategories)
 
 
 # #  ************
