@@ -82,16 +82,16 @@ async def read_all(*, n:int=25, page:int=1, db, model, profile:schemas.Profile=N
     return [value for value, in data.unique().all()]
 
 async def update(*, _id, model, update_data, db, profile):
-    data = await read(_id=_id, db=db, model=model, profile=profile)
-
-    if gatekeeper(data=data, model=model, profile=profile) is None:
-        return None
-
     try:
         statement = sql_update(model).where(model.id == _id).values(update_data.model_dump())
         await db.execute(statement)
-        await db.commit()
+
         data = await read(_id=_id, db=db, model=model, profile=profile)
+        if gatekeeper(data=data, model=model, profile=profile) is None:
+            await db.rollback()
+            return None
+
+        await db.commit()
         await db.refresh(data)
         return data
     except UnmappedInstanceError:

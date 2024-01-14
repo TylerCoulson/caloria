@@ -125,7 +125,7 @@ async def update_food(
 ):
     data = await crud.update(_id=food_id, model=models.Food, update_data=food_in, db=deps['db'], profile=deps['profile'])
     if data is None:
-        raise HTTPException(status_code=404, detail="Cannot Delete Food")
+        raise HTTPException(status_code=404, detail="Cannot Update Food")
 
     return data
 
