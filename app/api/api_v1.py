@@ -9,5 +9,5 @@ api_router.include_router(food_log.router, prefix="/food_log", tags=["food_log"]
 api_router.include_router(profile.router, prefix="/profile", tags=["profile"])
 # api_router.include_router(recipe.router, prefix="/recipe", tags=["recipe"])
 api_router.include_router(daily_overview.router, prefix="/daily", tags=["daily"])
-# api_router.include_router(predictions.router, prefix="/predictions", tags=["predictions"])
+api_router.include_router(predictions.router, prefix="/predictions", tags=["predictions"])
 api_router.include_router(auth_router, tags=['auth'])

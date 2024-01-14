@@ -8,7 +8,7 @@ from app import models
 from app import schemas
 from app import crud
 from app.auth.db import User
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from app.api.calcs.calorie_calcs import PersonsDay
 
 
@@ -64,3 +64,21 @@ async def module_profile(db, module_user) -> models.Profile:
     profile = {"id": 1, "start_date": "2022-12-06", "start_weight": 322.4, "goal_weight": 150.0, "sex": 'Male', "birthdate": "1992-12-05", "height": 70, "lbs_per_week": 2.0, "activity_level": 2.0, "user_id": 1}
     
     return profile
+
+@pytest.fixture()
+async def daily_output(db, module_profile):
+    food_log = await crud.read(_id=261, db=db, model=models.Food_Log, profile=schemas.Profile(**module_profile))
+    
+    food_log = schemas.FoodLog(**food_log.__dict__)
+
+    return PersonsDay(
+        height = 70,
+        start_weight = 322.4,
+        start_date = date(2022,12,6),
+        lbs_per_day = 2/7,
+        birthdate = date(1992,12,5),
+        sex = 'male',
+        activity_level = 1.2,
+        goal_weight = 150,
+        profile_logs = [food_log],
+    )
