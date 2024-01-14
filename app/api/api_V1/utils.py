@@ -1,27 +1,20 @@
 from fastapi import status, HTTPException
 from sqlalchemy import select, or_, nulls_last, Select
-# from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 from app import models, crud
 from app.api.api_V1.deps import CommonDeps
 
-# default_n = 25
+default_n = 25
 
-# async def get_weight(profile_id, current_date, db: Session):
-#     statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
-#     data = await db.execute(statement)
-#     return data.unique().scalar_one_or_none()
+async def get_weight(profile_id, current_date, db: Session):
+    statement = select(models.DailyLog).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
+    data = await db.execute(statement)
+    return data.unique().scalar_one_or_none()
 
-# async def get_day_activity_level(profile_id, current_date, db: Session):
-#     statement = select(models.DailyLog.activity_level).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
-#     data = await db.execute(statement)
-#     return data.unique().scalar_one_or_none()
-
-# def get_offset(page:int, n:int):
-#     if n < 0:
-#         n = default_n
-
-#     offset = max((page-1) * n, 0)
-#     return offset
+async def get_day_activity_level(profile_id, current_date, db: Session):
+    statement = select(models.DailyLog.activity_level).where(models.DailyLog.profile_id == profile_id).where(models.DailyLog.date == current_date)
+    data = await db.execute(statement)
+    return data.unique().scalar_one_or_none()
 
 # def get_user_id(deps:CommonDeps):
 #     return None if deps['user'] is None else deps['user'].id
