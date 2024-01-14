@@ -1,4 +1,4 @@
-from app.api.api_V1.deps import CommonDeps, LoggedInDeps
+from app.api.api_htmx.deps import CommonDeps, LoggedInDeps
 from app.api.api_V1 import daily_overview as api_daily
 
 async def calorie_progress_data(deps:LoggedInDeps, overview=None, total:bool=False):

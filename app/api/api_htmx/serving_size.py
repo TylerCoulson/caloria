@@ -12,7 +12,7 @@ router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
 @router.get(
-    "/servings/create/{food_id}",
+    "/{food_id}/servings/create",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
@@ -29,13 +29,12 @@ async def get_create_serving(*, deps:CommonDeps, food_id:int):
     return templates.TemplateResponse("food/servings/create.html", context)
 
 @router.get(
-    "/servings/{serving_id:int}/edit",
+    "/{food_id}/servings/{serving_id:int}/edit",
     response_class=HTMLResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_edit_serving(*, deps:CommonDeps, serving_id:int):
-
-    serving = await api_servings.get_serving_size_by_id(deps=deps, serving_id=serving_id)
+async def get_edit_serving(*, deps:CommonDeps, food_id:int, serving_id:int):
+    serving = await api_servings.get_serving_size_by_id(deps=deps, food_id=food_id, serving_id=serving_id)
 
     context = {
             "request": deps['request'],

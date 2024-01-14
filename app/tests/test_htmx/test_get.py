@@ -7,7 +7,7 @@ from app.tests.test_htmx.htmx_utils import methods, weight_params
         "url",
         methods['GET']
 )
-async def test_gets(client:TestClient, db:Session, url):
+async def test_gets(client:TestClient, url):
     params = {"food_category": 1, "search_word":"test", "food_id":1, "log_id":1, **weight_params, "email":"test123@test.com","password":"1231412321", "password_confirm":"1231412321"}
     response = await client.get(url, params=params)
 
